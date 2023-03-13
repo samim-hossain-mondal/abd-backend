@@ -1,5 +1,5 @@
 const { HttpError } = require('../../errors');
-const prisma = require('../../prismaClient');
+const { dashboardPrisma } = require('../prismaClient');
 
 const selectOnlyValidReactionFields = {
   select: {
@@ -47,7 +47,7 @@ const filterByAnonymous = (celebrations) => {
 
 // get list of all celebrations
 const listCelebrations = async () => {
-  const celebrations = await prisma.Celebration.findMany({
+  const celebrations = await dashboardPrisma.Celebration.findMany({
     orderBy: {
       createdAt: 'desc',
     },
@@ -59,7 +59,7 @@ const listCelebrations = async () => {
 
 // get a celebration by id
 const getCelebrationById = async (celebrationId) => {
-  const celebration = await prisma.Celebration.findUnique({
+  const celebration = await dashboardPrisma.Celebration.findUnique({
     where: {
       celebrationId
     },
@@ -72,7 +72,7 @@ const getCelebrationById = async (celebrationId) => {
 
 // create a new celebration
 const createCelebration = async (author, content, type, isAnonymous = false) => {
-  const newCelebration = await prisma.Celebration.create({
+  const newCelebration = await dashboardPrisma.Celebration.create({
     data: {
       author,
       isAnonymous,
@@ -88,7 +88,7 @@ const createCelebration = async (author, content, type, isAnonymous = false) => 
 // update a celebration
 const updateCelebrationById = async (celebrationId, content, type, isAnonymous) => {
   console.log(celebrationId, content, type, isAnonymous);
-  const updatedCelebration = await prisma.Celebration.update({
+  const updatedCelebration = await dashboardPrisma.Celebration.update({
     where: {
       celebrationId
     },
@@ -106,12 +106,12 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous) 
 
 // delete a celebration
 const deleteCelebrationById = async (celebrationId) => {
-  await prisma.celebrationReactedUser.deleteMany({
+  await dashboardPrisma.celebrationReactedUser.deleteMany({
     where: {
       celebrationId
     }
   });
-  const deletedCelebration = await prisma.Celebration.delete({
+  const deletedCelebration = await dashboardPrisma.Celebration.delete({
     where: {
       celebrationId
     },
@@ -124,14 +124,14 @@ const deleteCelebrationById = async (celebrationId) => {
 
 const updateReaction = async (celebrationId, userId, isReacted) => {
   const updatedReaction = isReacted ?
-    await prisma.celebrationReactedUser.create({
+    await dashboardPrisma.celebrationReactedUser.create({
       data: {
         celebrationId,
         userId
       },
       ...selectOnlyValidReactionFields
     }) :
-    await prisma.celebrationReactedUser.deleteMany({
+    await dashboardPrisma.celebrationReactedUser.deleteMany({
       where: {
         celebrationId,
         userId
@@ -142,7 +142,7 @@ const updateReaction = async (celebrationId, userId, isReacted) => {
 };
 
 const getReaction = async (celebrationId, userId) => {
-  const reaction = await prisma.celebrationReactedUser.findMany({
+  const reaction = await dashboardPrisma.celebrationReactedUser.findMany({
     where: {
       celebrationId,
       userId

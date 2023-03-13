@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DASHBOARD_DATABASE_URL")
 }
 
 // PO Notes Model

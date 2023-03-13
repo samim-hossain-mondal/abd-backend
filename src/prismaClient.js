@@ -3,7 +3,7 @@ const { PrismaClient } = require('@prisma/client');
 const dashboardPrisma = new PrismaClient({
   datasources: {
     db: {
-      url: process.env.DATABASE_URL
+      url: process.env.DASHBOARD_DATABASE_URL
     }
   }
 });

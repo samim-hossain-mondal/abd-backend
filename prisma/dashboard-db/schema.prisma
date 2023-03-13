@@ -81,6 +81,15 @@ model Announcement {
   createdAt DateTime @default(now())
 }
 
+// Member Model
+model Member {
+  memberId Int @id @unique @default(autoincrement())
+  name String
+  email String
+  role Role
+  isDeleted Boolean @default(false)
+}
+
 // Enums
 
 enum Status {
@@ -117,4 +126,10 @@ enum RequestType {
 enum CelebrationType {
   CELEBRATION
   IMPEDIMENT
+}
+
+enum Role {
+  ADMIN
+  LEADER
+  MEMBER
 }

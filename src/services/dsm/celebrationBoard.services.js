@@ -1,5 +1,5 @@
 const { HttpError } = require('../../errors');
-const { dashboardPrisma } = require('../prismaClient');
+const { dashboardPrisma } = require('../../prismaClient');
 
 const selectOnlyValidReactionFields = {
   select: {

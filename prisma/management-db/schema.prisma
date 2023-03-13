@@ -8,8 +8,15 @@ datasource db {
 }
 
 model Project {
-    projectId Int @id @default(autoincrement())
-    projectName String
-    // projectDescription String 
-    dbName String @unique
+  projectId         Int    @id @default(autoincrement())
+  projectName       String
+  dbName            String @unique
+  members           Member[]
+}
+
+model Member {
+  projectId         Int
+  email             String
+  @@id([projectId, email])
+  project           Project @relation(fields: [projectId], references: [projectId])
 }

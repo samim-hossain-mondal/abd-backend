@@ -16,6 +16,7 @@ const managementPrisma = new PrismaClient({
   }
 });
 
+
 module.exports = {
   dashboardPrisma,
   managementPrisma

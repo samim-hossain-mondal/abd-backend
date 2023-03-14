@@ -86,7 +86,7 @@ const createPONoteSchema = joi.object({
     .number()
     .integer()
     .required()
-
+    .min(1)
 
 });
 

@@ -20,6 +20,7 @@ model PONote {
   createdAt DateTime  @default(now())
   dueDate   DateTime?
   isDeleted   Boolean   @default(false)
+  projectId Int
 }
 
 // ** DSM Feature **
@@ -30,6 +31,7 @@ model SentimentMeter {
   author    String  // user UUID
   sentiment    Sentiment   // Enum - Sentiment
   createdAt DateTime @default(now())
+  projectId Int
 }
 
 // CelebrationReactedUser Model
@@ -51,6 +53,7 @@ model Celebration {
   type  CelebrationType   // Enum - CelebrationType
   reaction  CelebrationReactedUser[]
   createdAt DateTime @default(now())
+  projectId Int
 }
 
 // RequestTaggedUser Model
@@ -70,6 +73,7 @@ model Request {
   type RequestType // Enum - Type
   createdAt DateTime @default(now())
   taggedIndividuals RequestTaggedUser[]
+  projectId Int
 }
 
 
@@ -79,6 +83,7 @@ model Announcement {
   author    String  // user UUID
   content   String   @db.VarChar(255)
   createdAt DateTime @default(now())
+  projectId Int
 }
 
 // Member Model
@@ -88,6 +93,7 @@ model Member {
   email String
   role Role
   isDeleted Boolean @default(false)
+  projectId Int
 }
 
 // Enums

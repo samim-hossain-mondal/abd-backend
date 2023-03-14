@@ -71,13 +71,14 @@ const getCelebrationById = async (celebrationId) => {
 };
 
 // create a new celebration
-const createCelebration = async (author, content, type, isAnonymous = false) => {
+const createCelebration = async (author, content, type, isAnonymous = false, projectId) => {
   const newCelebration = await dashboardPrisma.Celebration.create({
     data: {
       author,
       isAnonymous,
       content,
       type,
+      projectId
     },
     ...selectOnlyValidCelebrationBoardFields
   }

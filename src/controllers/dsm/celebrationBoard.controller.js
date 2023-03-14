@@ -32,9 +32,9 @@ const detailCelebration = async (req, res, next) => {
 // controller to handle POST request for creating a celebration
 const createCelebration = async (req, res, next) => {
   try {
-    const { content, type, isAnonymous } = req.body;
+    const { content, type, isAnonymous, projectId } = req.body;
     const newCelebration =
-      await celebrationBoardServices.createCelebration(userId, content, type, isAnonymous);
+      await celebrationBoardServices.createCelebration(userId, content, type, isAnonymous, projectId);
     res.status(201).json({ message: 'Celebration created successfully', newCelebration });
   }
   catch (er) {

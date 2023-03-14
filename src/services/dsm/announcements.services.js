@@ -7,6 +7,7 @@ const selectOnlyValidAnnouncementFields = {
     author: true,
     content: true,
     createdAt: true,
+    projectId: true
   }
 };
 
@@ -49,11 +50,12 @@ const getAnnouncementByID = async (announcementId) => {
   * @param {String} content - content of the announcement
   * @returns {Object} - Announcement object
 */
-const createAnnouncement = async (author, content) => {
+const createAnnouncement = async (author, content, projectId) => {
   const announcement = await dashboardPrisma.Announcement.create({
     data: {
       author,
-      content
+      content,
+      projectId
     },
     ...selectOnlyValidAnnouncementFields
   });

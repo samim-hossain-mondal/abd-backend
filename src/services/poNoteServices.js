@@ -11,6 +11,7 @@ const selectOnlyValidPONoteFields = {
     dueDate: true,
     issueLink: true,
     createdAt: true,
+    projectId: true,
   }
 };
 
@@ -80,7 +81,7 @@ const getPONoteByID = async (noteId) => {
 const createValidPONote = async (
   type, note,
   status, dueDate,
-  issueLink
+  issueLink, projectId
 ) => {
 
   const noteDetails = {
@@ -98,7 +99,8 @@ const createValidPONote = async (
     }),
     ...(issueLink === undefined || issueLink === null && {
       issueLink: null
-    })
+    }),
+    projectId
   };
 
   const createdNote = await dashboardPrisma.PONote.create({

@@ -8,9 +8,8 @@ datasource db {
 }
 
 model Project {
-  projectId         Int    @id @default(autoincrement())
-  projectName       String
-  dbName            String @unique
+  projectId         Int    @id
+  projectName       String 
   members           Member[]
 }
 

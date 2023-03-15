@@ -74,14 +74,6 @@ model Announcement {
   projectId      Int
 }
 
-model Member {
-  memberId  Int     @id @unique @default(autoincrement())
-  name      String?
-  email     String @unique
-  role      Role
-  isDeleted Boolean @default(false)
-  projectId Int[]
-}
 
 enum Status {
   COMPLETED
@@ -119,8 +111,3 @@ enum CelebrationType {
   IMPEDIMENT
 }
 
-enum Role {
-  ADMIN
-  LEADER
-  MEMBER
-}

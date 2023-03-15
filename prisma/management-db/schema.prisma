@@ -12,13 +12,29 @@ model Project {
   projectId          Int      @id
   projectName        String
   projectDescription String?
-  members            Member[]
+  projectMembers     ProjectMember[] 
 }
 
 model Member {
+  email     String @unique
+  name      String?
+  role      Role
+  memberId  Int     @id @default(autoincrement())
+  projectMembers    ProjectMember[]
+}
+
+model ProjectMember {
   projectId Int
   email     String
-  project   Project @relation(fields: [projectId], references: [projectId])
-
+  role      Role
+  memberId Int      
+  project   Project @relation(fields: [projectId], references: [projectId], onDelete: Cascade)
+  member   Member @relation(fields: [memberId], references: [memberId], onDelete: Cascade)
   @@id([projectId, email])
+}
+
+enum Role {
+  ADMIN
+  LEADER
+  MEMBER
 }

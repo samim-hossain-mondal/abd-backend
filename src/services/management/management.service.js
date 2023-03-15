@@ -278,11 +278,89 @@ const updateMemberRoleInDb = async (projectId, email, role) => {
 
 
 
+const updateProjectInfoInDb = async (projectId, projectName, projectDescription) => {
+  let updateFields = {};
+  if (projectName) {
+    updateFields.projectName = projectName;
+  }
+  if (projectDescription) {
+    updateFields.projectDescription = projectDescription;
+  }
+
+  const updatedProject = await managementPrisma.project.update({
+    where: {
+      projectId
+    },
+    data: updateFields
+  });
+
+  if(!updatedProject) {
+    throw new HttpError(500, 'Error updating project info in management database.');
+  }
+
+  return updatedProject;
+};
+
+
+const deleteProjectInDb = async (projectId) => {
+  // Find all members with the deleted projectId in their projectId array
+  const membersToUpdate = await dashboardPrisma.member.findMany({
+    where: {
+      projectId: {
+        has: projectId
+      }
+    }
+  });
+
+  // Remove the deleted projectId from the projectId array of each member
+  await Promise.all(membersToUpdate.map(async (member) => {
+    const updatedMember = await dashboardPrisma.member.update({
+      where: {
+        memberId: member.memberId
+      },
+      data: {
+        projectId: {
+          set: member.projectId.filter(id => id !== projectId)
+        }
+      }
+    });
+    return updatedMember;
+  }));
+
+  const deleteMemberLookup = await managementPrisma.member.deleteMany({
+    where: {
+      projectId
+    }
+  });
+
+  if (!deleteMemberLookup) {
+    throw new HttpError(500, 'Error deleting member lookup in management database.');
+  }
+
+  // Save the updated Member model to the dashboard database
+  const deletedProject = await managementPrisma.project.delete({
+    where: {
+      projectId
+    }
+  });
+
+  if (!deletedProject) {
+    throw new HttpError(500, 'Error deleting project in management database.');
+  }
+
+  return deletedProject;
+};
+
+
+
+
 module.exports = {
   createNewAgileDashboardInDb,
   allProjectsByEmailInDb,
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
   removeProjectMemberInDb,
-  updateMemberRoleInDb
+  updateMemberRoleInDb,
+  updateProjectInfoInDb,
+  deleteProjectInDb
 };

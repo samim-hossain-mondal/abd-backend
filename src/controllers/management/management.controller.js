@@ -4,7 +4,9 @@ const {
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
   removeProjectMemberInDb,
-  updateMemberRoleInDb
+  updateMemberRoleInDb,
+  updateProjectInfoInDb,
+  deleteProjectInDb
 } = require('../../services/management/management.service');
 
 const createNewProject = async (req, res, next) => {
@@ -88,11 +90,40 @@ const updateMemberRole = async (req, res, next) => {
   }
 };
 
+
+const updateProjectInfo = async (req, res, next) => {
+  try {
+    const { projectId } = req.params;
+    const { projectName, projectDescription } = req.body;
+    const result = await updateProjectInfoInDb(parseInt(projectId), projectName, projectDescription);
+    res.status(200).json(result);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
+
+const deleteProject = async (req, res, next) => {
+  try {
+    const { projectId } = req.params;
+    const result = await deleteProjectInDb(parseInt(projectId));
+    res.status(200).json(result);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
 module.exports = {
   createNewProject,
   listAllProjectsByMemberEmail,
   listAllMembersByProjectId,
   addNewProjectMember,
   removeMemberFromProject,
-  updateMemberRole
+  updateMemberRole,
+  updateProjectInfo,
+  deleteProject
 };

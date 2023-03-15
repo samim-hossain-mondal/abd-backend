@@ -1,6 +1,7 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient: dashboardClient } = require('./generated/dashboard');
+const { PrismaClient: managementClient } = require('./generated/management');
 
-const dashboardPrisma = new PrismaClient({
+const dashboardPrisma = new dashboardClient({
   datasources: {
     db: {
       url: process.env.DASHBOARD_DATABASE_URL
@@ -8,7 +9,7 @@ const dashboardPrisma = new PrismaClient({
   }
 });
 
-const managementPrisma = new PrismaClient({
+const managementPrisma = new managementClient({
   datasources: {
     db: {
       url: process.env.MANAGEMENT_DATABASE_URL

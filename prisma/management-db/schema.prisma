@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../../src/generated/management"
 }
 
 datasource db {
@@ -8,15 +9,16 @@ datasource db {
 }
 
 model Project {
-  projectId         Int    @id
-  projectName       String 
+  projectId          Int      @id
+  projectName        String
   projectDescription String?
-  members           Member[]
+  members            Member[]
 }
 
 model Member {
-  projectId         Int
-  email             String
+  projectId Int
+  email     String
+  project   Project @relation(fields: [projectId], references: [projectId])
+
   @@id([projectId, email])
-  project           Project @relation(fields: [projectId], references: [projectId])
 }

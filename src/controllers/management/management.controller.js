@@ -1,5 +1,6 @@
 const { 
   createNewAgileDashboardInDb,
+  allProjectsByEmailInDb
 } = require('../../services/management/management.service');
 
 const createNewProject = async (req, res, next) => {
@@ -16,8 +17,22 @@ const createNewProject = async (req, res, next) => {
   }
 };
 
+const listAllProjectsByMemberEmail = async (req, res, next) => {
+  try {
+    // const { email } = req.user;
+    const email = 'dummy@email.com';
+    const result = await allProjectsByEmailInDb(email);
+    res.status(200).json(result);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
 
 
 module.exports = {
   createNewProject,
+  listAllProjectsByMemberEmail
 };

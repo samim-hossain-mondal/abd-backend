@@ -1,4 +1,4 @@
-const { managementPrisma, dashboardPrisma } = require('../../prismaClient');
+const { managementPrisma } = require('../../prismaClient');
 const { HttpError } = require('../../errors');
 
 const createNewAgileDashboardInDb = async (projectId, projectName, projectDescription = null, email) => {
@@ -34,6 +34,25 @@ const createNewAgileDashboardInDb = async (projectId, projectName, projectDescri
   return newProjectLookup;
 };
 
+const allProjectsByEmailInDb = async (email) => {
+  const projects = await managementPrisma.project.findMany({
+    where: {
+      members: {
+        some: {
+          email
+        }
+      }
+    }
+  });
+
+  if(!projects) {
+    throw new HttpError(500, 'Error fetching projects from management database.');
+  }
+
+  return projects;
+};
+
 module.exports = {
-  createNewAgileDashboardInDb
+  createNewAgileDashboardInDb,
+  allProjectsByEmailInDb
 };

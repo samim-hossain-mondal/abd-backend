@@ -1,7 +1,14 @@
 const router = require('express').Router();
-const { createNewProject, listAllProjectsByMemberEmail } = require('../../../controllers/management/management.controller');
+const { 
+  createNewProject, 
+  listAllProjectsByMemberEmail, 
+  listAllMembersByProjectId,
+  addNewProjectMember,
+  removeMemberFromProject,
+  updateMemberRole
+} = require('../../../controllers/management/management.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
-const { createProjectSchema } = require('../../../schemas/management/managementSchema');
+const { createProjectSchema, addMemberSchema } = require('../../../schemas/management/managementSchema');
 
 router.route('/project')
   .get(listAllProjectsByMemberEmail)
@@ -9,9 +16,17 @@ router.route('/project')
     generateValidationMiddleware(createProjectSchema), 
     createNewProject
   );
-  
 
-// router.route('/project/members')
-// .post(addProjectMembers)
+router.route('/project/member/:projectId')
+  .get(listAllMembersByProjectId)
+  .post(
+    generateValidationMiddleware(addMemberSchema),
+    addNewProjectMember
+  )
+  .patch(
+    generateValidationMiddleware(addMemberSchema),
+    updateMemberRole
+  )
+  .delete(removeMemberFromProject);
 
 module.exports = router;

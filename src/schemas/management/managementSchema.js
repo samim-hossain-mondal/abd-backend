@@ -17,7 +17,19 @@ const createProjectSchema = joi.object({
     .max(250),
 });
 
+const addMemberSchema = joi.object({
+  email: joi
+    .string()
+    .email()
+    .required(),
+  role: joi
+    .string()
+    .valid('ADMIN', 'LEADER', 'MEMBER')
+    .required()
+});
+
 module.exports = {
   createProjectSchema,
+  addMemberSchema
 };
 

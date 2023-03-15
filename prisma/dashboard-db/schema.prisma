@@ -80,7 +80,7 @@ model Member {
   email     String @unique
   role      Role
   isDeleted Boolean @default(false)
-  projectId Int
+  projectId Int[]
 }
 
 enum Status {

@@ -1,5 +1,5 @@
 const announcementServices = require('../../services/dsm/announcements.services');
-const {getRandomNumber} = require('../../utils/randomGenerator');
+const { getRandomNumber } = require('../../utils/randomGenerator');
 
 /**
   * Controller to handle GET request for listing all announcements
@@ -22,7 +22,7 @@ const listAnnouncements = async (req, res, next) => {
   * @param {Object} req - Express request object
   * @param {Object} res - Express response object
   * @param {Function} next - Express next middleware function
-*/  
+*/
 const detailAnnouncement = async (req, res, next) => {
   try {
     const announcementId = req.params.id;
@@ -62,6 +62,7 @@ const createAnnouncement = async (req, res, next) => {
 */
 const editAnnouncement = async (req, res, next) => {
   try {
+    //TODO: check if the user is the author of the announcement
     const announcementId = req.params.id;
     const content = req.body.content;
     const resultAnnouncement = await announcementServices.editAnnouncement(announcementId, content);
@@ -80,6 +81,7 @@ const editAnnouncement = async (req, res, next) => {
 */
 const deleteAnnouncement = async (req, res, next) => {
   try {
+    // TODO: check if the user is the author of the announcement
     const announcementId = req.params.id;
     await announcementServices.deleteAnnouncement(announcementId);
     res.status(204).json();
@@ -88,7 +90,7 @@ const deleteAnnouncement = async (req, res, next) => {
     next(er);
   }
 };
-    
+
 module.exports = {
   listAnnouncements,
   detailAnnouncement,

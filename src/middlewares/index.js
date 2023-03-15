@@ -25,7 +25,6 @@ function errorHandlingMiddleware(err, req, res, next) {
   case Prisma.PrismaClientKnownRequestError: {
     // seperatly handling the internal db or query errors
     // thrown prisma  ("2***" error codes)
-    console.log('error',err.message);
     if(err.code === ErrorCodeRecordNotExist) {
       return res.status(404).json({ message: 'Record does not exist' });
     } else

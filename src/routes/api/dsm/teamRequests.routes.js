@@ -42,6 +42,7 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *                  description: The date and time the request was created
  *              taggedIndividuals:
  *                  type: array
+ *                  description: email id of all the individuals tagged in the request
  */
 /**
  * @openapi

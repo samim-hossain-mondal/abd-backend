@@ -76,8 +76,8 @@ model Announcement {
 
 model Member {
   memberId  Int     @id @unique @default(autoincrement())
-  name      String
-  email     String
+  name      String?
+  email     String @unique
   role      Role
   isDeleted Boolean @default(false)
   projectId Int

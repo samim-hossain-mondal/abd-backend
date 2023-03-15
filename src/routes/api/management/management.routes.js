@@ -7,7 +7,12 @@ const {
   removeMemberFromProject,
   updateMemberRole,
   updateProjectInfo,
-  deleteProject
+  deleteProject,
+  getProjectDetailsById,
+  createNewMember,
+  getMemberDetailsById,
+  updateMemberInfo,
+  deleteMember
 } = require('../../../controllers/management/management.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { createProjectSchema, addMemberSchema } = require('../../../schemas/management/managementSchema');
@@ -19,7 +24,21 @@ router.route('/project')
     createNewProject
   );
 
-router.route('/project/member/:projectId')
+router.route('/project/:projectId')
+  .get(getProjectDetailsById)
+  .patch(updateProjectInfo)
+  .delete(deleteProject);
+
+router.route('/member')
+  .post(createNewMember);
+
+router.route('/member/:memberId')
+  .get(getMemberDetailsById)
+  .patch(updateMemberInfo)
+  .delete(deleteMember);
+  
+
+router.route('/project/:projectId/member')
   .get(listAllMembersByProjectId)
   .post(
     generateValidationMiddleware(addMemberSchema),
@@ -30,9 +49,5 @@ router.route('/project/member/:projectId')
     updateMemberRole
   )
   .delete(removeMemberFromProject);
-
-router.route('/project/:projectId')
-  .patch(updateProjectInfo)
-  .delete(deleteProject);
 
 module.exports = router;

@@ -2,10 +2,12 @@ const { managementPrisma } = require('../../prismaClient');
 const { HttpError } = require('../../errors');
 const { convertToRoleEnum } = require('../../utils/managementDbUtils');
 
-const createNewAgileDashboardInDb = async (projectId, projectName, projectDescription = null, email, role) => {
-  if(role !== 'ADMIN') 
-    throw new HttpError(403, 'You are not authorized to create a new project.');
-
+const createNewAgileDashboardInDb = async (
+  projectId, 
+  projectName, 
+  projectDescription = null, 
+  email
+) => {
   const isProjectNew = await managementPrisma.project.findUnique({
     where: {
       projectId
@@ -16,6 +18,9 @@ const createNewAgileDashboardInDb = async (projectId, projectName, projectDescri
     throw new HttpError(400, 'Project by this projectId already exists.');
   }
 
+  let role = 'ADMIN';
+
+  // check if member exists from before
   let member = await managementPrisma.member.findUnique({
     where: {
       email
@@ -30,8 +35,6 @@ const createNewAgileDashboardInDb = async (projectId, projectName, projectDescri
       }
     });
   }
-
-  
 
   const newProject = await managementPrisma.project.create({
     data: {
@@ -54,7 +57,7 @@ const createNewAgileDashboardInDb = async (projectId, projectName, projectDescri
   return newProject;
 };
 
-const allProjectsByEmailInDb = async (email) => {
+const allProjectsByCurrentUserInDb = async (email) => {
   const projects = await managementPrisma.project.findMany({
     where: {
       projectMembers: {
@@ -320,6 +323,8 @@ const getProjectDetailsByIdInDb = async (projectId) => {
   return project;
 };
 
+// REVIEW:
+
 const createNewMemberInDb = async (email, name = null, role) => {
   role = convertToRoleEnum(role);
 
@@ -393,7 +398,7 @@ const deleteMemberInDb = async (memberId) => {
 
 module.exports = {
   createNewAgileDashboardInDb,
-  allProjectsByEmailInDb,
+  allProjectsByCurrentUserInDb,
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
   removeProjectMemberInDb,

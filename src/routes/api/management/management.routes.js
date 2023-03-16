@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { 
   createNewProject, 
-  listAllProjectsByMemberEmail, 
+  listAllProjectsByCurrentUserEmail, 
   listAllMembersByProjectId,
   addNewProjectMember,
   removeMemberFromProject,
@@ -18,7 +18,7 @@ const { generateValidationMiddleware } = require('../../../middlewares/validatio
 const { createProjectSchema, addMemberSchema } = require('../../../schemas/management/managementSchema');
 
 router.route('/project')
-  .get(listAllProjectsByMemberEmail)
+  .get(listAllProjectsByCurrentUserEmail)
   .post(
     generateValidationMiddleware(createProjectSchema), 
     createNewProject

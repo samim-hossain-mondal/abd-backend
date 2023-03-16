@@ -6,7 +6,8 @@ const createNewAgileDashboardInDb = async (
   projectId, 
   projectName, 
   projectDescription = null, 
-  email
+  email,
+  name
 ) => {
   const isProjectNew = await managementPrisma.project.findUnique({
     where: {
@@ -30,6 +31,7 @@ const createNewAgileDashboardInDb = async (
   if (!member) {
     member = await managementPrisma.member.create({
       data: {
+        name,
         email,
       }
     });

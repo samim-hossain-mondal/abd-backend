@@ -17,13 +17,14 @@ const {
 const createNewProject = async (req, res, next) => {
   try {
     const { projectId, projectName, projectDescription } = req.body; /* projectId is JIRA project code */
-    const { email } = req.user;      /* TODO: comes via MW */
+    const { email, name} = req.user;      /* TODO: comes via MW */
     // const email = 'cricket@email.com'; // dummy
     const result = await createNewAgileDashboardInDb(
       projectId, 
       projectName, 
       projectDescription, 
-      email
+      email,
+      name
     );
     res.status(201).json({
       message: 'Successfully created new project.', 

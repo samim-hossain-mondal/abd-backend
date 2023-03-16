@@ -32,8 +32,6 @@ async function authMiddleware(req, res, next) {
       .then((jwt) => {
         const user = {
           uid: jwt.claims.uid,
-          firstName: jwt.claims.firstName,
-          lastName: jwt.claims.lastName,
           email: jwt.claims.sub,
           groups: jwt.claims.groups
         };

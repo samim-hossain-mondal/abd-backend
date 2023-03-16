@@ -31,7 +31,6 @@ const createNewAgileDashboardInDb = async (
     member = await managementPrisma.member.create({
       data: {
         email,
-        role: convertToRoleEnum(role)
       }
     });
   }
@@ -77,26 +76,25 @@ const allProjectsByCurrentUserInDb = async (email) => {
 
 const allMembersByProjectIdInDb = async (projectId) => {
 
-  const project = await managementPrisma.project.findUnique({
+  const projectMembers = await managementPrisma.project.findUnique({
     where: {
       projectId
     },
-    include: {
+    select: {
       projectMembers: {
-        include: {
-          member: true
+        select: {
+          email: true,
+          role: true
         }
       }
     }
   });
 
-  if (!project) {
+  if (!projectMembers) {
     throw new HttpError(404, 'Project not found.');
   }
 
-  const members = project.projectMembers.map(projectMember => projectMember.member);
-
-  return members;
+  return projectMembers;
 };
 
 const addProjectMemberInDb = async (projectId, email, role) => {
@@ -121,7 +119,6 @@ const addProjectMemberInDb = async (projectId, email, role) => {
     member = await managementPrisma.member.create({ 
       data: { 
         email, 
-        role 
       } 
     });
   }
@@ -204,7 +201,6 @@ const removeProjectMemberInDb = async (projectId, email) => {
 };
 
 const updateMemberRoleInDb = async (projectId, email, role) => {
-
   role = convertToRoleEnum(role);
 
   const member = await managementPrisma.member.findUnique({
@@ -249,15 +245,6 @@ const updateMemberRoleInDb = async (projectId, email, role) => {
         projectId,
         email
       }
-    },
-    data: {
-      role
-    }
-  });
-
-  await managementPrisma.member.update({
-    where: {
-      memberId: member.memberId
     },
     data: {
       role
@@ -323,16 +310,16 @@ const getProjectDetailsByIdInDb = async (projectId) => {
   return project;
 };
 
-// REVIEW:
+// REVIEW: these are not used endpoints
 
 const createNewMemberInDb = async (email, name = null, role) => {
-  role = convertToRoleEnum(role);
+  // role = convertToRoleEnum(role);
 
   const member = await managementPrisma.member.create({
     data: {
       email,
       name,
-      role,
+      // role
     },
   });
 
@@ -360,9 +347,9 @@ const updateMemberInfoInDb = async (memberId, name, role) => {
     updateFields.name = name;
   }
 
-  if (role) {
-    updateFields.role = convertToRoleEnum(role);
-  }
+  // if (role) {
+  //   updateFields.role = convertToRoleEnum(role);
+  // }
 
   const updatedMember = await managementPrisma.member.update({
     where: {

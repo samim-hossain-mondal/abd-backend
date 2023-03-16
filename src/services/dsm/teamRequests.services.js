@@ -1,4 +1,4 @@
-const prisma = require('../../prismaClient');
+const { dashboardPrisma } = require('../../prismaClient');
 const { HttpError } = require('../../errors');
 const prismaUtils = require('../../utils/prismaUtils');
 const selectOnlyValidTeamrequestsFields = {
@@ -14,7 +14,7 @@ const selectOnlyValidTeamrequestsFields = {
 };
 // service to create a valid team request
 const createValidTeamRequest = async (author, content, status, type, createdAt, taggedIndividuals) => {
-  const createdRequest = await prisma.Request.create({
+  const createdRequest = await dashboardPrisma.Request.create({
     data: {
       author,
       content,
@@ -43,7 +43,7 @@ const getAllTeamRequests = async (type,
     endDate,
     searchKeyword,
     status);
-  const teamRequests = await prisma.Request.findMany({
+  const teamRequests = await dashboardPrisma.Request.findMany({
     where: {
       ...filterObj,
     },
@@ -58,7 +58,7 @@ const getAllTeamRequests = async (type,
 };
 // service to edit team requests
 const editTeamRequest = async (requestId, author, content, status, type, createdAt, taggedIndividuals) => {
-  const updatedRequest = await prisma.Request.update({
+  const updatedRequest = await dashboardPrisma.Request.update({
     where: {
       requestId: requestId,
     },
@@ -79,7 +79,7 @@ const editTeamRequest = async (requestId, author, content, status, type, created
 };
 // service to delete team request by team request id
 const deleteTeamRequest = async (requestId) => {
-  const deleteRequest = await prisma.Request.delete(
+  const deleteRequest = await dashboardPrisma.Request.delete(
     {
       where: {
         requestId: requestId

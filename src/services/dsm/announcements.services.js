@@ -1,5 +1,5 @@
 const { HttpError } = require('../../errors');
-const { dashboardPrisma } = require('../../generated/dashboard');
+const { dashboardPrisma } = require('../../prismaClient');
 
 const selectOnlyValidAnnouncementFields = {
   select: {

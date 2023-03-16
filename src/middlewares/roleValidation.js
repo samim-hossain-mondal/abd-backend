@@ -19,7 +19,7 @@ const roleValidationMiddleware = async (req, res, next) => {
     },
   });
 
-  if (isAdmin.role === convertToRoleEnum('ADMIN')) {
+  if (isAdmin && isAdmin.role === convertToRoleEnum('ADMIN')) {
     next();
   }
   else {

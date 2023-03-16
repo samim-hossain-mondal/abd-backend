@@ -27,6 +27,28 @@ const roleValidationMiddleware = async (req, res, next) => {
   }
 };
 
+const memberValidationMiddleware = async (req, res, next) => {
+  const { email } = req.user;
+  const { projectId } = req.params;
+  
+  
+  const member = await managementPrisma.projectMember.findUnique({
+    where: {
+      projectId_email: {
+        projectId: parseInt(projectId),
+        email,
+      },
+    },
+  });
+
+  if (!member) {
+    res.status(403).json({ message: 'You are not authorized to access this project.' });
+  }
+
+  next();
+};
+
 module.exports = { 
-  roleValidationMiddleware 
+  roleValidationMiddleware,
+  memberValidationMiddleware,
 };

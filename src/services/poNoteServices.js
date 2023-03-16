@@ -1,5 +1,5 @@
 const { HttpError } = require('../errors');
-const prisma = require('../prismaClient');
+const { dashboardPrisma } = require('../prismaClient');
 const prismaUtils = require('../utils/prismaUtils');
 
 const selectOnlyValidPONoteFields = {
@@ -11,6 +11,7 @@ const selectOnlyValidPONoteFields = {
     dueDate: true,
     issueLink: true,
     createdAt: true,
+    projectId: true,
   }
 };
 
@@ -46,7 +47,7 @@ const getPONotesByQuickFilter = async (
     ...filterObj, type
   } : filterObj;
 
-  const notes = await prisma.PONote.findMany({
+  const notes = await dashboardPrisma.PONote.findMany({
     where: {
       ...filterObj,
       isDeleted: false
@@ -64,7 +65,7 @@ const getPONotesByQuickFilter = async (
 
 // get specific note by id
 const getPONoteByID = async (noteId) => {
-  const noteObj = await prisma.PONote.findFirst({
+  const noteObj = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
       isDeleted: false
@@ -80,7 +81,7 @@ const getPONoteByID = async (noteId) => {
 const createValidPONote = async (
   type, note,
   status, dueDate,
-  issueLink
+  issueLink, projectId
 ) => {
 
   const noteDetails = {
@@ -98,10 +99,11 @@ const createValidPONote = async (
     }),
     ...(issueLink === undefined || issueLink === null && {
       issueLink: null
-    })
+    }),
+    projectId
   };
 
-  const createdNote = await prisma.PONote.create({
+  const createdNote = await dashboardPrisma.PONote.create({
     data: noteDetails,
     ...selectOnlyValidPONoteFields
   },
@@ -136,7 +138,7 @@ const updatePONoteById = async (
   };
 
   const noteObj =
-    await prisma.PONote.updateMany({
+    await dashboardPrisma.PONote.updateMany({
       where: {
         noteId,
         isDeleted: false
@@ -154,7 +156,7 @@ const updatePONoteById = async (
 
 // soft delete a note
 const softDeletePONoteById = async (noteId) => {
-  const noteObj = await prisma.PONote.updateMany({
+  const noteObj = await dashboardPrisma.PONote.updateMany({
     where: {
       noteId,
       isDeleted: false
@@ -170,7 +172,7 @@ const softDeletePONoteById = async (noteId) => {
 
 // hard delete a note
 const hardDeletePONoteById = async (noteId) => {
-  const noteObj = await prisma.PONote.deleteMany({
+  const noteObj = await dashboardPrisma.PONote.deleteMany({
     where: {
       noteId,
       isDeleted: false

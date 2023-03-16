@@ -1,4 +1,24 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const { PrismaClient: dashboardClient } = require('./generated/dashboard');
+const { PrismaClient: managementClient } = require('./generated/management');
 
-module.exports = prisma;
+const dashboardPrisma = new dashboardClient({
+  datasources: {
+    db: {
+      url: process.env.DASHBOARD_DATABASE_URL
+    }
+  }
+});
+
+const managementPrisma = new managementClient({
+  datasources: {
+    db: {
+      url: process.env.MANAGEMENT_DATABASE_URL
+    }
+  }
+});
+
+
+module.exports = {
+  dashboardPrisma,
+  managementPrisma
+};

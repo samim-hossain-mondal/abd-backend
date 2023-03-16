@@ -9,5 +9,6 @@ router.use('/users', require('./user.routes'));
 router.use('/dsm/celebrations', require('./dsm/celebrationBoard.routes'));
 router.use('/dsm/announcements', require('./dsm/announcements.routes'));
 router.use('/dsm/team-requests',require('./dsm/teamRequests.routes'));
+router.use('/management', require('./management/management.routes'));
 
 module.exports = router;

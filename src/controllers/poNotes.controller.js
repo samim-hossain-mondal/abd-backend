@@ -36,14 +36,14 @@ const createPONote = async (req, res, next) => {
     const {
       type, note,
       status, dueDate,
-      issueLink
+      issueLink, projectId
     } = req.body;
 
     const createdNote =
       await poNoteServices.createValidPONote(
         type, note,
         status, dueDate,
-        issueLink
+        issueLink, projectId
       );
 
     res.status(201).json(createdNote);

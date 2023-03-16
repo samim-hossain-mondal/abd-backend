@@ -1,5 +1,5 @@
 const { HttpError } = require('../../errors');
-const prisma = require('../../prismaClient');
+const { dashboardPrisma } = require('../../generated/dashboard');
 
 const selectOnlyValidAnnouncementFields = {
   select: {
@@ -7,6 +7,7 @@ const selectOnlyValidAnnouncementFields = {
     author: true,
     content: true,
     createdAt: true,
+    projectId: true
   }
 };
 
@@ -15,7 +16,7 @@ const selectOnlyValidAnnouncementFields = {
   * @returns {Object} - List of announcements
 */
 const getAnnouncements = async () => {
-  const announcements = await prisma.Announcement.findMany({
+  const announcements = await dashboardPrisma.Announcement.findMany({
     orderBy: {
       createdAt: 'desc',
     },
@@ -31,7 +32,7 @@ const getAnnouncements = async () => {
   * @throws {HttpError} - Throws an error if announcement not found
 */
 const getAnnouncementByID = async (announcementId) => {
-  const announcement = await prisma.Announcement.findUnique({
+  const announcement = await dashboardPrisma.Announcement.findUnique({
     where: {
       announcementId
     },
@@ -49,11 +50,12 @@ const getAnnouncementByID = async (announcementId) => {
   * @param {String} content - content of the announcement
   * @returns {Object} - Announcement object
 */
-const createAnnouncement = async (author, content) => {
-  const announcement = await prisma.Announcement.create({
+const createAnnouncement = async (author, content, projectId) => {
+  const announcement = await dashboardPrisma.Announcement.create({
     data: {
       author,
-      content
+      content,
+      projectId
     },
     ...selectOnlyValidAnnouncementFields
   });
@@ -68,7 +70,7 @@ const createAnnouncement = async (author, content) => {
   * @throws {HttpError} - Throws an error if announcement not found
 */
 const editAnnouncement = async (announcementId, content) => {
-  const availableAnnouncement = await prisma.Announcement.findUnique({
+  const availableAnnouncement = await dashboardPrisma.Announcement.findUnique({
     where: {
       announcementId
     },
@@ -78,7 +80,7 @@ const editAnnouncement = async (announcementId, content) => {
     throw new HttpError(404, 'Announcement not found');
   }
   //TODO: Can be optimised further
-  const announcement = await prisma.Announcement.update({
+  const announcement = await dashboardPrisma.Announcement.update({
     where: {
       announcementId
     },
@@ -97,7 +99,7 @@ const editAnnouncement = async (announcementId, content) => {
   * @throws {HttpError} - Throws an error if announcement not found
 */
 const deleteAnnouncement = async (announcementId) => {
-  const announcement = await prisma.Announcement.findUnique({
+  const announcement = await dashboardPrisma.Announcement.findUnique({
     where: {
       announcementId
     },
@@ -107,7 +109,7 @@ const deleteAnnouncement = async (announcementId) => {
     throw new HttpError(404, 'Announcement not found');
   }
   // TODO: Can be optimised further
-  await prisma.Announcement.delete({
+  await dashboardPrisma.Announcement.delete({
     where: {
       announcementId
     },

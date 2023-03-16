@@ -3,8 +3,8 @@ const { convertToRoleEnum } = require('../utils/managementDbUtils');
 
 const roleValidationMiddleware = async (req, res, next) => {
   // TODO:
-  // const { email } = req.user;
-  const email = 'cricket@email.com'; // dummy
+  const { email } = req.user;
+  // const email = 'cricket@email.com'; // dummy
   const { projectId } = req.params;
   
   const isAdmin = await managementPrisma.projectMember.findUnique({

@@ -17,8 +17,8 @@ const {
 const createNewProject = async (req, res, next) => {
   try {
     const { projectId, projectName, projectDescription } = req.body; /* projectId is JIRA project code */
-    // const { email } = req.user;      /* TODO: comes via MW */
-    const email = 'cricket@email.com'; // dummy
+    const { email } = req.user;      /* TODO: comes via MW */
+    // const email = 'cricket@email.com'; // dummy
     const result = await createNewAgileDashboardInDb(
       projectId, 
       projectName, 
@@ -122,8 +122,8 @@ const deleteProject = async (req, res, next) => {
   // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
-    const result = await deleteProjectInDb(parseInt(projectId));
-    res.status(200).json(result);
+    await deleteProjectInDb(parseInt(projectId));
+    res.status(200).json({ message: `Successfully deleted project with id ${projectId}.`});
   }
   catch (er) {
     console.log(er);
@@ -144,7 +144,7 @@ const getProjectDetailsById = async (req, res, next) => {
   }
 };
 
-// REVIEW:
+// REVIEW: these are not used anywhere
 
 const createNewMember = async (req, res, next) => {
   try {

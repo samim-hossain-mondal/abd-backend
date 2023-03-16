@@ -38,8 +38,8 @@ const createNewProject = async (req, res, next) => {
 
 const listAllProjectsByCurrentUserEmail = async (req, res, next) => {
   try {
-    // const { email } = req.user; // TODO: comes via MW
-    const email = 'aryan@email.com';
+    const { email } = req.user; // TODO: comes via MW
+    // const email = 'aryan@email.com';
     const result = await allProjectsByCurrentUserInDb(email);
     res.status(200).json(result);
   }

@@ -18,7 +18,7 @@ model Project {
 model Member {
   email     String @unique
   name      String?
-  role      Role
+  role      Role?
   memberId  Int     @id @default(autoincrement())
   projectMembers    ProjectMember[]
 }

@@ -18,6 +18,7 @@ model PONote {
   issueLink String?
   isDeleted Boolean   @default(false)
   projectId Int
+  memberId Int
 }
 
 model SentimentMeter {

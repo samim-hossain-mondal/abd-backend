@@ -12,6 +12,7 @@ const listPONotes = async (req, res, next) => {
       page,
       limit
     } = req.query;
+    const { projectId } = req.params;
 
     const filteredNotes =
       await poNoteServices.getPONotesByQuickFilter(
@@ -21,7 +22,8 @@ const listPONotes = async (req, res, next) => {
         search,
         status,
         page,
-        limit
+        limit,
+        parseInt(projectId)
       );
     res.status(200).json(filteredNotes);
   }
@@ -36,14 +38,17 @@ const createPONote = async (req, res, next) => {
     const {
       type, note,
       status, dueDate,
-      issueLink, projectId
+      issueLink
     } = req.body;
-
+    const { projectId } = req.params;
+    const { memberId } = req.user;
+    
     const createdNote =
       await poNoteServices.createValidPONote(
         type, note,
         status, dueDate,
-        issueLink, projectId
+        issueLink, parseInt(projectId),
+        parseInt(memberId)
       );
 
     res.status(201).json(createdNote);
@@ -56,8 +61,11 @@ const createPONote = async (req, res, next) => {
 // controller to handle GET request for getting a po note by id
 const detailPONote = async (req, res, next) => {
   try {
-    const noteId = req.params.id;
-    const resultNote = await poNoteServices.getPONoteByID(noteId);
+    const { projectId, id: noteId } = req.params;
+    const resultNote = await poNoteServices.getPONoteByID(
+      noteId, 
+      parseInt(projectId)
+    );
     res.status(200).json(resultNote);
   }
   catch (er) {
@@ -68,7 +76,7 @@ const detailPONote = async (req, res, next) => {
 // controller to handle PATCH request for editing a po note by id
 const editPONote = async (req, res, next) => {
   try {
-    const noteId = req.params.id;
+    const { projectId, id: noteId } = req.params;
 
     const {
       note,
@@ -82,7 +90,8 @@ const editPONote = async (req, res, next) => {
       await poNoteServices.updatePONoteById(
         noteId, note,
         status, dueDate,
-        issueLink, type
+        issueLink, type,
+        parseInt(projectId)
       );
 
     res.status(200).json(updatedNote);
@@ -95,12 +104,12 @@ const editPONote = async (req, res, next) => {
 // controller to handle DELETE request for deleting a po note by id
 const deletePONote = async (req, res, next) => {
   try {
-    const noteId = req.params.id;
+    const { projectId, id: noteId } = req.params;
     const deleteType = req.body.deleteType;
 
     deleteType === 'HARD' ?
-      await poNoteServices.hardDeletePONoteById(noteId) :
-      await poNoteServices.softDeletePONoteById(noteId);
+      await poNoteServices.hardDeletePONoteById(noteId, parseInt(projectId)) :
+      await poNoteServices.softDeletePONoteById(noteId, parseInt(projectId));
 
     res.status(204).json();
   }

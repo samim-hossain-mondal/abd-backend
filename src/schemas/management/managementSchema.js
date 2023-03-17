@@ -1,10 +1,6 @@
 const joi = require('joi');
 
 const projectInfoSchema = joi.object({
-  projectId: joi
-    .number()
-    .integer()
-    .min(1),
   projectName: joi
     .string()
     .min(1)
@@ -16,7 +12,7 @@ const projectInfoSchema = joi.object({
 });
 
 const createProjectSchema = projectInfoSchema.fork([
-  'projectId', 'projectName', 'projectDescription'
+  'projectName', 'projectDescription'
 ], (field) => field.required());
 
 const addMemberSchema = joi.object({

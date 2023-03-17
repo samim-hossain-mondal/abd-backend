@@ -9,9 +9,10 @@ datasource db {
 }
 
 model Project {
-  projectId          Int      @id
+  projectId          Int      @id @default(autoincrement())
   projectName        String
   projectDescription String?
+  isDeleted          Boolean  @default(false)
   projectMembers     ProjectMember[] 
 }
 
@@ -20,6 +21,7 @@ model Member {
   name      String?
   role      Role?
   memberId  Int     @id @default(autoincrement())
+  isDeleted Boolean @default(false)
   projectMembers    ProjectMember[]
 }
 
@@ -27,9 +29,10 @@ model ProjectMember {
   projectId Int
   email     String
   role      Role
-  memberId Int      
+  memberId  Int      
   project   Project @relation(fields: [projectId], references: [projectId], onDelete: Cascade)
-  member   Member @relation(fields: [memberId], references: [memberId], onDelete: Cascade)
+  member    Member @relation(fields: [memberId], references: [memberId], onDelete: Cascade)
+  
   @@id([projectId, email])
 }
 

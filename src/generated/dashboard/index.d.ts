@@ -3,12 +3,10 @@
  * Client
 **/
 
-import * as runtime from './runtime/index';
-declare const prisma: unique symbol
-export interface PrismaPromise<A> extends Promise<A> {[prisma]: true}
+import * as runtime from './runtime/library';
 type UnwrapPromise<P extends any> = P extends Promise<infer R> ? R : P
 type UnwrapTuple<Tuple extends readonly unknown[]> = {
-  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
+  [K in keyof Tuple]: K extends `${number}` ? Tuple[K] extends Prisma.PrismaPromise<infer X> ? X : UnwrapPromise<Tuple[K]> : UnwrapPromise<Tuple[K]>
 };
 
 
@@ -26,6 +24,7 @@ export type PONote = {
   issueLink: string | null
   isDeleted: boolean
   projectId: number
+  memberId: number
 }
 
 /**
@@ -225,7 +224,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<number>;
+  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Executes a raw query and returns the number of affected rows.
@@ -237,7 +236,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<number>;
+  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<number>;
 
   /**
    * Performs a prepared raw query and returns the `SELECT` data.
@@ -248,7 +247,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<T>;
+  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Performs a raw query and returns the `SELECT` data.
@@ -260,7 +259,7 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
    */
-  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<T>;
+  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): Prisma.PrismaPromise<T>;
 
   /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
@@ -275,9 +274,9 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>
+  $transaction<P extends Prisma.PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
+  $transaction<R>(fn: (prisma: Omit<this, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use">) => Promise<R>, options?: { maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<R>
 
       /**
    * `prisma.pONote`: Exposes CRUD operations for the **PONote** model.
@@ -353,6 +352,8 @@ export class PrismaClient<
 export namespace Prisma {
   export import DMMF = runtime.DMMF
 
+  export type PrismaPromise<T> = runtime.Types.Public.PrismaPromise<T>
+
   /**
    * Prisma Errors
    */
@@ -389,7 +390,7 @@ export namespace Prisma {
 
 
   /**
-   * Prisma Client JS version: 4.9.0
+   * Prisma Client JS version: 4.11.0
    * Query Engine version: 8fde8fef4033376662cad983758335009d522acb
    */
   export type PrismaVersion = {
@@ -813,15 +814,6 @@ export namespace Prisma {
 
   type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
 
-  class PrismaClientFetcher {
-    private readonly prisma;
-    private readonly debug;
-    private readonly hooks?;
-    constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
-    request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
-    sanitizeMessage(message: string): string;
-    protected unpack(document: any, data: any, path: string[], rootField?: string, isList?: boolean): any;
-  }
 
   export const ModelName: {
     PONote: 'PONote',
@@ -907,10 +899,6 @@ export namespace Prisma {
      * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/logging#the-log-option).
      */
     log?: Array<LogLevel | LogDefinition>
-  }
-
-  export type Hooks = {
-    beforeRequest?: (options: { query: string, path: string[], rootField?: string, typeName?: string, document: any }) => any
   }
 
   /* Types for Logging */
@@ -1101,11 +1089,13 @@ export namespace Prisma {
   export type PONoteAvgAggregateOutputType = {
     noteId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type PONoteSumAggregateOutputType = {
     noteId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type PONoteMinAggregateOutputType = {
@@ -1118,6 +1108,7 @@ export namespace Prisma {
     issueLink: string | null
     isDeleted: boolean | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type PONoteMaxAggregateOutputType = {
@@ -1130,6 +1121,7 @@ export namespace Prisma {
     issueLink: string | null
     isDeleted: boolean | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type PONoteCountAggregateOutputType = {
@@ -1142,6 +1134,7 @@ export namespace Prisma {
     issueLink: number
     isDeleted: number
     projectId: number
+    memberId: number
     _all: number
   }
 
@@ -1149,11 +1142,13 @@ export namespace Prisma {
   export type PONoteAvgAggregateInputType = {
     noteId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type PONoteSumAggregateInputType = {
     noteId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type PONoteMinAggregateInputType = {
@@ -1166,6 +1161,7 @@ export namespace Prisma {
     issueLink?: true
     isDeleted?: true
     projectId?: true
+    memberId?: true
   }
 
   export type PONoteMaxAggregateInputType = {
@@ -1178,6 +1174,7 @@ export namespace Prisma {
     issueLink?: true
     isDeleted?: true
     projectId?: true
+    memberId?: true
   }
 
   export type PONoteCountAggregateInputType = {
@@ -1190,6 +1187,7 @@ export namespace Prisma {
     issueLink?: true
     isDeleted?: true
     projectId?: true
+    memberId?: true
     _all?: true
   }
 
@@ -1290,6 +1288,7 @@ export namespace Prisma {
     issueLink: string | null
     isDeleted: boolean
     projectId: number
+    memberId: number
     _count: PONoteCountAggregateOutputType | null
     _avg: PONoteAvgAggregateOutputType | null
     _sum: PONoteSumAggregateOutputType | null
@@ -1297,7 +1296,7 @@ export namespace Prisma {
     _max: PONoteMaxAggregateOutputType | null
   }
 
-  type GetPONoteGroupByPayload<T extends PONoteGroupByArgs> = PrismaPromise<
+  type GetPONoteGroupByPayload<T extends PONoteGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<PONoteGroupByOutputType, T['by']> &
         {
@@ -1321,6 +1320,7 @@ export namespace Prisma {
     issueLink?: boolean
     isDeleted?: boolean
     projectId?: boolean
+    memberId?: boolean
   }
 
 
@@ -1429,7 +1429,7 @@ export namespace Prisma {
     **/
     findMany<T extends PONoteFindManyArgs>(
       args?: SelectSubset<T, PONoteFindManyArgs>
-    ): PrismaPromise<Array<PONoteGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<PONoteGetPayload<T>>>
 
     /**
      * Create a PONote.
@@ -1461,7 +1461,7 @@ export namespace Prisma {
     **/
     createMany<T extends PONoteCreateManyArgs>(
       args?: SelectSubset<T, PONoteCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a PONote.
@@ -1512,7 +1512,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends PONoteDeleteManyArgs>(
       args?: SelectSubset<T, PONoteDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more PONotes.
@@ -1533,7 +1533,7 @@ export namespace Prisma {
     **/
     updateMany<T extends PONoteUpdateManyArgs>(
       args: SelectSubset<T, PONoteUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one PONote.
@@ -1571,7 +1571,7 @@ export namespace Prisma {
     **/
     count<T extends PONoteCountArgs>(
       args?: Subset<T, PONoteCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -1603,7 +1603,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends PONoteAggregateArgs>(args: Subset<T, PONoteAggregateArgs>): PrismaPromise<GetPONoteAggregateType<T>>
+    aggregate<T extends PONoteAggregateArgs>(args: Subset<T, PONoteAggregateArgs>): Prisma.PrismaPromise<GetPONoteAggregateType<T>>
 
     /**
      * Group by PONote.
@@ -1680,7 +1680,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, PONoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPONoteGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, PONoteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPONoteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -1690,10 +1690,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__PONoteClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__PONoteClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -1704,8 +1702,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
 
     private get _document();
@@ -2223,7 +2221,7 @@ export namespace Prisma {
     _max: SentimentMeterMaxAggregateOutputType | null
   }
 
-  type GetSentimentMeterGroupByPayload<T extends SentimentMeterGroupByArgs> = PrismaPromise<
+  type GetSentimentMeterGroupByPayload<T extends SentimentMeterGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<SentimentMeterGroupByOutputType, T['by']> &
         {
@@ -2351,7 +2349,7 @@ export namespace Prisma {
     **/
     findMany<T extends SentimentMeterFindManyArgs>(
       args?: SelectSubset<T, SentimentMeterFindManyArgs>
-    ): PrismaPromise<Array<SentimentMeterGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<SentimentMeterGetPayload<T>>>
 
     /**
      * Create a SentimentMeter.
@@ -2383,7 +2381,7 @@ export namespace Prisma {
     **/
     createMany<T extends SentimentMeterCreateManyArgs>(
       args?: SelectSubset<T, SentimentMeterCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a SentimentMeter.
@@ -2434,7 +2432,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends SentimentMeterDeleteManyArgs>(
       args?: SelectSubset<T, SentimentMeterDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more SentimentMeters.
@@ -2455,7 +2453,7 @@ export namespace Prisma {
     **/
     updateMany<T extends SentimentMeterUpdateManyArgs>(
       args: SelectSubset<T, SentimentMeterUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one SentimentMeter.
@@ -2493,7 +2491,7 @@ export namespace Prisma {
     **/
     count<T extends SentimentMeterCountArgs>(
       args?: Subset<T, SentimentMeterCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -2525,7 +2523,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends SentimentMeterAggregateArgs>(args: Subset<T, SentimentMeterAggregateArgs>): PrismaPromise<GetSentimentMeterAggregateType<T>>
+    aggregate<T extends SentimentMeterAggregateArgs>(args: Subset<T, SentimentMeterAggregateArgs>): Prisma.PrismaPromise<GetSentimentMeterAggregateType<T>>
 
     /**
      * Group by SentimentMeter.
@@ -2602,7 +2600,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, SentimentMeterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSentimentMeterGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, SentimentMeterGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSentimentMeterGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -2612,10 +2610,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__SentimentMeterClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__SentimentMeterClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -2626,8 +2622,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
 
     private get _document();
@@ -3131,7 +3127,7 @@ export namespace Prisma {
     _max: CelebrationReactedUserMaxAggregateOutputType | null
   }
 
-  type GetCelebrationReactedUserGroupByPayload<T extends CelebrationReactedUserGroupByArgs> = PrismaPromise<
+  type GetCelebrationReactedUserGroupByPayload<T extends CelebrationReactedUserGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<CelebrationReactedUserGroupByOutputType, T['by']> &
         {
@@ -3265,7 +3261,7 @@ export namespace Prisma {
     **/
     findMany<T extends CelebrationReactedUserFindManyArgs>(
       args?: SelectSubset<T, CelebrationReactedUserFindManyArgs>
-    ): PrismaPromise<Array<CelebrationReactedUserGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<CelebrationReactedUserGetPayload<T>>>
 
     /**
      * Create a CelebrationReactedUser.
@@ -3297,7 +3293,7 @@ export namespace Prisma {
     **/
     createMany<T extends CelebrationReactedUserCreateManyArgs>(
       args?: SelectSubset<T, CelebrationReactedUserCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a CelebrationReactedUser.
@@ -3348,7 +3344,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends CelebrationReactedUserDeleteManyArgs>(
       args?: SelectSubset<T, CelebrationReactedUserDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more CelebrationReactedUsers.
@@ -3369,7 +3365,7 @@ export namespace Prisma {
     **/
     updateMany<T extends CelebrationReactedUserUpdateManyArgs>(
       args: SelectSubset<T, CelebrationReactedUserUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one CelebrationReactedUser.
@@ -3407,7 +3403,7 @@ export namespace Prisma {
     **/
     count<T extends CelebrationReactedUserCountArgs>(
       args?: Subset<T, CelebrationReactedUserCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -3439,7 +3435,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends CelebrationReactedUserAggregateArgs>(args: Subset<T, CelebrationReactedUserAggregateArgs>): PrismaPromise<GetCelebrationReactedUserAggregateType<T>>
+    aggregate<T extends CelebrationReactedUserAggregateArgs>(args: Subset<T, CelebrationReactedUserAggregateArgs>): Prisma.PrismaPromise<GetCelebrationReactedUserAggregateType<T>>
 
     /**
      * Group by CelebrationReactedUser.
@@ -3516,7 +3512,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, CelebrationReactedUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCelebrationReactedUserGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CelebrationReactedUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCelebrationReactedUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -3526,10 +3522,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CelebrationReactedUserClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__CelebrationReactedUserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -3540,8 +3534,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     request<T extends CelebrationArgs= {}>(args?: Subset<T, CelebrationArgs>): Prisma__CelebrationClient<CelebrationGetPayload<T> | Null>;
 
@@ -4114,7 +4108,7 @@ export namespace Prisma {
     _max: CelebrationMaxAggregateOutputType | null
   }
 
-  type GetCelebrationGroupByPayload<T extends CelebrationGroupByArgs> = PrismaPromise<
+  type GetCelebrationGroupByPayload<T extends CelebrationGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<CelebrationGroupByOutputType, T['by']> &
         {
@@ -4256,7 +4250,7 @@ export namespace Prisma {
     **/
     findMany<T extends CelebrationFindManyArgs>(
       args?: SelectSubset<T, CelebrationFindManyArgs>
-    ): PrismaPromise<Array<CelebrationGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<CelebrationGetPayload<T>>>
 
     /**
      * Create a Celebration.
@@ -4288,7 +4282,7 @@ export namespace Prisma {
     **/
     createMany<T extends CelebrationCreateManyArgs>(
       args?: SelectSubset<T, CelebrationCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Celebration.
@@ -4339,7 +4333,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends CelebrationDeleteManyArgs>(
       args?: SelectSubset<T, CelebrationDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Celebrations.
@@ -4360,7 +4354,7 @@ export namespace Prisma {
     **/
     updateMany<T extends CelebrationUpdateManyArgs>(
       args: SelectSubset<T, CelebrationUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Celebration.
@@ -4398,7 +4392,7 @@ export namespace Prisma {
     **/
     count<T extends CelebrationCountArgs>(
       args?: Subset<T, CelebrationCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -4430,7 +4424,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends CelebrationAggregateArgs>(args: Subset<T, CelebrationAggregateArgs>): PrismaPromise<GetCelebrationAggregateType<T>>
+    aggregate<T extends CelebrationAggregateArgs>(args: Subset<T, CelebrationAggregateArgs>): Prisma.PrismaPromise<GetCelebrationAggregateType<T>>
 
     /**
      * Group by Celebration.
@@ -4507,7 +4501,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, CelebrationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCelebrationGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, CelebrationGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCelebrationGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -4517,10 +4511,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CelebrationClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__CelebrationClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -4531,10 +4523,10 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    reaction<T extends Celebration$reactionArgs= {}>(args?: Subset<T, Celebration$reactionArgs>): PrismaPromise<Array<CelebrationReactedUserGetPayload<T>>| Null>;
+    reaction<T extends Celebration$reactionArgs= {}>(args?: Subset<T, Celebration$reactionArgs>): Prisma.PrismaPromise<Array<CelebrationReactedUserGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -5098,7 +5090,7 @@ export namespace Prisma {
     _max: RequestTaggedUserMaxAggregateOutputType | null
   }
 
-  type GetRequestTaggedUserGroupByPayload<T extends RequestTaggedUserGroupByArgs> = PrismaPromise<
+  type GetRequestTaggedUserGroupByPayload<T extends RequestTaggedUserGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<RequestTaggedUserGroupByOutputType, T['by']> &
         {
@@ -5232,7 +5224,7 @@ export namespace Prisma {
     **/
     findMany<T extends RequestTaggedUserFindManyArgs>(
       args?: SelectSubset<T, RequestTaggedUserFindManyArgs>
-    ): PrismaPromise<Array<RequestTaggedUserGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<RequestTaggedUserGetPayload<T>>>
 
     /**
      * Create a RequestTaggedUser.
@@ -5264,7 +5256,7 @@ export namespace Prisma {
     **/
     createMany<T extends RequestTaggedUserCreateManyArgs>(
       args?: SelectSubset<T, RequestTaggedUserCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a RequestTaggedUser.
@@ -5315,7 +5307,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends RequestTaggedUserDeleteManyArgs>(
       args?: SelectSubset<T, RequestTaggedUserDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more RequestTaggedUsers.
@@ -5336,7 +5328,7 @@ export namespace Prisma {
     **/
     updateMany<T extends RequestTaggedUserUpdateManyArgs>(
       args: SelectSubset<T, RequestTaggedUserUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one RequestTaggedUser.
@@ -5374,7 +5366,7 @@ export namespace Prisma {
     **/
     count<T extends RequestTaggedUserCountArgs>(
       args?: Subset<T, RequestTaggedUserCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -5406,7 +5398,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends RequestTaggedUserAggregateArgs>(args: Subset<T, RequestTaggedUserAggregateArgs>): PrismaPromise<GetRequestTaggedUserAggregateType<T>>
+    aggregate<T extends RequestTaggedUserAggregateArgs>(args: Subset<T, RequestTaggedUserAggregateArgs>): Prisma.PrismaPromise<GetRequestTaggedUserAggregateType<T>>
 
     /**
      * Group by RequestTaggedUser.
@@ -5483,7 +5475,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, RequestTaggedUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRequestTaggedUserGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, RequestTaggedUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRequestTaggedUserGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -5493,10 +5485,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__RequestTaggedUserClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__RequestTaggedUserClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -5507,8 +5497,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
     request<T extends RequestArgs= {}>(args?: Subset<T, RequestArgs>): Prisma__RequestClient<RequestGetPayload<T> | Null>;
 
@@ -6081,7 +6071,7 @@ export namespace Prisma {
     _max: RequestMaxAggregateOutputType | null
   }
 
-  type GetRequestGroupByPayload<T extends RequestGroupByArgs> = PrismaPromise<
+  type GetRequestGroupByPayload<T extends RequestGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<RequestGroupByOutputType, T['by']> &
         {
@@ -6223,7 +6213,7 @@ export namespace Prisma {
     **/
     findMany<T extends RequestFindManyArgs>(
       args?: SelectSubset<T, RequestFindManyArgs>
-    ): PrismaPromise<Array<RequestGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<RequestGetPayload<T>>>
 
     /**
      * Create a Request.
@@ -6255,7 +6245,7 @@ export namespace Prisma {
     **/
     createMany<T extends RequestCreateManyArgs>(
       args?: SelectSubset<T, RequestCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Request.
@@ -6306,7 +6296,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends RequestDeleteManyArgs>(
       args?: SelectSubset<T, RequestDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Requests.
@@ -6327,7 +6317,7 @@ export namespace Prisma {
     **/
     updateMany<T extends RequestUpdateManyArgs>(
       args: SelectSubset<T, RequestUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Request.
@@ -6365,7 +6355,7 @@ export namespace Prisma {
     **/
     count<T extends RequestCountArgs>(
       args?: Subset<T, RequestCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -6397,7 +6387,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends RequestAggregateArgs>(args: Subset<T, RequestAggregateArgs>): PrismaPromise<GetRequestAggregateType<T>>
+    aggregate<T extends RequestAggregateArgs>(args: Subset<T, RequestAggregateArgs>): Prisma.PrismaPromise<GetRequestAggregateType<T>>
 
     /**
      * Group by Request.
@@ -6474,7 +6464,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, RequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRequestGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, RequestGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRequestGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -6484,10 +6474,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__RequestClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__RequestClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -6498,10 +6486,10 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
-    taggedIndividuals<T extends Request$taggedIndividualsArgs= {}>(args?: Subset<T, Request$taggedIndividualsArgs>): PrismaPromise<Array<RequestTaggedUserGetPayload<T>>| Null>;
+    taggedIndividuals<T extends Request$taggedIndividualsArgs= {}>(args?: Subset<T, Request$taggedIndividualsArgs>): Prisma.PrismaPromise<Array<RequestTaggedUserGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -7079,7 +7067,7 @@ export namespace Prisma {
     _max: AnnouncementMaxAggregateOutputType | null
   }
 
-  type GetAnnouncementGroupByPayload<T extends AnnouncementGroupByArgs> = PrismaPromise<
+  type GetAnnouncementGroupByPayload<T extends AnnouncementGroupByArgs> = Prisma.PrismaPromise<
     Array<
       PickArray<AnnouncementGroupByOutputType, T['by']> &
         {
@@ -7207,7 +7195,7 @@ export namespace Prisma {
     **/
     findMany<T extends AnnouncementFindManyArgs>(
       args?: SelectSubset<T, AnnouncementFindManyArgs>
-    ): PrismaPromise<Array<AnnouncementGetPayload<T>>>
+    ): Prisma.PrismaPromise<Array<AnnouncementGetPayload<T>>>
 
     /**
      * Create a Announcement.
@@ -7239,7 +7227,7 @@ export namespace Prisma {
     **/
     createMany<T extends AnnouncementCreateManyArgs>(
       args?: SelectSubset<T, AnnouncementCreateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Delete a Announcement.
@@ -7290,7 +7278,7 @@ export namespace Prisma {
     **/
     deleteMany<T extends AnnouncementDeleteManyArgs>(
       args?: SelectSubset<T, AnnouncementDeleteManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Update zero or more Announcements.
@@ -7311,7 +7299,7 @@ export namespace Prisma {
     **/
     updateMany<T extends AnnouncementUpdateManyArgs>(
       args: SelectSubset<T, AnnouncementUpdateManyArgs>
-    ): PrismaPromise<BatchPayload>
+    ): Prisma.PrismaPromise<BatchPayload>
 
     /**
      * Create or update one Announcement.
@@ -7349,7 +7337,7 @@ export namespace Prisma {
     **/
     count<T extends AnnouncementCountArgs>(
       args?: Subset<T, AnnouncementCountArgs>,
-    ): PrismaPromise<
+    ): Prisma.PrismaPromise<
       T extends _Record<'select', any>
         ? T['select'] extends true
           ? number
@@ -7381,7 +7369,7 @@ export namespace Prisma {
      *   take: 10,
      * })
     **/
-    aggregate<T extends AnnouncementAggregateArgs>(args: Subset<T, AnnouncementAggregateArgs>): PrismaPromise<GetAnnouncementAggregateType<T>>
+    aggregate<T extends AnnouncementAggregateArgs>(args: Subset<T, AnnouncementAggregateArgs>): Prisma.PrismaPromise<GetAnnouncementAggregateType<T>>
 
     /**
      * Group by Announcement.
@@ -7458,7 +7446,7 @@ export namespace Prisma {
             ? never
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
-    >(args: SubsetIntersection<T, AnnouncementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAnnouncementGroupByPayload<T> : PrismaPromise<InputErrors>
+    >(args: SubsetIntersection<T, AnnouncementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAnnouncementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 
   }
 
@@ -7468,10 +7456,8 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__AnnouncementClient<T, Null = never> implements PrismaPromise<T> {
-    [prisma]: true;
+  export class Prisma__AnnouncementClient<T, Null = never> implements Prisma.PrismaPromise<T> {
     private readonly _dmmf;
-    private readonly _fetcher;
     private readonly _queryType;
     private readonly _rootField;
     private readonly _clientMethod;
@@ -7482,8 +7468,8 @@ export namespace Prisma {
     private _isList;
     private _callsite;
     private _requestPromise?;
-    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+    readonly [Symbol.toStringTag]: 'PrismaPromise';
+    constructor(_dmmf: runtime.DMMFClass, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
 
 
     private get _document();
@@ -7866,7 +7852,8 @@ export namespace Prisma {
     dueDate: 'dueDate',
     issueLink: 'issueLink',
     isDeleted: 'isDeleted',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    memberId: 'memberId'
   };
 
   export type PONoteScalarFieldEnum = (typeof PONoteScalarFieldEnum)[keyof typeof PONoteScalarFieldEnum]
@@ -7949,6 +7936,7 @@ export namespace Prisma {
     issueLink?: StringNullableFilter | string | null
     isDeleted?: BoolFilter | boolean
     projectId?: IntFilter | number
+    memberId?: IntFilter | number
   }
 
   export type PONoteOrderByWithRelationInput = {
@@ -7961,6 +7949,7 @@ export namespace Prisma {
     issueLink?: SortOrder
     isDeleted?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type PONoteWhereUniqueInput = {
@@ -7977,6 +7966,7 @@ export namespace Prisma {
     issueLink?: SortOrder
     isDeleted?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
     _count?: PONoteCountOrderByAggregateInput
     _avg?: PONoteAvgOrderByAggregateInput
     _max?: PONoteMaxOrderByAggregateInput
@@ -7997,6 +7987,7 @@ export namespace Prisma {
     issueLink?: StringNullableWithAggregatesFilter | string | null
     isDeleted?: BoolWithAggregatesFilter | boolean
     projectId?: IntWithAggregatesFilter | number
+    memberId?: IntWithAggregatesFilter | number
   }
 
   export type SentimentMeterWhereInput = {
@@ -8299,6 +8290,7 @@ export namespace Prisma {
     issueLink?: string | null
     isDeleted?: boolean
     projectId: number
+    memberId: number
   }
 
   export type PONoteUncheckedCreateInput = {
@@ -8311,6 +8303,7 @@ export namespace Prisma {
     issueLink?: string | null
     isDeleted?: boolean
     projectId: number
+    memberId: number
   }
 
   export type PONoteUpdateInput = {
@@ -8322,6 +8315,7 @@ export namespace Prisma {
     issueLink?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PONoteUncheckedUpdateInput = {
@@ -8334,6 +8328,7 @@ export namespace Prisma {
     issueLink?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PONoteCreateManyInput = {
@@ -8346,6 +8341,7 @@ export namespace Prisma {
     issueLink?: string | null
     isDeleted?: boolean
     projectId: number
+    memberId: number
   }
 
   export type PONoteUpdateManyMutationInput = {
@@ -8357,6 +8353,7 @@ export namespace Prisma {
     issueLink?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type PONoteUncheckedUpdateManyInput = {
@@ -8369,6 +8366,7 @@ export namespace Prisma {
     issueLink?: NullableStringFieldUpdateOperationsInput | string | null
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SentimentMeterCreateInput = {
@@ -8787,11 +8785,13 @@ export namespace Prisma {
     issueLink?: SortOrder
     isDeleted?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type PONoteAvgOrderByAggregateInput = {
     noteId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type PONoteMaxOrderByAggregateInput = {
@@ -8804,6 +8804,7 @@ export namespace Prisma {
     issueLink?: SortOrder
     isDeleted?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type PONoteMinOrderByAggregateInput = {
@@ -8816,11 +8817,13 @@ export namespace Prisma {
     issueLink?: SortOrder
     isDeleted?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type PONoteSumOrderByAggregateInput = {
     noteId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type IntWithAggregatesFilter = {

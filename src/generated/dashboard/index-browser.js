@@ -13,11 +13,11 @@ const Prisma = {}
 exports.Prisma = Prisma
 
 /**
- * Prisma Client JS version: 4.9.0
+ * Prisma Client JS version: 4.11.0
  * Query Engine version: 8fde8fef4033376662cad983758335009d522acb
  */
 Prisma.prismaVersion = {
-  client: "4.9.0",
+  client: "4.11.0",
   engine: "8fde8fef4033376662cad983758335009d522acb"
 }
 
@@ -122,7 +122,8 @@ exports.Prisma.PONoteScalarFieldEnum = makeEnum({
   dueDate: 'dueDate',
   issueLink: 'issueLink',
   isDeleted: 'isDeleted',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  memberId: 'memberId'
 });
 
 exports.Prisma.QueryMode = makeEnum({

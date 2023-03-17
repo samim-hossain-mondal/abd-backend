@@ -18,6 +18,7 @@ export type Project = {
   projectId: number
   projectName: string
   projectDescription: string | null
+  isDeleted: boolean
 }
 
 /**
@@ -29,6 +30,7 @@ export type Member = {
   name: string | null
   role: Role | null
   memberId: number
+  isDeleted: boolean
 }
 
 /**
@@ -952,18 +954,21 @@ export namespace Prisma {
     projectId: number | null
     projectName: string | null
     projectDescription: string | null
+    isDeleted: boolean | null
   }
 
   export type ProjectMaxAggregateOutputType = {
     projectId: number | null
     projectName: string | null
     projectDescription: string | null
+    isDeleted: boolean | null
   }
 
   export type ProjectCountAggregateOutputType = {
     projectId: number
     projectName: number
     projectDescription: number
+    isDeleted: number
     _all: number
   }
 
@@ -980,18 +985,21 @@ export namespace Prisma {
     projectId?: true
     projectName?: true
     projectDescription?: true
+    isDeleted?: true
   }
 
   export type ProjectMaxAggregateInputType = {
     projectId?: true
     projectName?: true
     projectDescription?: true
+    isDeleted?: true
   }
 
   export type ProjectCountAggregateInputType = {
     projectId?: true
     projectName?: true
     projectDescription?: true
+    isDeleted?: true
     _all?: true
   }
 
@@ -1086,6 +1094,7 @@ export namespace Prisma {
     projectId: number
     projectName: string
     projectDescription: string | null
+    isDeleted: boolean
     _count: ProjectCountAggregateOutputType | null
     _avg: ProjectAvgAggregateOutputType | null
     _sum: ProjectSumAggregateOutputType | null
@@ -1111,6 +1120,7 @@ export namespace Prisma {
     projectId?: boolean
     projectName?: boolean
     projectDescription?: boolean
+    isDeleted?: boolean
     projectMembers?: boolean | Project$projectMembersArgs
     _count?: boolean | ProjectCountOutputTypeArgs
   }
@@ -1927,6 +1937,7 @@ export namespace Prisma {
     name: string | null
     role: Role | null
     memberId: number | null
+    isDeleted: boolean | null
   }
 
   export type MemberMaxAggregateOutputType = {
@@ -1934,6 +1945,7 @@ export namespace Prisma {
     name: string | null
     role: Role | null
     memberId: number | null
+    isDeleted: boolean | null
   }
 
   export type MemberCountAggregateOutputType = {
@@ -1941,6 +1953,7 @@ export namespace Prisma {
     name: number
     role: number
     memberId: number
+    isDeleted: number
     _all: number
   }
 
@@ -1958,6 +1971,7 @@ export namespace Prisma {
     name?: true
     role?: true
     memberId?: true
+    isDeleted?: true
   }
 
   export type MemberMaxAggregateInputType = {
@@ -1965,6 +1979,7 @@ export namespace Prisma {
     name?: true
     role?: true
     memberId?: true
+    isDeleted?: true
   }
 
   export type MemberCountAggregateInputType = {
@@ -1972,6 +1987,7 @@ export namespace Prisma {
     name?: true
     role?: true
     memberId?: true
+    isDeleted?: true
     _all?: true
   }
 
@@ -2067,6 +2083,7 @@ export namespace Prisma {
     name: string | null
     role: Role | null
     memberId: number
+    isDeleted: boolean
     _count: MemberCountAggregateOutputType | null
     _avg: MemberAvgAggregateOutputType | null
     _sum: MemberSumAggregateOutputType | null
@@ -2093,6 +2110,7 @@ export namespace Prisma {
     name?: boolean
     role?: boolean
     memberId?: boolean
+    isDeleted?: boolean
     projectMembers?: boolean | Member$projectMembersArgs
     _count?: boolean | MemberCountOutputTypeArgs
   }
@@ -3861,7 +3879,8 @@ export namespace Prisma {
     email: 'email',
     name: 'name',
     role: 'role',
-    memberId: 'memberId'
+    memberId: 'memberId',
+    isDeleted: 'isDeleted'
   };
 
   export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]
@@ -3880,7 +3899,8 @@ export namespace Prisma {
   export const ProjectScalarFieldEnum: {
     projectId: 'projectId',
     projectName: 'projectName',
-    projectDescription: 'projectDescription'
+    projectDescription: 'projectDescription',
+    isDeleted: 'isDeleted'
   };
 
   export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeof ProjectScalarFieldEnum]
@@ -3924,6 +3944,7 @@ export namespace Prisma {
     projectId?: IntFilter | number
     projectName?: StringFilter | string
     projectDescription?: StringNullableFilter | string | null
+    isDeleted?: BoolFilter | boolean
     projectMembers?: ProjectMemberListRelationFilter
   }
 
@@ -3931,6 +3952,7 @@ export namespace Prisma {
     projectId?: SortOrder
     projectName?: SortOrder
     projectDescription?: SortOrder
+    isDeleted?: SortOrder
     projectMembers?: ProjectMemberOrderByRelationAggregateInput
   }
 
@@ -3942,6 +3964,7 @@ export namespace Prisma {
     projectId?: SortOrder
     projectName?: SortOrder
     projectDescription?: SortOrder
+    isDeleted?: SortOrder
     _count?: ProjectCountOrderByAggregateInput
     _avg?: ProjectAvgOrderByAggregateInput
     _max?: ProjectMaxOrderByAggregateInput
@@ -3956,6 +3979,7 @@ export namespace Prisma {
     projectId?: IntWithAggregatesFilter | number
     projectName?: StringWithAggregatesFilter | string
     projectDescription?: StringNullableWithAggregatesFilter | string | null
+    isDeleted?: BoolWithAggregatesFilter | boolean
   }
 
   export type MemberWhereInput = {
@@ -3966,6 +3990,7 @@ export namespace Prisma {
     name?: StringNullableFilter | string | null
     role?: EnumRoleNullableFilter | Role | null
     memberId?: IntFilter | number
+    isDeleted?: BoolFilter | boolean
     projectMembers?: ProjectMemberListRelationFilter
   }
 
@@ -3974,6 +3999,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     memberId?: SortOrder
+    isDeleted?: SortOrder
     projectMembers?: ProjectMemberOrderByRelationAggregateInput
   }
 
@@ -3987,6 +4013,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     memberId?: SortOrder
+    isDeleted?: SortOrder
     _count?: MemberCountOrderByAggregateInput
     _avg?: MemberAvgOrderByAggregateInput
     _max?: MemberMaxOrderByAggregateInput
@@ -4002,6 +4029,7 @@ export namespace Prisma {
     name?: StringNullableWithAggregatesFilter | string | null
     role?: EnumRoleNullableWithAggregatesFilter | Role | null
     memberId?: IntWithAggregatesFilter | number
+    isDeleted?: BoolWithAggregatesFilter | boolean
   }
 
   export type ProjectMemberWhereInput = {
@@ -4052,23 +4080,24 @@ export namespace Prisma {
   }
 
   export type ProjectCreateInput = {
-    projectId: number
     projectName: string
     projectDescription?: string | null
+    isDeleted?: boolean
     projectMembers?: ProjectMemberCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateInput = {
-    projectId: number
+    projectId?: number
     projectName: string
     projectDescription?: string | null
+    isDeleted?: boolean
     projectMembers?: ProjectMemberUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUpdateInput = {
-    projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectMembers?: ProjectMemberUpdateManyWithoutProjectNestedInput
   }
 
@@ -4076,31 +4105,35 @@ export namespace Prisma {
     projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectMembers?: ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectCreateManyInput = {
-    projectId: number
+    projectId?: number
     projectName: string
     projectDescription?: string | null
+    isDeleted?: boolean
   }
 
   export type ProjectUpdateManyMutationInput = {
-    projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectUncheckedUpdateManyInput = {
     projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MemberCreateInput = {
     email: string
     name?: string | null
     role?: Role | null
+    isDeleted?: boolean
     projectMembers?: ProjectMemberCreateNestedManyWithoutMemberInput
   }
 
@@ -4109,6 +4142,7 @@ export namespace Prisma {
     name?: string | null
     role?: Role | null
     memberId?: number
+    isDeleted?: boolean
     projectMembers?: ProjectMemberUncheckedCreateNestedManyWithoutMemberInput
   }
 
@@ -4116,6 +4150,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectMembers?: ProjectMemberUpdateManyWithoutMemberNestedInput
   }
 
@@ -4124,6 +4159,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
     memberId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
     projectMembers?: ProjectMemberUncheckedUpdateManyWithoutMemberNestedInput
   }
 
@@ -4132,12 +4168,14 @@ export namespace Prisma {
     name?: string | null
     role?: Role | null
     memberId?: number
+    isDeleted?: boolean
   }
 
   export type MemberUpdateManyMutationInput = {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MemberUncheckedUpdateManyInput = {
@@ -4145,6 +4183,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
     memberId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectMemberCreateInput = {
@@ -4235,6 +4274,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter | string | null
   }
 
+  export type BoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
+  }
+
   export type ProjectMemberListRelationFilter = {
     every?: ProjectMemberWhereInput
     some?: ProjectMemberWhereInput
@@ -4249,6 +4293,7 @@ export namespace Prisma {
     projectId?: SortOrder
     projectName?: SortOrder
     projectDescription?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type ProjectAvgOrderByAggregateInput = {
@@ -4259,12 +4304,14 @@ export namespace Prisma {
     projectId?: SortOrder
     projectName?: SortOrder
     projectDescription?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type ProjectMinOrderByAggregateInput = {
     projectId?: SortOrder
     projectName?: SortOrder
     projectDescription?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type ProjectSumOrderByAggregateInput = {
@@ -4323,6 +4370,14 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter
   }
 
+  export type BoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
+  }
+
   export type EnumRoleNullableFilter = {
     equals?: Role | null
     in?: Enumerable<Role> | null
@@ -4335,6 +4390,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     memberId?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MemberAvgOrderByAggregateInput = {
@@ -4346,6 +4402,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     memberId?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MemberMinOrderByAggregateInput = {
@@ -4353,6 +4410,7 @@ export namespace Prisma {
     name?: SortOrder
     role?: SortOrder
     memberId?: SortOrder
+    isDeleted?: SortOrder
   }
 
   export type MemberSumOrderByAggregateInput = {
@@ -4446,20 +4504,16 @@ export namespace Prisma {
     connect?: Enumerable<ProjectMemberWhereUniqueInput>
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
 
   export type NullableStringFieldUpdateOperationsInput = {
     set?: string | null
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type ProjectMemberUpdateManyWithoutProjectNestedInput = {
@@ -4474,6 +4528,14 @@ export namespace Prisma {
     update?: Enumerable<ProjectMemberUpdateWithWhereUniqueWithoutProjectInput>
     updateMany?: Enumerable<ProjectMemberUpdateManyWithWhereWithoutProjectInput>
     deleteMany?: Enumerable<ProjectMemberScalarWhereInput>
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type ProjectMemberUncheckedUpdateManyWithoutProjectNestedInput = {
@@ -4607,6 +4669,11 @@ export namespace Prisma {
     not?: NestedStringNullableFilter | string | null
   }
 
+  export type NestedBoolFilter = {
+    equals?: boolean
+    not?: NestedBoolFilter | boolean
+  }
+
   export type NestedIntWithAggregatesFilter = {
     equals?: number
     in?: Enumerable<number>
@@ -4677,6 +4744,14 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+  }
+
+  export type NestedBoolWithAggregatesFilter = {
+    equals?: boolean
+    not?: NestedBoolWithAggregatesFilter | boolean
+    _count?: NestedIntFilter
+    _min?: NestedBoolFilter
+    _max?: NestedBoolFilter
   }
 
   export type NestedEnumRoleNullableFilter = {
@@ -4800,15 +4875,16 @@ export namespace Prisma {
   }
 
   export type ProjectCreateWithoutProjectMembersInput = {
-    projectId: number
     projectName: string
     projectDescription?: string | null
+    isDeleted?: boolean
   }
 
   export type ProjectUncheckedCreateWithoutProjectMembersInput = {
-    projectId: number
+    projectId?: number
     projectName: string
     projectDescription?: string | null
+    isDeleted?: boolean
   }
 
   export type ProjectCreateOrConnectWithoutProjectMembersInput = {
@@ -4820,6 +4896,7 @@ export namespace Prisma {
     email: string
     name?: string | null
     role?: Role | null
+    isDeleted?: boolean
   }
 
   export type MemberUncheckedCreateWithoutProjectMembersInput = {
@@ -4827,6 +4904,7 @@ export namespace Prisma {
     name?: string | null
     role?: Role | null
     memberId?: number
+    isDeleted?: boolean
   }
 
   export type MemberCreateOrConnectWithoutProjectMembersInput = {
@@ -4840,15 +4918,16 @@ export namespace Prisma {
   }
 
   export type ProjectUpdateWithoutProjectMembersInput = {
-    projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectUncheckedUpdateWithoutProjectMembersInput = {
     projectId?: IntFieldUpdateOperationsInput | number
     projectName?: StringFieldUpdateOperationsInput | string
     projectDescription?: NullableStringFieldUpdateOperationsInput | string | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MemberUpsertWithoutProjectMembersInput = {
@@ -4860,6 +4939,7 @@ export namespace Prisma {
     email?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MemberUncheckedUpdateWithoutProjectMembersInput = {
@@ -4867,6 +4947,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     role?: NullableEnumRoleFieldUpdateOperationsInput | Role | null
     memberId?: IntFieldUpdateOperationsInput | number
+    isDeleted?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProjectMemberCreateManyProjectInput = {

@@ -93,7 +93,8 @@ exports.Prisma.MemberScalarFieldEnum = makeEnum({
   email: 'email',
   name: 'name',
   role: 'role',
-  memberId: 'memberId'
+  memberId: 'memberId',
+  isDeleted: 'isDeleted'
 });
 
 exports.Prisma.ProjectMemberScalarFieldEnum = makeEnum({
@@ -106,7 +107,8 @@ exports.Prisma.ProjectMemberScalarFieldEnum = makeEnum({
 exports.Prisma.ProjectScalarFieldEnum = makeEnum({
   projectId: 'projectId',
   projectName: 'projectName',
-  projectDescription: 'projectDescription'
+  projectDescription: 'projectDescription',
+  isDeleted: 'isDeleted'
 });
 
 exports.Prisma.QueryMode = makeEnum({

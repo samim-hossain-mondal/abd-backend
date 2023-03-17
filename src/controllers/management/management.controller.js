@@ -16,11 +16,9 @@ const {
 
 const createNewProject = async (req, res, next) => {
   try {
-    const { projectId, projectName, projectDescription } = req.body; /* projectId is JIRA project code */
-    const { email, name} = req.user;      /* TODO: comes via MW */
-    // const email = 'cricket@email.com'; // dummy
+    const { projectName, projectDescription } = req.body; 
+    const { email, name } = req.user;      
     const result = await createNewAgileDashboardInDb(
-      projectId, 
       projectName, 
       projectDescription, 
       email,
@@ -39,8 +37,8 @@ const createNewProject = async (req, res, next) => {
 
 const listAllProjectsByCurrentUserEmail = async (req, res, next) => {
   try {
-    const { email } = req.user; // TODO: comes via MW
-    // const email = 'aryan@email.com';
+    const { email } = req.user; 
+    console.log(req.user);
     const result = await allProjectsByCurrentUserInDb(email);
     res.status(200).json(result);
   }
@@ -63,7 +61,6 @@ const listAllMembersByProjectId = async (req, res, next) => {
 };
 
 const addNewProjectMember = async (req, res, next) => {
-  // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
     const { email, role } = req.body;
@@ -77,7 +74,6 @@ const addNewProjectMember = async (req, res, next) => {
 };
 
 const removeMemberFromProject = async (req, res, next) => {
-  // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
     const { memberId } = req.body;
@@ -91,7 +87,6 @@ const removeMemberFromProject = async (req, res, next) => {
 };
 
 const updateMemberRole = async (req, res, next) => {
-  // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
     const { email, role } = req.body;
@@ -106,7 +101,6 @@ const updateMemberRole = async (req, res, next) => {
 };
 
 const updateProjectInfo = async (req, res, next) => {
-  // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
     const { projectName, projectDescription } = req.body;
@@ -120,7 +114,6 @@ const updateProjectInfo = async (req, res, next) => {
 };
 
 const deleteProject = async (req, res, next) => {
-  // TODO: MW has to protect this route - only ADMIN can access
   try {
     const { projectId } = req.params;
     await deleteProjectInDb(parseInt(projectId));

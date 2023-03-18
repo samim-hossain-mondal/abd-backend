@@ -3,6 +3,8 @@ const { listTeamRequests, createTeamRequest, editTeamRequest, deleteTeamRequest 
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const requestSchema = require('../../../schemas/dsm/teamRequests.schema');
 const { paramParser } = require('../../../middlewares/paramParser');
+const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+
 /**
  * @openapi
  * components:
@@ -152,9 +154,17 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *       500:
  *         description: Internal server error
 */
-router.route('')
-  .get(generateValidationMiddleware(requestSchema.dsmRequestQuerySchema,'query'),listTeamRequests)
-  .post(generateValidationMiddleware(requestSchema.createValidTeamRequest), createTeamRequest);
+router.route('/:projectId')
+  .get(
+    memberValidationMiddleware,
+    generateValidationMiddleware(requestSchema.dsmRequestQuerySchema,'query'),
+    listTeamRequests
+  )
+  .post(
+    memberValidationMiddleware,
+    generateValidationMiddleware(requestSchema.createValidTeamRequest), 
+    createTeamRequest
+  );
 /**
  * @openapi
  * /api/dsm/team-requests/{requestId}:
@@ -236,7 +246,18 @@ const requiredParams = {
   requestId: 'number'
 };
 const paramParsingMiddleware = paramParser(requiredParams);
-router.route('/:requestId')
-  .put(paramParsingMiddleware,generateValidationMiddleware(requestSchema.editTeamRequest), editTeamRequest)
-  .delete(paramParsingMiddleware,generateValidationMiddleware(requestSchema.deleteTeamRequest), deleteTeamRequest);
+
+router.route('/:projectId/:requestId')
+  .put(
+    memberValidationMiddleware,
+    paramParsingMiddleware,
+    generateValidationMiddleware(requestSchema.editTeamRequest), 
+    editTeamRequest
+  )
+  .delete(
+    memberValidationMiddleware,
+    paramParsingMiddleware,
+    generateValidationMiddleware(requestSchema.deleteTeamRequest), 
+    deleteTeamRequest
+  );
 module.exports = router;

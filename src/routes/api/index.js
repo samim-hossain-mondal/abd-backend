@@ -13,6 +13,7 @@ router.use(authMiddleware);
 router.use('/po-notes', require('./poNotes.routes'));
 router.use('/dsm/celebrations', require('./dsm/celebrationBoard.routes'));
 router.use('/dsm/announcements', require('./dsm/announcements.routes'));
+router.use('/leaves', require('./leaves.routes'));
 
 
 module.exports = router;

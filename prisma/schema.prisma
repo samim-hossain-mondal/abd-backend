@@ -81,6 +81,17 @@ model Announcement {
   createdAt DateTime @default(now())
 }
 
+// Leave Model
+model Leave {
+  leaveId Int @id @unique @default(autoincrement())
+  userId String
+  userFullName String
+  startDate DateTime
+  endDate DateTime
+  event String @db.VarChar(255)
+  isRisk Boolean
+}
+
 // Enums
 
 enum Status {

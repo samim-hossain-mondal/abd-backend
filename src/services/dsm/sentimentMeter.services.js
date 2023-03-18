@@ -1,5 +1,5 @@
 const { HttpError } = require('../../errors');
-const prisma = require('../../prismaClient');
+const { dashboardPrisma } = require('../../prismaClient');
 
 const selectOnlyValidSentimentMeterFields = {
   select: {
@@ -10,11 +10,13 @@ const selectOnlyValidSentimentMeterFields = {
   },
 };
 
-const createSentiment = async (author, sentiment) => {
-  const newSentiment = await prisma.sentimentMeter.create({
+const createSentiment = async (author, sentiment, projectId, memberId) => {
+  const newSentiment = await dashboardPrisma.sentimentMeter.create({
     data: {
       author,
       sentiment,
+      projectId,
+      memberId,
     },
     ...selectOnlyValidSentimentMeterFields,
   });
@@ -22,7 +24,7 @@ const createSentiment = async (author, sentiment) => {
 };
 
 const getSentimentById = async (sentimentId) => {
-  const sentiment = await prisma.sentimentMeter.findUnique({
+  const sentiment = await dashboardPrisma.sentimentMeter.findUnique({
     where: {
       sentimentId,
     },
@@ -34,8 +36,21 @@ const getSentimentById = async (sentimentId) => {
   return sentiment;
 };
 
-const updateSentimentById = async (sentimentId, sentiment) => {
-  const updatedSentiment = await prisma.sentimentMeter.update({
+const updateSentimentById = async (sentimentId, sentiment, memberId) => {
+  // check if sentiment exists and belongs to memeber
+  const sentimentExists = await dashboardPrisma.sentimentMeter.findUnique({
+    where: {
+      sentimentId,
+    },
+    select: {
+      memberId: true,
+    },
+  });
+
+  if (!sentimentExists) throw new HttpError(404, 'No Record Found');
+  if (sentimentExists.memberId !== memberId) throw new HttpError(403, 'You are not authorized to update this record');
+  
+  const updatedSentiment = await dashboardPrisma.sentimentMeter.update({
     where: {
       sentimentId,
     },
@@ -44,12 +59,13 @@ const updateSentimentById = async (sentimentId, sentiment) => {
     },
     ...selectOnlyValidSentimentMeterFields,
   });
+
   if (updatedSentiment.count === 0) throw new HttpError(404, 'No Record Found');
   return updatedSentiment;
 };
 
 const countSentimentByDate = async (createdAt) => {
-  const countSentiment = await prisma.sentimentMeter.groupBy({
+  const countSentiment = await dashboardPrisma.sentimentMeter.groupBy({
     by: ['sentiment'],
     where: {
       createdAt: {
@@ -80,14 +96,26 @@ const countSentimentByDate = async (createdAt) => {
 };
 
 const getAllSentiment = async () => {
-  const allSentiment = await prisma.sentimentMeter.findMany({
+  const allSentiment = await dashboardPrisma.sentimentMeter.findMany({
     ...selectOnlyValidSentimentMeterFields,
   });
   return allSentiment;
 };
 
-const deleteSentimentById = async (sentimentId) => {
-  const deletedSentiment = await prisma.sentimentMeter.delete({
+const deleteSentimentById = async (sentimentId, memberId) => {
+  const sentimentExists = await dashboardPrisma.sentimentMeter.findUnique({
+    where: {
+      sentimentId,
+    },
+    select: {
+      memberId: true,
+    },
+  });
+
+  if (!sentimentExists) throw new HttpError(404, 'No Record Found');
+  if (sentimentExists.memberId !== memberId) throw new HttpError(403, 'You are not authorized to delete this record');
+
+  const deletedSentiment = await dashboardPrisma.sentimentMeter.delete({
     where: {
       sentimentId,
     },

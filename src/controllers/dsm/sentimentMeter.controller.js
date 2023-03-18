@@ -4,9 +4,14 @@ const userAnonmyous = 'anonymous';
 const createSentiment = async (req, res, next) => {
   try {
     const { sentiment } = req.body;
+    const projectId = parseInt(req.params.projectId);
+    const memberId = parseInt(req.user.memberId);
+    const author = req.user.name || userAnonmyous;
     const newSentiment = await sentimentMeterService.createSentiment(
-      userAnonmyous,
-      sentiment
+      author,
+      sentiment,
+      projectId,
+      memberId
     );
     res.status(201).json(newSentiment);
   } catch (err) {
@@ -29,10 +34,12 @@ const detailSentiment = async (req, res, next) => {
 const updateSentiment = async (req, res, next) => {
   try {
     const sentimentId = parseInt(req.params.id);
+    const memberId = parseInt(req.user.memberId);
     const { sentiment } = req.body;
     const updatedSentiment = await sentimentMeterService.updateSentimentById(
       sentimentId,
-      sentiment
+      sentiment,
+      memberId
     );
     res.status(200).json(updatedSentiment);
   } catch (err) {
@@ -63,8 +70,10 @@ const getAllSentiment = async (req, res, next) => {
 const deleteSentimentById = async (req, res, next) => {
   try {
     const sentimentId = parseInt(req.params.id);
+    const memberId = parseInt(req.user.memberId);
     await sentimentMeterService.deleteSentimentById(
-      sentimentId
+      sentimentId,
+      memberId
     );
     res.status(200).json({ message: 'Sentiment deleted' });
   } catch (err) {

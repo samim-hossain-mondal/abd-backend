@@ -1,5 +1,5 @@
 const { HttpError } = require('../errors');
-const { Role } = require('../generated/management');
+const { Role } = require('../generated/management-db');
 
 const convertToRoleEnum = (role) => {
   switch (role) {

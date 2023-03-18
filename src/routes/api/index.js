@@ -9,8 +9,8 @@ router.use('/dsm/team-requests',require('./dsm/teamRequests.routes'));
 router.use('/dsm/announcements',require('./dsm/announcements.routes'));
 router.use('/dsm/sentiment-meter',require('./dsm/sentimentMeter.routes'));
 router.use('/dsm/celebrations', require('./dsm/celebrationBoard.routes'));
-router.use('/dsm/announcements', require('./dsm/announcements.routes'));
-router.use('/dsm/team-requests',require('./dsm/teamRequests.routes'));
+router.use('/madeToStick', require('./madeToStick.routes'));
+router.use('/leaves', require('./leaves.routes'));
 router.use('/management', require('./management/management.routes'));
 
 module.exports = router;

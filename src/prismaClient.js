@@ -1,5 +1,5 @@
-const { PrismaClient: dashboardClient } = require('./generated/dashboard');
-const { PrismaClient: managementClient } = require('./generated/management');
+const { PrismaClient: dashboardClient } = require('./generated/dashboard-db');
+const { PrismaClient: managementClient } = require('./generated/management-db');
 
 const dashboardPrisma = new dashboardClient({
   datasources: {

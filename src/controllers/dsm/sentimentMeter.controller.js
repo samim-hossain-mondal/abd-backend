@@ -6,7 +6,7 @@ const createSentiment = async (req, res, next) => {
     const { sentiment } = req.body;
     const projectId = parseInt(req.params.projectId);
     const memberId = parseInt(req.user.memberId);
-    const author = req.user.name || userAnonmyous;
+    const author = userAnonmyous;
     const newSentiment = await sentimentMeterService.createSentiment(
       author,
       sentiment,

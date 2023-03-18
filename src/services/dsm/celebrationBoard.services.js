@@ -87,7 +87,7 @@ const createCelebration = async (author, content, type, isAnonymous = false) => 
 
 // update a celebration
 const updateCelebrationById = async (celebrationId, content, type, isAnonymous) => {
-  console.log(celebrationId, content, type, isAnonymous);
+  // console.log(celebrationId, content, type, isAnonymous);
   const updatedCelebration = await prisma.Celebration.update({
     where: {
       celebrationId

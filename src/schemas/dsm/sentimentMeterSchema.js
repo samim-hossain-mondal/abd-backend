@@ -1,6 +1,6 @@
 const joi = require('joi');
 const createSentiment = joi.object({
-  author: joi.string().required(),
+  author: joi.string(),
   sentiment: joi.valid('OK', 'GOOD', 'BAD', 'HAPPY'),
 });
 

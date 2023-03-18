@@ -63,11 +63,13 @@ describe('Celebration Board Services', () => {
   describe('deleteCelebration', () => {
     it('should delete a celebration', async () => {
       const expected = celebrations[0];
+      jest.spyOn(prisma.celebrationReactedUser, 'deleteMany').mockResolvedValue(undefined);
       jest.spyOn(prisma.Celebration, 'delete').mockResolvedValue(expected);
       const actual = await celebrationBoardServices.deleteCelebrationById(1);
       expect(actual).toEqual(expected);
     });
     it('should throw error if no record is found', async () => {
+      jest.spyOn(prisma.celebrationReactedUser, 'deleteMany').mockResolvedValue(undefined);
       jest.spyOn(prisma.Celebration, 'delete').mockResolvedValue(null);
       await expect(celebrationBoardServices.deleteCelebrationById(1)).rejects.toThrow(new HttpError(404, 'No Record Found'));
     });

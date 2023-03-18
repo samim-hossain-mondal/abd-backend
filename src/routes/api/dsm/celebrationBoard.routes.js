@@ -10,6 +10,7 @@ const {
 } = require('../../../controllers/dsm/celebrationBoard.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const celebrationsSchema = require('../../../schemas/dsm/celebrationsSchema');
+const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
 
 /**
  * @openapi
@@ -114,10 +115,10 @@ const celebrationsSchema = require('../../../schemas/dsm/celebrationsSchema');
 */
 
 // GET /api/dsm/celebration
-router.get('/', listCelebrations);
+router.get('/:projectId', memberValidationMiddleware, listCelebrations);
 
 // POST /api/dsm/celebration
-router.post('/', generateValidationMiddleware(celebrationsSchema.createCelebrationSchema), createCelebration);
+router.post('/:projectId', memberValidationMiddleware, generateValidationMiddleware(celebrationsSchema.createCelebrationSchema), createCelebration);
 
 /**
  * @openapi
@@ -211,16 +212,26 @@ router.post('/', generateValidationMiddleware(celebrationsSchema.createCelebrati
  *        description: Internal server error
 */
 
-const paramValidationMiddleware = generateValidationMiddleware(celebrationsSchema.celebrationsParamSchema, 'params');
+// const paramValidationMiddleware = generateValidationMiddleware(celebrationsSchema.celebrationsParamSchema, 'params');
 
 // GET /api/dsm/celebration/:id
-router.get('/:id', paramValidationMiddleware, detailCelebration);
+router.get('/:projectId/:id',
+  memberValidationMiddleware,
+  // paramValidationMiddleware, 
+  detailCelebration);
 
 // PATCH /api/dsm/celebration/:id
-router.patch('/:id', paramValidationMiddleware, generateValidationMiddleware(celebrationsSchema.patchcelebrationSchema), updateCelebration);
+router.patch('/:projectId/:id',
+  memberValidationMiddleware, 
+  // paramValidationMiddleware, 
+  generateValidationMiddleware(celebrationsSchema.patchcelebrationSchema), 
+  updateCelebration);
 
 // DELETE /api/dsm/celebration/:id
-router.delete('/:id', paramValidationMiddleware, deleteCelebration);
+router.delete('/:projectId/:id', 
+  memberValidationMiddleware,
+  // paramValidationMiddleware, 
+  deleteCelebration);
 
 /**
  * @openapi
@@ -289,10 +300,17 @@ router.delete('/:id', paramValidationMiddleware, deleteCelebration);
 */
 
 // GET /api/dsm/celebration/:id/react
-router.get('/:id/react', paramValidationMiddleware, getReaction);
+router.get('/:projectId/:id/react',
+  memberValidationMiddleware, 
+  // paramValidationMiddleware, 
+  getReaction);
 
 // PATCH /api/dsm/celebration/:id/react
-router.patch('/:id/react', paramValidationMiddleware, generateValidationMiddleware(celebrationsSchema.patchReactionSchema), updateReaction);
+router.patch('/:projectId/:id/react', 
+  memberValidationMiddleware,
+  // paramValidationMiddleware, 
+  generateValidationMiddleware(celebrationsSchema.patchReactionSchema), 
+  updateReaction);
 
 
 module.exports = router;

@@ -7,6 +7,8 @@ const selectOnlyValidSentimentMeterFields = {
     author: true,
     sentiment: true,
     createdAt: true,
+    projectId: true,
+    memberId: true,
   },
 };
 
@@ -64,10 +66,11 @@ const updateSentimentById = async (sentimentId, sentiment, memberId) => {
   return updatedSentiment;
 };
 
-const countSentimentByDate = async (createdAt) => {
+const countSentimentByDate = async (createdAt, projectId) => {
   const countSentiment = await dashboardPrisma.sentimentMeter.groupBy({
     by: ['sentiment'],
     where: {
+      projectId,
       createdAt: {
         gte: new Date(createdAt),
         lte: new Date(
@@ -95,8 +98,11 @@ const countSentimentByDate = async (createdAt) => {
   return countSentiment;
 };
 
-const getAllSentiment = async () => {
+const getAllSentiment = async (projectId) => {
   const allSentiment = await dashboardPrisma.sentimentMeter.findMany({
+    where: {
+      projectId,
+    },
     ...selectOnlyValidSentimentMeterFields,
   });
   return allSentiment;

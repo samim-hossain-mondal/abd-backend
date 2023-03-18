@@ -49,9 +49,10 @@ const updateSentiment = async (req, res, next) => {
 
 const countSentimentByDate = async (req, res, next) => {
   try {
-    const { createdAt } = req.params;
+    const { createdAt, projectId } = req.params;
     const countSentiment = await sentimentMeterService.countSentimentByDate(
-      createdAt
+      createdAt,
+      parseInt(projectId)
     );
     res.status(200).json(countSentiment);
   } catch (err) {
@@ -60,7 +61,8 @@ const countSentimentByDate = async (req, res, next) => {
 };
 const getAllSentiment = async (req, res, next) => {
   try {
-    const allSentiment = await sentimentMeterService.getAllSentiment();
+    const projectId = parseInt(req.params.projectId);
+    const allSentiment = await sentimentMeterService.getAllSentiment(projectId);
     res.status(200).json(allSentiment);
   } catch (err) {
     next(err);

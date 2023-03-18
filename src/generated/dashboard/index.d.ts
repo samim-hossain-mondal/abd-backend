@@ -37,6 +37,7 @@ export type SentimentMeter = {
   createdAt: Date
   sentimentId: number
   projectId: number
+  memberId: number
 }
 
 /**
@@ -44,7 +45,7 @@ export type SentimentMeter = {
  * 
  */
 export type CelebrationReactedUser = {
-  userId: string
+  memberId: number
   celebrationId: number
   reactionId: number
 }
@@ -61,6 +62,7 @@ export type Celebration = {
   celebrationId: number
   isAnonymous: boolean
   projectId: number
+  memberId: number
 }
 
 /**
@@ -68,7 +70,7 @@ export type Celebration = {
  * 
  */
 export type RequestTaggedUser = {
-  userId: string
+  memberId: number
   requestId: number
   tagId: number
 }
@@ -78,6 +80,7 @@ export type RequestTaggedUser = {
  * 
  */
 export type Request = {
+  memberId: number
   author: string
   content: string
   status: RequestStatus
@@ -97,6 +100,7 @@ export type Announcement = {
   content: string
   createdAt: Date
   projectId: number
+  memberId: number
 }
 
 
@@ -2053,11 +2057,13 @@ export namespace Prisma {
   export type SentimentMeterAvgAggregateOutputType = {
     sentimentId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type SentimentMeterSumAggregateOutputType = {
     sentimentId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type SentimentMeterMinAggregateOutputType = {
@@ -2066,6 +2072,7 @@ export namespace Prisma {
     createdAt: Date | null
     sentimentId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type SentimentMeterMaxAggregateOutputType = {
@@ -2074,6 +2081,7 @@ export namespace Prisma {
     createdAt: Date | null
     sentimentId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type SentimentMeterCountAggregateOutputType = {
@@ -2082,6 +2090,7 @@ export namespace Prisma {
     createdAt: number
     sentimentId: number
     projectId: number
+    memberId: number
     _all: number
   }
 
@@ -2089,11 +2098,13 @@ export namespace Prisma {
   export type SentimentMeterAvgAggregateInputType = {
     sentimentId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type SentimentMeterSumAggregateInputType = {
     sentimentId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type SentimentMeterMinAggregateInputType = {
@@ -2102,6 +2113,7 @@ export namespace Prisma {
     createdAt?: true
     sentimentId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type SentimentMeterMaxAggregateInputType = {
@@ -2110,6 +2122,7 @@ export namespace Prisma {
     createdAt?: true
     sentimentId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type SentimentMeterCountAggregateInputType = {
@@ -2118,6 +2131,7 @@ export namespace Prisma {
     createdAt?: true
     sentimentId?: true
     projectId?: true
+    memberId?: true
     _all?: true
   }
 
@@ -2214,6 +2228,7 @@ export namespace Prisma {
     createdAt: Date
     sentimentId: number
     projectId: number
+    memberId: number
     _count: SentimentMeterCountAggregateOutputType | null
     _avg: SentimentMeterAvgAggregateOutputType | null
     _sum: SentimentMeterSumAggregateOutputType | null
@@ -2241,6 +2256,7 @@ export namespace Prisma {
     createdAt?: boolean
     sentimentId?: boolean
     projectId?: boolean
+    memberId?: boolean
   }
 
 
@@ -2971,29 +2987,31 @@ export namespace Prisma {
   }
 
   export type CelebrationReactedUserAvgAggregateOutputType = {
+    memberId: number | null
     celebrationId: number | null
     reactionId: number | null
   }
 
   export type CelebrationReactedUserSumAggregateOutputType = {
+    memberId: number | null
     celebrationId: number | null
     reactionId: number | null
   }
 
   export type CelebrationReactedUserMinAggregateOutputType = {
-    userId: string | null
+    memberId: number | null
     celebrationId: number | null
     reactionId: number | null
   }
 
   export type CelebrationReactedUserMaxAggregateOutputType = {
-    userId: string | null
+    memberId: number | null
     celebrationId: number | null
     reactionId: number | null
   }
 
   export type CelebrationReactedUserCountAggregateOutputType = {
-    userId: number
+    memberId: number
     celebrationId: number
     reactionId: number
     _all: number
@@ -3001,29 +3019,31 @@ export namespace Prisma {
 
 
   export type CelebrationReactedUserAvgAggregateInputType = {
+    memberId?: true
     celebrationId?: true
     reactionId?: true
   }
 
   export type CelebrationReactedUserSumAggregateInputType = {
+    memberId?: true
     celebrationId?: true
     reactionId?: true
   }
 
   export type CelebrationReactedUserMinAggregateInputType = {
-    userId?: true
+    memberId?: true
     celebrationId?: true
     reactionId?: true
   }
 
   export type CelebrationReactedUserMaxAggregateInputType = {
-    userId?: true
+    memberId?: true
     celebrationId?: true
     reactionId?: true
   }
 
   export type CelebrationReactedUserCountAggregateInputType = {
-    userId?: true
+    memberId?: true
     celebrationId?: true
     reactionId?: true
     _all?: true
@@ -3117,7 +3137,7 @@ export namespace Prisma {
 
 
   export type CelebrationReactedUserGroupByOutputType = {
-    userId: string
+    memberId: number
     celebrationId: number
     reactionId: number
     _count: CelebrationReactedUserCountAggregateOutputType | null
@@ -3142,7 +3162,7 @@ export namespace Prisma {
 
 
   export type CelebrationReactedUserSelect = {
-    userId?: boolean
+    memberId?: boolean
     celebrationId?: boolean
     reactionId?: boolean
     request?: boolean | CelebrationArgs
@@ -3255,8 +3275,8 @@ export namespace Prisma {
      * // Get first 10 CelebrationReactedUsers
      * const celebrationReactedUsers = await prisma.celebrationReactedUser.findMany({ take: 10 })
      * 
-     * // Only select the `userId`
-     * const celebrationReactedUserWithUserIdOnly = await prisma.celebrationReactedUser.findMany({ select: { userId: true } })
+     * // Only select the `memberId`
+     * const celebrationReactedUserWithMemberIdOnly = await prisma.celebrationReactedUser.findMany({ select: { memberId: true } })
      * 
     **/
     findMany<T extends CelebrationReactedUserFindManyArgs>(
@@ -3926,11 +3946,13 @@ export namespace Prisma {
   export type CelebrationAvgAggregateOutputType = {
     celebrationId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type CelebrationSumAggregateOutputType = {
     celebrationId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type CelebrationMinAggregateOutputType = {
@@ -3941,6 +3963,7 @@ export namespace Prisma {
     celebrationId: number | null
     isAnonymous: boolean | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type CelebrationMaxAggregateOutputType = {
@@ -3951,6 +3974,7 @@ export namespace Prisma {
     celebrationId: number | null
     isAnonymous: boolean | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type CelebrationCountAggregateOutputType = {
@@ -3961,6 +3985,7 @@ export namespace Prisma {
     celebrationId: number
     isAnonymous: number
     projectId: number
+    memberId: number
     _all: number
   }
 
@@ -3968,11 +3993,13 @@ export namespace Prisma {
   export type CelebrationAvgAggregateInputType = {
     celebrationId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type CelebrationSumAggregateInputType = {
     celebrationId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type CelebrationMinAggregateInputType = {
@@ -3983,6 +4010,7 @@ export namespace Prisma {
     celebrationId?: true
     isAnonymous?: true
     projectId?: true
+    memberId?: true
   }
 
   export type CelebrationMaxAggregateInputType = {
@@ -3993,6 +4021,7 @@ export namespace Prisma {
     celebrationId?: true
     isAnonymous?: true
     projectId?: true
+    memberId?: true
   }
 
   export type CelebrationCountAggregateInputType = {
@@ -4003,6 +4032,7 @@ export namespace Prisma {
     celebrationId?: true
     isAnonymous?: true
     projectId?: true
+    memberId?: true
     _all?: true
   }
 
@@ -4101,6 +4131,7 @@ export namespace Prisma {
     celebrationId: number
     isAnonymous: boolean
     projectId: number
+    memberId: number
     _count: CelebrationCountAggregateOutputType | null
     _avg: CelebrationAvgAggregateOutputType | null
     _sum: CelebrationSumAggregateOutputType | null
@@ -4130,6 +4161,7 @@ export namespace Prisma {
     celebrationId?: boolean
     isAnonymous?: boolean
     projectId?: boolean
+    memberId?: boolean
     reaction?: boolean | Celebration$reactionArgs
     _count?: boolean | CelebrationCountOutputTypeArgs
   }
@@ -4934,29 +4966,31 @@ export namespace Prisma {
   }
 
   export type RequestTaggedUserAvgAggregateOutputType = {
+    memberId: number | null
     requestId: number | null
     tagId: number | null
   }
 
   export type RequestTaggedUserSumAggregateOutputType = {
+    memberId: number | null
     requestId: number | null
     tagId: number | null
   }
 
   export type RequestTaggedUserMinAggregateOutputType = {
-    userId: string | null
+    memberId: number | null
     requestId: number | null
     tagId: number | null
   }
 
   export type RequestTaggedUserMaxAggregateOutputType = {
-    userId: string | null
+    memberId: number | null
     requestId: number | null
     tagId: number | null
   }
 
   export type RequestTaggedUserCountAggregateOutputType = {
-    userId: number
+    memberId: number
     requestId: number
     tagId: number
     _all: number
@@ -4964,29 +4998,31 @@ export namespace Prisma {
 
 
   export type RequestTaggedUserAvgAggregateInputType = {
+    memberId?: true
     requestId?: true
     tagId?: true
   }
 
   export type RequestTaggedUserSumAggregateInputType = {
+    memberId?: true
     requestId?: true
     tagId?: true
   }
 
   export type RequestTaggedUserMinAggregateInputType = {
-    userId?: true
+    memberId?: true
     requestId?: true
     tagId?: true
   }
 
   export type RequestTaggedUserMaxAggregateInputType = {
-    userId?: true
+    memberId?: true
     requestId?: true
     tagId?: true
   }
 
   export type RequestTaggedUserCountAggregateInputType = {
-    userId?: true
+    memberId?: true
     requestId?: true
     tagId?: true
     _all?: true
@@ -5080,7 +5116,7 @@ export namespace Prisma {
 
 
   export type RequestTaggedUserGroupByOutputType = {
-    userId: string
+    memberId: number
     requestId: number
     tagId: number
     _count: RequestTaggedUserCountAggregateOutputType | null
@@ -5105,7 +5141,7 @@ export namespace Prisma {
 
 
   export type RequestTaggedUserSelect = {
-    userId?: boolean
+    memberId?: boolean
     requestId?: boolean
     tagId?: boolean
     request?: boolean | RequestArgs
@@ -5218,8 +5254,8 @@ export namespace Prisma {
      * // Get first 10 RequestTaggedUsers
      * const requestTaggedUsers = await prisma.requestTaggedUser.findMany({ take: 10 })
      * 
-     * // Only select the `userId`
-     * const requestTaggedUserWithUserIdOnly = await prisma.requestTaggedUser.findMany({ select: { userId: true } })
+     * // Only select the `memberId`
+     * const requestTaggedUserWithMemberIdOnly = await prisma.requestTaggedUser.findMany({ select: { memberId: true } })
      * 
     **/
     findMany<T extends RequestTaggedUserFindManyArgs>(
@@ -5887,16 +5923,19 @@ export namespace Prisma {
   }
 
   export type RequestAvgAggregateOutputType = {
+    memberId: number | null
     requestId: number | null
     projectId: number | null
   }
 
   export type RequestSumAggregateOutputType = {
+    memberId: number | null
     requestId: number | null
     projectId: number | null
   }
 
   export type RequestMinAggregateOutputType = {
+    memberId: number | null
     author: string | null
     content: string | null
     status: RequestStatus | null
@@ -5907,6 +5946,7 @@ export namespace Prisma {
   }
 
   export type RequestMaxAggregateOutputType = {
+    memberId: number | null
     author: string | null
     content: string | null
     status: RequestStatus | null
@@ -5917,6 +5957,7 @@ export namespace Prisma {
   }
 
   export type RequestCountAggregateOutputType = {
+    memberId: number
     author: number
     content: number
     status: number
@@ -5929,16 +5970,19 @@ export namespace Prisma {
 
 
   export type RequestAvgAggregateInputType = {
+    memberId?: true
     requestId?: true
     projectId?: true
   }
 
   export type RequestSumAggregateInputType = {
+    memberId?: true
     requestId?: true
     projectId?: true
   }
 
   export type RequestMinAggregateInputType = {
+    memberId?: true
     author?: true
     content?: true
     status?: true
@@ -5949,6 +5993,7 @@ export namespace Prisma {
   }
 
   export type RequestMaxAggregateInputType = {
+    memberId?: true
     author?: true
     content?: true
     status?: true
@@ -5959,6 +6004,7 @@ export namespace Prisma {
   }
 
   export type RequestCountAggregateInputType = {
+    memberId?: true
     author?: true
     content?: true
     status?: true
@@ -6057,6 +6103,7 @@ export namespace Prisma {
 
 
   export type RequestGroupByOutputType = {
+    memberId: number
     author: string
     content: string
     status: RequestStatus
@@ -6086,6 +6133,7 @@ export namespace Prisma {
 
 
   export type RequestSelect = {
+    memberId?: boolean
     author?: boolean
     content?: boolean
     status?: boolean
@@ -6207,8 +6255,8 @@ export namespace Prisma {
      * // Get first 10 Requests
      * const requests = await prisma.request.findMany({ take: 10 })
      * 
-     * // Only select the `author`
-     * const requestWithAuthorOnly = await prisma.request.findMany({ select: { author: true } })
+     * // Only select the `memberId`
+     * const requestWithMemberIdOnly = await prisma.request.findMany({ select: { memberId: true } })
      * 
     **/
     findMany<T extends RequestFindManyArgs>(
@@ -6899,11 +6947,13 @@ export namespace Prisma {
   export type AnnouncementAvgAggregateOutputType = {
     announcementId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type AnnouncementSumAggregateOutputType = {
     announcementId: number | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type AnnouncementMinAggregateOutputType = {
@@ -6912,6 +6962,7 @@ export namespace Prisma {
     content: string | null
     createdAt: Date | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type AnnouncementMaxAggregateOutputType = {
@@ -6920,6 +6971,7 @@ export namespace Prisma {
     content: string | null
     createdAt: Date | null
     projectId: number | null
+    memberId: number | null
   }
 
   export type AnnouncementCountAggregateOutputType = {
@@ -6928,6 +6980,7 @@ export namespace Prisma {
     content: number
     createdAt: number
     projectId: number
+    memberId: number
     _all: number
   }
 
@@ -6935,11 +6988,13 @@ export namespace Prisma {
   export type AnnouncementAvgAggregateInputType = {
     announcementId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type AnnouncementSumAggregateInputType = {
     announcementId?: true
     projectId?: true
+    memberId?: true
   }
 
   export type AnnouncementMinAggregateInputType = {
@@ -6948,6 +7003,7 @@ export namespace Prisma {
     content?: true
     createdAt?: true
     projectId?: true
+    memberId?: true
   }
 
   export type AnnouncementMaxAggregateInputType = {
@@ -6956,6 +7012,7 @@ export namespace Prisma {
     content?: true
     createdAt?: true
     projectId?: true
+    memberId?: true
   }
 
   export type AnnouncementCountAggregateInputType = {
@@ -6964,6 +7021,7 @@ export namespace Prisma {
     content?: true
     createdAt?: true
     projectId?: true
+    memberId?: true
     _all?: true
   }
 
@@ -7060,6 +7118,7 @@ export namespace Prisma {
     content: string
     createdAt: Date
     projectId: number
+    memberId: number
     _count: AnnouncementCountAggregateOutputType | null
     _avg: AnnouncementAvgAggregateOutputType | null
     _sum: AnnouncementSumAggregateOutputType | null
@@ -7087,6 +7146,7 @@ export namespace Prisma {
     content?: boolean
     createdAt?: boolean
     projectId?: boolean
+    memberId?: boolean
   }
 
 
@@ -7815,14 +7875,15 @@ export namespace Prisma {
     author: 'author',
     content: 'content',
     createdAt: 'createdAt',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    memberId: 'memberId'
   };
 
   export type AnnouncementScalarFieldEnum = (typeof AnnouncementScalarFieldEnum)[keyof typeof AnnouncementScalarFieldEnum]
 
 
   export const CelebrationReactedUserScalarFieldEnum: {
-    userId: 'userId',
+    memberId: 'memberId',
     celebrationId: 'celebrationId',
     reactionId: 'reactionId'
   };
@@ -7837,7 +7898,8 @@ export namespace Prisma {
     type: 'type',
     celebrationId: 'celebrationId',
     isAnonymous: 'isAnonymous',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    memberId: 'memberId'
   };
 
   export type CelebrationScalarFieldEnum = (typeof CelebrationScalarFieldEnum)[keyof typeof CelebrationScalarFieldEnum]
@@ -7868,6 +7930,7 @@ export namespace Prisma {
 
 
   export const RequestScalarFieldEnum: {
+    memberId: 'memberId',
     author: 'author',
     content: 'content',
     status: 'status',
@@ -7881,7 +7944,7 @@ export namespace Prisma {
 
 
   export const RequestTaggedUserScalarFieldEnum: {
-    userId: 'userId',
+    memberId: 'memberId',
     requestId: 'requestId',
     tagId: 'tagId'
   };
@@ -7894,7 +7957,8 @@ export namespace Prisma {
     sentiment: 'sentiment',
     createdAt: 'createdAt',
     sentimentId: 'sentimentId',
-    projectId: 'projectId'
+    projectId: 'projectId',
+    memberId: 'memberId'
   };
 
   export type SentimentMeterScalarFieldEnum = (typeof SentimentMeterScalarFieldEnum)[keyof typeof SentimentMeterScalarFieldEnum]
@@ -7999,6 +8063,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     sentimentId?: IntFilter | number
     projectId?: IntFilter | number
+    memberId?: IntFilter | number
   }
 
   export type SentimentMeterOrderByWithRelationInput = {
@@ -8007,6 +8072,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type SentimentMeterWhereUniqueInput = {
@@ -8019,6 +8085,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
     _count?: SentimentMeterCountOrderByAggregateInput
     _avg?: SentimentMeterAvgOrderByAggregateInput
     _max?: SentimentMeterMaxOrderByAggregateInput
@@ -8035,20 +8102,21 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     sentimentId?: IntWithAggregatesFilter | number
     projectId?: IntWithAggregatesFilter | number
+    memberId?: IntWithAggregatesFilter | number
   }
 
   export type CelebrationReactedUserWhereInput = {
     AND?: Enumerable<CelebrationReactedUserWhereInput>
     OR?: Enumerable<CelebrationReactedUserWhereInput>
     NOT?: Enumerable<CelebrationReactedUserWhereInput>
-    userId?: StringFilter | string
+    memberId?: IntFilter | number
     celebrationId?: IntFilter | number
     reactionId?: IntFilter | number
     request?: XOR<CelebrationRelationFilter, CelebrationWhereInput>
   }
 
   export type CelebrationReactedUserOrderByWithRelationInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
     request?: CelebrationOrderByWithRelationInput
@@ -8056,11 +8124,11 @@ export namespace Prisma {
 
   export type CelebrationReactedUserWhereUniqueInput = {
     reactionId?: number
-    userId_celebrationId?: CelebrationReactedUserUserIdCelebrationIdCompoundUniqueInput
+    memberId_celebrationId?: CelebrationReactedUserMemberIdCelebrationIdCompoundUniqueInput
   }
 
   export type CelebrationReactedUserOrderByWithAggregationInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
     _count?: CelebrationReactedUserCountOrderByAggregateInput
@@ -8074,7 +8142,7 @@ export namespace Prisma {
     AND?: Enumerable<CelebrationReactedUserScalarWhereWithAggregatesInput>
     OR?: Enumerable<CelebrationReactedUserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<CelebrationReactedUserScalarWhereWithAggregatesInput>
-    userId?: StringWithAggregatesFilter | string
+    memberId?: IntWithAggregatesFilter | number
     celebrationId?: IntWithAggregatesFilter | number
     reactionId?: IntWithAggregatesFilter | number
   }
@@ -8090,6 +8158,7 @@ export namespace Prisma {
     celebrationId?: IntFilter | number
     isAnonymous?: BoolFilter | boolean
     projectId?: IntFilter | number
+    memberId?: IntFilter | number
     reaction?: CelebrationReactedUserListRelationFilter
   }
 
@@ -8101,6 +8170,7 @@ export namespace Prisma {
     celebrationId?: SortOrder
     isAnonymous?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
     reaction?: CelebrationReactedUserOrderByRelationAggregateInput
   }
 
@@ -8116,6 +8186,7 @@ export namespace Prisma {
     celebrationId?: SortOrder
     isAnonymous?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
     _count?: CelebrationCountOrderByAggregateInput
     _avg?: CelebrationAvgOrderByAggregateInput
     _max?: CelebrationMaxOrderByAggregateInput
@@ -8134,20 +8205,21 @@ export namespace Prisma {
     celebrationId?: IntWithAggregatesFilter | number
     isAnonymous?: BoolWithAggregatesFilter | boolean
     projectId?: IntWithAggregatesFilter | number
+    memberId?: IntWithAggregatesFilter | number
   }
 
   export type RequestTaggedUserWhereInput = {
     AND?: Enumerable<RequestTaggedUserWhereInput>
     OR?: Enumerable<RequestTaggedUserWhereInput>
     NOT?: Enumerable<RequestTaggedUserWhereInput>
-    userId?: StringFilter | string
+    memberId?: IntFilter | number
     requestId?: IntFilter | number
     tagId?: IntFilter | number
     request?: XOR<RequestRelationFilter, RequestWhereInput>
   }
 
   export type RequestTaggedUserOrderByWithRelationInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
     request?: RequestOrderByWithRelationInput
@@ -8158,7 +8230,7 @@ export namespace Prisma {
   }
 
   export type RequestTaggedUserOrderByWithAggregationInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
     _count?: RequestTaggedUserCountOrderByAggregateInput
@@ -8172,7 +8244,7 @@ export namespace Prisma {
     AND?: Enumerable<RequestTaggedUserScalarWhereWithAggregatesInput>
     OR?: Enumerable<RequestTaggedUserScalarWhereWithAggregatesInput>
     NOT?: Enumerable<RequestTaggedUserScalarWhereWithAggregatesInput>
-    userId?: StringWithAggregatesFilter | string
+    memberId?: IntWithAggregatesFilter | number
     requestId?: IntWithAggregatesFilter | number
     tagId?: IntWithAggregatesFilter | number
   }
@@ -8181,6 +8253,7 @@ export namespace Prisma {
     AND?: Enumerable<RequestWhereInput>
     OR?: Enumerable<RequestWhereInput>
     NOT?: Enumerable<RequestWhereInput>
+    memberId?: IntFilter | number
     author?: StringFilter | string
     content?: StringFilter | string
     status?: EnumRequestStatusFilter | RequestStatus
@@ -8192,6 +8265,7 @@ export namespace Prisma {
   }
 
   export type RequestOrderByWithRelationInput = {
+    memberId?: SortOrder
     author?: SortOrder
     content?: SortOrder
     status?: SortOrder
@@ -8207,6 +8281,7 @@ export namespace Prisma {
   }
 
   export type RequestOrderByWithAggregationInput = {
+    memberId?: SortOrder
     author?: SortOrder
     content?: SortOrder
     status?: SortOrder
@@ -8225,6 +8300,7 @@ export namespace Prisma {
     AND?: Enumerable<RequestScalarWhereWithAggregatesInput>
     OR?: Enumerable<RequestScalarWhereWithAggregatesInput>
     NOT?: Enumerable<RequestScalarWhereWithAggregatesInput>
+    memberId?: IntWithAggregatesFilter | number
     author?: StringWithAggregatesFilter | string
     content?: StringWithAggregatesFilter | string
     status?: EnumRequestStatusWithAggregatesFilter | RequestStatus
@@ -8243,6 +8319,7 @@ export namespace Prisma {
     content?: StringFilter | string
     createdAt?: DateTimeFilter | Date | string
     projectId?: IntFilter | number
+    memberId?: IntFilter | number
   }
 
   export type AnnouncementOrderByWithRelationInput = {
@@ -8251,6 +8328,7 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type AnnouncementWhereUniqueInput = {
@@ -8263,6 +8341,7 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
     _count?: AnnouncementCountOrderByAggregateInput
     _avg?: AnnouncementAvgOrderByAggregateInput
     _max?: AnnouncementMaxOrderByAggregateInput
@@ -8279,6 +8358,7 @@ export namespace Prisma {
     content?: StringWithAggregatesFilter | string
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     projectId?: IntWithAggregatesFilter | number
+    memberId?: IntWithAggregatesFilter | number
   }
 
   export type PONoteCreateInput = {
@@ -8374,6 +8454,7 @@ export namespace Prisma {
     sentiment: Sentiment
     createdAt?: Date | string
     projectId: number
+    memberId: number
   }
 
   export type SentimentMeterUncheckedCreateInput = {
@@ -8382,6 +8463,7 @@ export namespace Prisma {
     createdAt?: Date | string
     sentimentId?: number
     projectId: number
+    memberId: number
   }
 
   export type SentimentMeterUpdateInput = {
@@ -8389,6 +8471,7 @@ export namespace Prisma {
     sentiment?: EnumSentimentFieldUpdateOperationsInput | Sentiment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SentimentMeterUncheckedUpdateInput = {
@@ -8397,6 +8480,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentimentId?: IntFieldUpdateOperationsInput | number
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SentimentMeterCreateManyInput = {
@@ -8405,6 +8489,7 @@ export namespace Prisma {
     createdAt?: Date | string
     sentimentId?: number
     projectId: number
+    memberId: number
   }
 
   export type SentimentMeterUpdateManyMutationInput = {
@@ -8412,6 +8497,7 @@ export namespace Prisma {
     sentiment?: EnumSentimentFieldUpdateOperationsInput | Sentiment
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type SentimentMeterUncheckedUpdateManyInput = {
@@ -8420,42 +8506,43 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     sentimentId?: IntFieldUpdateOperationsInput | number
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserCreateInput = {
-    userId: string
+    memberId: number
     request: CelebrationCreateNestedOneWithoutReactionInput
   }
 
   export type CelebrationReactedUserUncheckedCreateInput = {
-    userId: string
+    memberId: number
     celebrationId: number
     reactionId?: number
   }
 
   export type CelebrationReactedUserUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     request?: CelebrationUpdateOneRequiredWithoutReactionNestedInput
   }
 
   export type CelebrationReactedUserUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     celebrationId?: IntFieldUpdateOperationsInput | number
     reactionId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserCreateManyInput = {
-    userId: string
+    memberId: number
     celebrationId: number
     reactionId?: number
   }
 
   export type CelebrationReactedUserUpdateManyMutationInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     celebrationId?: IntFieldUpdateOperationsInput | number
     reactionId?: IntFieldUpdateOperationsInput | number
   }
@@ -8467,6 +8554,7 @@ export namespace Prisma {
     type: CelebrationType
     isAnonymous?: boolean
     projectId: number
+    memberId: number
     reaction?: CelebrationReactedUserCreateNestedManyWithoutRequestInput
   }
 
@@ -8478,6 +8566,7 @@ export namespace Prisma {
     celebrationId?: number
     isAnonymous?: boolean
     projectId: number
+    memberId: number
     reaction?: CelebrationReactedUserUncheckedCreateNestedManyWithoutRequestInput
   }
 
@@ -8488,6 +8577,7 @@ export namespace Prisma {
     type?: EnumCelebrationTypeFieldUpdateOperationsInput | CelebrationType
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
     reaction?: CelebrationReactedUserUpdateManyWithoutRequestNestedInput
   }
 
@@ -8499,6 +8589,7 @@ export namespace Prisma {
     celebrationId?: IntFieldUpdateOperationsInput | number
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
     reaction?: CelebrationReactedUserUncheckedUpdateManyWithoutRequestNestedInput
   }
 
@@ -8510,6 +8601,7 @@ export namespace Prisma {
     celebrationId?: number
     isAnonymous?: boolean
     projectId: number
+    memberId: number
   }
 
   export type CelebrationUpdateManyMutationInput = {
@@ -8519,6 +8611,7 @@ export namespace Prisma {
     type?: EnumCelebrationTypeFieldUpdateOperationsInput | CelebrationType
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationUncheckedUpdateManyInput = {
@@ -8529,47 +8622,49 @@ export namespace Prisma {
     celebrationId?: IntFieldUpdateOperationsInput | number
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserCreateInput = {
-    userId: string
+    memberId: number
     request: RequestCreateNestedOneWithoutTaggedIndividualsInput
   }
 
   export type RequestTaggedUserUncheckedCreateInput = {
-    userId: string
+    memberId: number
     requestId: number
     tagId?: number
   }
 
   export type RequestTaggedUserUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     request?: RequestUpdateOneRequiredWithoutTaggedIndividualsNestedInput
   }
 
   export type RequestTaggedUserUncheckedUpdateInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     requestId?: IntFieldUpdateOperationsInput | number
     tagId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserCreateManyInput = {
-    userId: string
+    memberId: number
     requestId: number
     tagId?: number
   }
 
   export type RequestTaggedUserUpdateManyMutationInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserUncheckedUpdateManyInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     requestId?: IntFieldUpdateOperationsInput | number
     tagId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestCreateInput = {
+    memberId: number
     author: string
     content: string
     status?: RequestStatus
@@ -8580,6 +8675,7 @@ export namespace Prisma {
   }
 
   export type RequestUncheckedCreateInput = {
+    memberId: number
     author: string
     content: string
     status?: RequestStatus
@@ -8591,6 +8687,7 @@ export namespace Prisma {
   }
 
   export type RequestUpdateInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -8601,6 +8698,7 @@ export namespace Prisma {
   }
 
   export type RequestUncheckedUpdateInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -8612,6 +8710,7 @@ export namespace Prisma {
   }
 
   export type RequestCreateManyInput = {
+    memberId: number
     author: string
     content: string
     status?: RequestStatus
@@ -8622,6 +8721,7 @@ export namespace Prisma {
   }
 
   export type RequestUpdateManyMutationInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -8631,6 +8731,7 @@ export namespace Prisma {
   }
 
   export type RequestUncheckedUpdateManyInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -8645,6 +8746,7 @@ export namespace Prisma {
     content: string
     createdAt?: Date | string
     projectId: number
+    memberId: number
   }
 
   export type AnnouncementUncheckedCreateInput = {
@@ -8653,6 +8755,7 @@ export namespace Prisma {
     content: string
     createdAt?: Date | string
     projectId: number
+    memberId: number
   }
 
   export type AnnouncementUpdateInput = {
@@ -8660,6 +8763,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AnnouncementUncheckedUpdateInput = {
@@ -8668,6 +8772,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AnnouncementCreateManyInput = {
@@ -8676,6 +8781,7 @@ export namespace Prisma {
     content: string
     createdAt?: Date | string
     projectId: number
+    memberId: number
   }
 
   export type AnnouncementUpdateManyMutationInput = {
@@ -8683,6 +8789,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type AnnouncementUncheckedUpdateManyInput = {
@@ -8691,6 +8798,7 @@ export namespace Prisma {
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter = {
@@ -8947,11 +9055,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type SentimentMeterAvgOrderByAggregateInput = {
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type SentimentMeterMaxOrderByAggregateInput = {
@@ -8960,6 +9070,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type SentimentMeterMinOrderByAggregateInput = {
@@ -8968,11 +9079,13 @@ export namespace Prisma {
     createdAt?: SortOrder
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type SentimentMeterSumOrderByAggregateInput = {
     sentimentId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type EnumSentimentWithAggregatesFilter = {
@@ -8990,35 +9103,37 @@ export namespace Prisma {
     isNot?: CelebrationWhereInput
   }
 
-  export type CelebrationReactedUserUserIdCelebrationIdCompoundUniqueInput = {
-    userId: string
+  export type CelebrationReactedUserMemberIdCelebrationIdCompoundUniqueInput = {
+    memberId: number
     celebrationId: number
   }
 
   export type CelebrationReactedUserCountOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
   }
 
   export type CelebrationReactedUserAvgOrderByAggregateInput = {
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
   }
 
   export type CelebrationReactedUserMaxOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
   }
 
   export type CelebrationReactedUserMinOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
   }
 
   export type CelebrationReactedUserSumOrderByAggregateInput = {
+    memberId?: SortOrder
     celebrationId?: SortOrder
     reactionId?: SortOrder
   }
@@ -9048,11 +9163,13 @@ export namespace Prisma {
     celebrationId?: SortOrder
     isAnonymous?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type CelebrationAvgOrderByAggregateInput = {
     celebrationId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type CelebrationMaxOrderByAggregateInput = {
@@ -9063,6 +9180,7 @@ export namespace Prisma {
     celebrationId?: SortOrder
     isAnonymous?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type CelebrationMinOrderByAggregateInput = {
@@ -9073,11 +9191,13 @@ export namespace Prisma {
     celebrationId?: SortOrder
     isAnonymous?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type CelebrationSumOrderByAggregateInput = {
     celebrationId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type EnumCelebrationTypeWithAggregatesFilter = {
@@ -9096,29 +9216,31 @@ export namespace Prisma {
   }
 
   export type RequestTaggedUserCountOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
   }
 
   export type RequestTaggedUserAvgOrderByAggregateInput = {
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
   }
 
   export type RequestTaggedUserMaxOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
   }
 
   export type RequestTaggedUserMinOrderByAggregateInput = {
-    userId?: SortOrder
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
   }
 
   export type RequestTaggedUserSumOrderByAggregateInput = {
+    memberId?: SortOrder
     requestId?: SortOrder
     tagId?: SortOrder
   }
@@ -9148,6 +9270,7 @@ export namespace Prisma {
   }
 
   export type RequestCountOrderByAggregateInput = {
+    memberId?: SortOrder
     author?: SortOrder
     content?: SortOrder
     status?: SortOrder
@@ -9158,11 +9281,13 @@ export namespace Prisma {
   }
 
   export type RequestAvgOrderByAggregateInput = {
+    memberId?: SortOrder
     requestId?: SortOrder
     projectId?: SortOrder
   }
 
   export type RequestMaxOrderByAggregateInput = {
+    memberId?: SortOrder
     author?: SortOrder
     content?: SortOrder
     status?: SortOrder
@@ -9173,6 +9298,7 @@ export namespace Prisma {
   }
 
   export type RequestMinOrderByAggregateInput = {
+    memberId?: SortOrder
     author?: SortOrder
     content?: SortOrder
     status?: SortOrder
@@ -9183,6 +9309,7 @@ export namespace Prisma {
   }
 
   export type RequestSumOrderByAggregateInput = {
+    memberId?: SortOrder
     requestId?: SortOrder
     projectId?: SortOrder
   }
@@ -9213,11 +9340,13 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type AnnouncementAvgOrderByAggregateInput = {
     announcementId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type AnnouncementMaxOrderByAggregateInput = {
@@ -9226,6 +9355,7 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type AnnouncementMinOrderByAggregateInput = {
@@ -9234,11 +9364,13 @@ export namespace Prisma {
     content?: SortOrder
     createdAt?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type AnnouncementSumOrderByAggregateInput = {
     announcementId?: SortOrder
     projectId?: SortOrder
+    memberId?: SortOrder
   }
 
   export type EnumTypeFieldUpdateOperationsInput = {
@@ -9688,6 +9820,7 @@ export namespace Prisma {
     type: CelebrationType
     isAnonymous?: boolean
     projectId: number
+    memberId: number
   }
 
   export type CelebrationUncheckedCreateWithoutReactionInput = {
@@ -9698,6 +9831,7 @@ export namespace Prisma {
     celebrationId?: number
     isAnonymous?: boolean
     projectId: number
+    memberId: number
   }
 
   export type CelebrationCreateOrConnectWithoutReactionInput = {
@@ -9717,6 +9851,7 @@ export namespace Prisma {
     type?: EnumCelebrationTypeFieldUpdateOperationsInput | CelebrationType
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationUncheckedUpdateWithoutReactionInput = {
@@ -9727,14 +9862,15 @@ export namespace Prisma {
     celebrationId?: IntFieldUpdateOperationsInput | number
     isAnonymous?: BoolFieldUpdateOperationsInput | boolean
     projectId?: IntFieldUpdateOperationsInput | number
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserCreateWithoutRequestInput = {
-    userId: string
+    memberId: number
   }
 
   export type CelebrationReactedUserUncheckedCreateWithoutRequestInput = {
-    userId: string
+    memberId: number
     reactionId?: number
   }
 
@@ -9768,12 +9904,13 @@ export namespace Prisma {
     AND?: Enumerable<CelebrationReactedUserScalarWhereInput>
     OR?: Enumerable<CelebrationReactedUserScalarWhereInput>
     NOT?: Enumerable<CelebrationReactedUserScalarWhereInput>
-    userId?: StringFilter | string
+    memberId?: IntFilter | number
     celebrationId?: IntFilter | number
     reactionId?: IntFilter | number
   }
 
   export type RequestCreateWithoutTaggedIndividualsInput = {
+    memberId: number
     author: string
     content: string
     status?: RequestStatus
@@ -9783,6 +9920,7 @@ export namespace Prisma {
   }
 
   export type RequestUncheckedCreateWithoutTaggedIndividualsInput = {
+    memberId: number
     author: string
     content: string
     status?: RequestStatus
@@ -9803,6 +9941,7 @@ export namespace Prisma {
   }
 
   export type RequestUpdateWithoutTaggedIndividualsInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -9812,6 +9951,7 @@ export namespace Prisma {
   }
 
   export type RequestUncheckedUpdateWithoutTaggedIndividualsInput = {
+    memberId?: IntFieldUpdateOperationsInput | number
     author?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     status?: EnumRequestStatusFieldUpdateOperationsInput | RequestStatus
@@ -9822,11 +9962,11 @@ export namespace Prisma {
   }
 
   export type RequestTaggedUserCreateWithoutRequestInput = {
-    userId: string
+    memberId: number
   }
 
   export type RequestTaggedUserUncheckedCreateWithoutRequestInput = {
-    userId: string
+    memberId: number
     tagId?: number
   }
 
@@ -9860,46 +10000,46 @@ export namespace Prisma {
     AND?: Enumerable<RequestTaggedUserScalarWhereInput>
     OR?: Enumerable<RequestTaggedUserScalarWhereInput>
     NOT?: Enumerable<RequestTaggedUserScalarWhereInput>
-    userId?: StringFilter | string
+    memberId?: IntFilter | number
     requestId?: IntFilter | number
     tagId?: IntFilter | number
   }
 
   export type CelebrationReactedUserCreateManyRequestInput = {
-    userId: string
+    memberId: number
     reactionId?: number
   }
 
   export type CelebrationReactedUserUpdateWithoutRequestInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserUncheckedUpdateWithoutRequestInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     reactionId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CelebrationReactedUserUncheckedUpdateManyWithoutReactionInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     reactionId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserCreateManyRequestInput = {
-    userId: string
+    memberId: number
     tagId?: number
   }
 
   export type RequestTaggedUserUpdateWithoutRequestInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserUncheckedUpdateWithoutRequestInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     tagId?: IntFieldUpdateOperationsInput | number
   }
 
   export type RequestTaggedUserUncheckedUpdateManyWithoutTaggedIndividualsInput = {
-    userId?: StringFieldUpdateOperationsInput | string
+    memberId?: IntFieldUpdateOperationsInput | number
     tagId?: IntFieldUpdateOperationsInput | number
   }
 

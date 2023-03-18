@@ -18,7 +18,7 @@ model PONote {
   issueLink String?
   isDeleted Boolean   @default(false)
   projectId Int
-  memberId Int
+  memberId  Int
 }
 
 model SentimentMeter {
@@ -27,15 +27,18 @@ model SentimentMeter {
   createdAt   DateTime  @default(now())
   sentimentId Int       @id @unique @default(autoincrement())
   projectId   Int
+  memberId    Int 
 }
 
 model CelebrationReactedUser {
-  userId        String
+  // userId        String
+  memberId      Int
   celebrationId Int
   reactionId    Int         @id @unique @default(autoincrement())
   request       Celebration @relation(fields: [celebrationId], references: [celebrationId])
 
-  @@unique([userId, celebrationId])
+  // @@unique([userId, celebrationId])
+  @@unique([memberId, celebrationId])
 }
 
 model Celebration {
@@ -46,17 +49,20 @@ model Celebration {
   celebrationId Int                      @id @unique @default(autoincrement())
   isAnonymous   Boolean                  @default(false)
   projectId     Int
+  memberId      Int
   reaction      CelebrationReactedUser[]
 }
 
 model RequestTaggedUser {
-  userId    String
+  // userId    String
+  memberId  Int
   requestId Int
   tagId     Int     @id @unique @default(autoincrement())
   request   Request @relation(fields: [requestId], references: [requestId])
 }
 
 model Request {
+  memberId          Int
   author            String
   content           String              @db.VarChar(255)
   status            RequestStatus       @default(PENDING)
@@ -73,6 +79,7 @@ model Announcement {
   content        String   @db.VarChar(255)
   createdAt      DateTime @default(now())
   projectId      Int
+  memberId       Int
 }
 
 

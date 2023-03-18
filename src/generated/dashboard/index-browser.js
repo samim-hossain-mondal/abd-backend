@@ -94,11 +94,12 @@ exports.Prisma.AnnouncementScalarFieldEnum = makeEnum({
   author: 'author',
   content: 'content',
   createdAt: 'createdAt',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  memberId: 'memberId'
 });
 
 exports.Prisma.CelebrationReactedUserScalarFieldEnum = makeEnum({
-  userId: 'userId',
+  memberId: 'memberId',
   celebrationId: 'celebrationId',
   reactionId: 'reactionId'
 });
@@ -110,7 +111,8 @@ exports.Prisma.CelebrationScalarFieldEnum = makeEnum({
   type: 'type',
   celebrationId: 'celebrationId',
   isAnonymous: 'isAnonymous',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  memberId: 'memberId'
 });
 
 exports.Prisma.PONoteScalarFieldEnum = makeEnum({
@@ -132,6 +134,7 @@ exports.Prisma.QueryMode = makeEnum({
 });
 
 exports.Prisma.RequestScalarFieldEnum = makeEnum({
+  memberId: 'memberId',
   author: 'author',
   content: 'content',
   status: 'status',
@@ -142,7 +145,7 @@ exports.Prisma.RequestScalarFieldEnum = makeEnum({
 });
 
 exports.Prisma.RequestTaggedUserScalarFieldEnum = makeEnum({
-  userId: 'userId',
+  memberId: 'memberId',
   requestId: 'requestId',
   tagId: 'tagId'
 });
@@ -152,7 +155,8 @@ exports.Prisma.SentimentMeterScalarFieldEnum = makeEnum({
   sentiment: 'sentiment',
   createdAt: 'createdAt',
   sentimentId: 'sentimentId',
-  projectId: 'projectId'
+  projectId: 'projectId',
+  memberId: 'memberId'
 });
 
 exports.Prisma.SortOrder = makeEnum({

@@ -15,12 +15,6 @@ const createCelebrationSchema = joi.object({
   isAnonymous: joi
     .valid(true, false)
     .required(),
-
-  projectId: joi
-    .number()
-    .integer()
-    .required()
-    .min(1)
 });
 
 const celebrationsParamSchema = joi.object({

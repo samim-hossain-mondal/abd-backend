@@ -12,7 +12,8 @@ const {
   createNewMember,
   getMemberDetailsById,
   updateMemberInfo,
-  deleteMember
+  deleteMember,
+  currentUserDetails
 } = require('../../../controllers/management/management.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
@@ -61,5 +62,9 @@ router.route('/project/:projectId/member')
     roleValidationMiddleware,
     removeMemberFromProject
   );
+
+router.route('/me')
+  .get(currentUserDetails);
+
 
 module.exports = router;

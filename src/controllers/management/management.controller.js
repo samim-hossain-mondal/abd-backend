@@ -190,6 +190,16 @@ const deleteMember = async (req, res, next) => {
   }
 };
 
+const currentUserDetails = async (req, res, next) => {
+  try {
+    const { user } = req;
+    res.status(200).json(user);
+  }
+  catch (er) {
+    next(er);
+  }
+};
+
 module.exports = {
   createNewProject,
   listAllProjectsByCurrentUserEmail,
@@ -204,4 +214,5 @@ module.exports = {
   getMemberDetailsById,
   updateMemberInfo,
   deleteMember,
+  currentUserDetails
 };

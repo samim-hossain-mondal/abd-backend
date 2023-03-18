@@ -81,6 +81,19 @@ model Announcement {
   createdAt DateTime @default(now())
 }
 
+// Made to stick model
+model MadeToStick {
+  i String @id @unique @default(uuid())
+  value String
+  backgroundColor String @db.VarChar(255)
+  x Int
+  y Int
+  w Int
+  h Int
+  type MadeToStickType // Enum - MadeToStick
+  emailId String
+}
+
 // Leave Model
 model Leave {
   leaveId Int @id @unique @default(autoincrement())
@@ -94,6 +107,10 @@ model Leave {
 
 // Enums
 
+enum MadeToStickType {
+  IMAGE
+  TEXT
+}
 enum Status {
   COMPLETED
   PENDING

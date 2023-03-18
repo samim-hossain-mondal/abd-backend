@@ -180,7 +180,7 @@ const { roleValidationMiddleware, memberValidationMiddleware } = require('../../
  *         description: Internal server error
 */
 
-router.route('/:projectId')
+router.route('/:projectId') // TODO: refactor route url
   .get(
     generateValidationMiddleware(poNotesSchema.poNotesQuerySchema, 'query'),
     memberValidationMiddleware,
@@ -304,14 +304,14 @@ router.route('/:projectId')
 */
 
 const requiredParams = {
-  id:'number'
+  id: 'number',
 };
 
 // to validate params using joi
 // const paramValidationMiddleware = generateValidationMiddleware(poNotesSchema.poNotesParamSchema, 'params');
 const paramParsingMiddleware = paramParser(requiredParams);
 
-router.route('/:projectId/:id')
+router.route('/:projectId/:id') // TODO: refactor route url
   .get(
     // paramValidationMiddleware,
     paramParsingMiddleware,

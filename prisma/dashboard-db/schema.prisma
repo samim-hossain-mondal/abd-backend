@@ -102,17 +102,20 @@ model MadeToStick {
   h Int
   type MadeToStickType // Enum - MadeToStick
   emailId String
+  projectId Int
+  memberId  Int
 }
 
 // Leave Model
 model Leave {
   leaveId Int @id @unique @default(autoincrement())
-  userId String
   userFullName String
   startDate DateTime
   endDate DateTime
   event String @db.VarChar(255)
   isRisk Boolean
+  projectId Int
+  memberId  Int
 }
 
 // Enums

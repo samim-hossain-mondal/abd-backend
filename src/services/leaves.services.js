@@ -1,5 +1,5 @@
 const { HttpError } = require('../errors');
-const prisma = require('../prismaClient');
+const { dashboardPrisma: prisma } = require('../prismaClient');
 
 async function getAllLeaves(projectId) {
   return await prisma.Leave.findMany({

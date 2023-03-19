@@ -113,7 +113,7 @@ const editAnnouncement = async (announcementId, content, memberId, projectId) =>
   * @throws {HttpError} - Throws an error if announcement not found
 */
 const deleteAnnouncement = async (announcementId, memberId, projectId) => {
-  const announcement = await dashboardPrisma.Announcement.findUnique({
+  const announcement = await dashboardPrisma.Announcement.findFirst({
     where: {
       announcementId,
       projectId

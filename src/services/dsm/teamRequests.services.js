@@ -45,12 +45,14 @@ const getAllTeamRequests = async (type,
   projectId
 ) => {
   const paginationObj = prismaUtils.getPaginationObject(page, limit);
-  const filterObj = prismaUtils.queryParamFilterTeamRequests(type,
+  const filterObj = prismaUtils.queryParamFilterTeamRequests(
+    type,
     author,
     startDate,
     endDate,
     searchKeyword,
-    status);
+    status
+  );
   const teamRequests = await dashboardPrisma.Request.findMany({
     where: {
       projectId: projectId,

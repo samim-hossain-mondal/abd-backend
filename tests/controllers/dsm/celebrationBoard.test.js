@@ -5,7 +5,14 @@ const celebrations = require('../../../mocks/dsm/celebration');
 describe('When team members fetch all celebrations', () => {
   it('should return a list of all celebrations', async () => {
     jest.spyOn(celebrationBoardServices, 'listCelebrations').mockResolvedValue(celebrations);
-    const req = {};
+    const req = {
+      params: {
+        projectId: 1
+      },
+      user: {
+        memberId: 1
+      }
+    };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
@@ -16,7 +23,14 @@ describe('When team members fetch all celebrations', () => {
   });
   it('should return a 500 status code if there is an error', async () => {
     jest.spyOn(celebrationBoardServices, 'listCelebrations').mockRejectedValue(new Error('Bad Request'));
-    const req = {};
+    const req = {
+      params: {
+        projectId: 1
+      },
+      user: {
+        memberId: 1
+      }
+    };
     const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn()
@@ -32,7 +46,10 @@ describe('When team members fetch a celebration by id', () => {
   it('should return a celebration by id', async () => {
     jest.spyOn(celebrationBoardServices, 'getCelebrationById').mockResolvedValue(celebration);
     const req = {
-      params: { celebrationId: 1 }
+      params: { celebrationId: 1, projectId: 1 },
+      user: {
+        memberId: 1
+      }
     };
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -45,7 +62,10 @@ describe('When team members fetch a celebration by id', () => {
   it('should return a 500 status code if there is an error', async () => {
     jest.spyOn(celebrationBoardServices, 'getCelebrationById').mockRejectedValue(new Error('Bad Request'));
     const req = {
-      params: { celebrationId: 1 }
+      params: { celebrationId: 1, projectId: 1 },
+      user: {
+        memberId: 1
+      }
     };
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -65,6 +85,12 @@ describe('When team members create a celebration', () => {
       body: {
         content: 'Congrats Team!',
         type: 'CELEBRATION'
+      },
+      params: {
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
       }
     };
     const res = {
@@ -81,6 +107,12 @@ describe('When team members create a celebration', () => {
       body: {
         content: 'Congrats Team!',
         type: 'CELEBRATION'
+      },
+      params: {
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
       }
     };
     const res = {
@@ -99,7 +131,13 @@ describe('When team members update a celebration', () => {
     jest.spyOn(celebrationBoardServices, 'updateCelebrationById').mockResolvedValue(updatedCelebration);
     const req = {
       query: {},
-      params: { celebrationId: 1 },
+      params: {
+        celebrationId: 1,
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      },
       body: {
         content: 'Congrats Team!'
       }
@@ -117,7 +155,13 @@ describe('When team members update a celebration', () => {
     jest.spyOn(celebrationBoardServices, 'updateCelebrationById').mockRejectedValue(new Error('Bad Request'));
     const req = {
       query: {},
-      params: { celebrationId: 1 },
+      params: {
+        celebrationId: 1,
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      },
       body: {
         content: 'Congrats Team ABD!'
       }
@@ -136,7 +180,13 @@ describe('When team members delete a celebration', () => {
   it('should delete a celebration', async () => {
     jest.spyOn(celebrationBoardServices, 'deleteCelebrationById').mockResolvedValue();
     const req = {
-      params: { celebrationId: 1 }
+      params: {
+        celebrationId: 1,
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      }
     };
     const res = {
       status: jest.fn().mockReturnThis(),
@@ -149,7 +199,13 @@ describe('When team members delete a celebration', () => {
   it('should return a 500 status code if there is an error', async () => {
     jest.spyOn(celebrationBoardServices, 'deleteCelebrationById').mockRejectedValue(new Error('Bad Request'));
     const req = {
-      params: { celebrationId: 1 }
+      params: {
+        celebrationId: 1,
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      }
     };
     const res = {
       status: jest.fn().mockReturnThis(),

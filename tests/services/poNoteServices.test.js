@@ -1,4 +1,4 @@
-const prisma = require('../../src/prismaClient');
+const { dashboardPrisma: prisma } = require('../../src/prismaClient');
 const poNotesServices = require('../../src/services/poNoteServices');
 
 const prismaUtils = require('../../src/utils/prismaUtils');
@@ -328,20 +328,31 @@ describe('createValidPONote', () => {
 });
 
 describe('updatePONoteById', () => {
+  const findResult = {
+    'noteId': 8,
+    'note': 'string',
+    'status': 'PENDING',
+    'issueLink': 'http://it-me',
+    'type': 'ACTION_ITEM',
+    projectId: 1,
+    memberId: 1
+  };
   it('should return updated po note as an object (without dueDate & issueLink)', async () => {
     const updatePONote = {
       'noteId': 8,
       'note': 'string'
     };
 
-    const params = [8, 'string'];
+    const params = [8, 'string', undefined, undefined, undefined, undefined];
 
     const updateResult = { count: 1 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedUpdate = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
 
-    const returnedVal = await poNotesServices.updatePONoteById(...params);
+    const returnedVal = await poNotesServices.updatePONoteById(...params, 1, 1);
     expect(spiedUpdate).toBeCalled();
+    expect(spiedFindFirst).toBeCalled();
     expect(returnedVal).toEqual(updatePONote);
   });
   it('should return updated po note as an object (all, but without dueDate)', async () => {
@@ -357,10 +368,12 @@ describe('updatePONoteById', () => {
     const params = Object.values(updatePONote);
 
     const updateResult = { count: 1 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedUpdate = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
 
-    const returnedVal = await poNotesServices.updatePONoteById(...params);
+    const returnedVal = await poNotesServices.updatePONoteById(...params, 1, 1);
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedUpdate).toBeCalled();
     expect(returnedVal).toEqual(updatePONote);
   });
@@ -379,10 +392,12 @@ describe('updatePONoteById', () => {
     const params = Object.values(updatePONote);
 
     const updateResult = { count: 1 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedUpdate = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
 
-    const returnedVal = await poNotesServices.updatePONoteById(...params);
+    const returnedVal = await poNotesServices.updatePONoteById(...params, 1, 1);
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedUpdate).toBeCalled();
     expect(returnedVal).toEqual({
       ...updatePONote,
@@ -394,52 +409,77 @@ describe('updatePONoteById', () => {
 
     // count = 0 mean no data exists
     const updateResult = { count: 0 };
-
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(null);
     const spiedUpdate = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedUpdate).toBeCalled();
 
     await expect(async () => {
-      await poNotesServices.updatePONoteById(...params);
+      await poNotesServices.updatePONoteById(...params, 1, 1);
     }).rejects.toThrowError(new HttpError(404, '(UPDATE) : No Record Found'));
   });
 });
 
 describe('softDeletePONoteById', () => {
+  const findResult = {
+    'noteId': 8,
+    'note': 'string',
+    'status': 'PENDING',
+    'issueLink': 'http://it-me',
+    'type': 'ACTION_ITEM',
+    projectId: 1,
+    memberId: 1
+  };
   it('should return object with count property & value to be 1', async () => {
     const noteId = 8;
 
     const updateResult = { count: 1 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedDelete = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
 
-    const returnedVal = await poNotesServices.softDeletePONoteById(noteId);
+    const returnedVal = await poNotesServices.softDeletePONoteById(noteId, 1, 1);
     expect(spiedDelete).toBeCalled();
+    expect(spiedFindFirst).toBeCalled();
     expect(returnedVal).toEqual(updateResult);
   });
   it('should throw error when not existing noteId is passed', async () => {
     const noteId = 8;
 
     const updateResult = { count: 0 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedDelete = jest.spyOn(prisma.PONote, 'updateMany')
       .mockResolvedValue(updateResult);
 
     await expect(async () => {
-      await poNotesServices.softDeletePONoteById(noteId);
+      await poNotesServices.softDeletePONoteById(noteId, 1, 1);
     }).rejects.toThrowError(new HttpError(404, '(DELETE) : No Record Found'));
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedDelete).toBeCalled();
   });
 });
 
 describe('hardDeletePONoteById', () => {
+  const findResult = {
+    'noteId': 8,
+    'note': 'string',
+    'status': 'PENDING',
+    'issueLink': 'http://it-me',
+    'type': 'ACTION_ITEM',
+    projectId: 1,
+    memberId: 1
+  };
   it('should return object with count property & value to be 1', async () => {
     const noteId = 8;
 
     const deleteResult = { count: 1 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedDelete = jest.spyOn(prisma.PONote, 'deleteMany')
       .mockResolvedValue(deleteResult);
 
-    const returnedVal = await poNotesServices.hardDeletePONoteById(noteId);
+    const returnedVal = await poNotesServices.hardDeletePONoteById(noteId, 1, 1);
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedDelete).toBeCalled();
     expect(returnedVal).toEqual(deleteResult);
   });
@@ -447,12 +487,14 @@ describe('hardDeletePONoteById', () => {
     const noteId = 8;
 
     const deleteResult = { count: 0 };
+    const spiedFindFirst = jest.spyOn(prisma.PONote, 'findFirst').mockResolvedValue(findResult);
     const spiedDelete = jest.spyOn(prisma.PONote, 'deleteMany')
       .mockResolvedValue(deleteResult);
 
     await expect(async () => {
-      await poNotesServices.hardDeletePONoteById(noteId);
+      await poNotesServices.hardDeletePONoteById(noteId, 1, 1);
     }).rejects.toThrowError(new HttpError(404, '(DELETE) : No Record Found'));
+    expect(spiedFindFirst).toBeCalled();
     expect(spiedDelete).toBeCalled();
   });
 });

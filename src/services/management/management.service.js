@@ -327,6 +327,7 @@ const getProjectDetailsByIdInDb = async (projectId) => {
         select: {
           email: true,
           role: true,
+          memberId: true,
         }
       }
     },

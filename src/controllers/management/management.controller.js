@@ -18,7 +18,7 @@ const {
 const createNewProject = async (req, res, next) => {
   try {
     const { projectName, projectDescription } = req.body; 
-    const { email, name } = req.user;      
+    const { email, name } = req.user;    
     const result = await createNewAgileDashboardInDb(
       projectName, 
       projectDescription, 
@@ -77,8 +77,8 @@ const addNewProjectMember = async (req, res, next) => {
 const removeMemberFromProject = async (req, res, next) => {
   try {
     const { projectId } = req.params;
-    const { memberId } = req.body;
-    const result = await removeProjectMemberInDb(parseInt(projectId), memberId);
+    const { email } = req.body;
+    const result = await removeProjectMemberInDb(parseInt(projectId), email);
     res.status(200).json(result);
   }
   catch (er) {

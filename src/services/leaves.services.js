@@ -1,31 +1,36 @@
 const { HttpError } = require('../errors');
 const prisma = require('../prismaClient');
 
-async function getAllLeaves() {
+async function getAllLeaves(projectId) {
   return await prisma.Leave.findMany({
+    where: {
+      projectId
+    },
     orderBy: {
       startDate: 'desc',
     },
   });
 }
 
-async function createLeave(event, isRisk, startDate, endDate, user) {
+async function createLeave(event, isRisk, startDate, endDate, user, projectId) {
   return await prisma.Leave.create({
     data: {
       event,
       isRisk,
       startDate,
       endDate,
-      userId: user.uid,
+      projectId,
+      memberId: user.memberId,
       userFullName: user.firstName + ' ' + user.lastName,
     },
   });
 }
 
-async function editLeave(id, event, isRisk, startDate, endDate, user) {
-  const leave = await prisma.Leave.findUnique({
+async function editLeave(id, event, isRisk, startDate, endDate, user, projectId) {
+  const leave = await prisma.Leave.findFirst({
     where: {
       leaveId: id,
+      projectId
     }
   });
 
@@ -33,7 +38,7 @@ async function editLeave(id, event, isRisk, startDate, endDate, user) {
     throw new HttpError(404, 'Leave not found');
   }
 
-  if (leave.userId !== user.uid) {
+  if (leave.memberId !== user.memberId) {
     throw new HttpError(403, 'You are not allowed to edit this leave');
   }
 
@@ -50,10 +55,11 @@ async function editLeave(id, event, isRisk, startDate, endDate, user) {
   });
 }
 
-async function deleteLeave(id, user) {
-  const leave = await prisma.Leave.findUnique({
+async function deleteLeave(id, user, projectId) {
+  const leave = await prisma.Leave.findFirst({
     where: {
       leaveId: id,
+      projectId
     }
   });
 
@@ -61,7 +67,7 @@ async function deleteLeave(id, user) {
     throw new HttpError(404, 'Leave not found');
   }
 
-  if (leave.userId !== user.uid) {
+  if (leave.memberId !== user.memberId) {
     throw new HttpError(403, 'You are not allowed to delete this leave');
   }
 

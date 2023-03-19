@@ -169,7 +169,7 @@ router.route('/project')
  * /api/management/project/{projectId}:
  *   get:
  *     tags:
- *      - management
+ *       - management
  *     summary: Get project details by ID
  *     description: Returns project details for a given project ID, can be viewed only by project's members.
  *     parameters:
@@ -185,19 +185,39 @@ router.route('/project')
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ProjectDetails'
+ *               type: object
+ *               properties:
+ *                 projectId:
+ *                   type: integer
+ *                 projectName:
+ *                   type: string
+ *                 projectDescription:
+ *                   type: string
+ *                 isDeleted:
+ *                   type: boolean
+ *                 projectMembers:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       memberId:
+ *                         type: integer
+ *                       email:
+ *                         type: string
+ *                       role:
+ *                         type: string
  *       '401':
  *         description: Unauthorized
  *       '404':
  *         description: Project not found
  *       '403':
- *          description: Forbidden
+ *         description: Forbidden
  *       '500':
- *          description: Internal server error
+ *         description: Internal server error
  * 
  *   patch:
  *     tags:
- *      - management
+ *       - management
  *     summary: Update project information (both or one of name and description)
  *     description: Updates project information for a given project ID, can be accessed only by project admin.
  *     parameters:
@@ -226,19 +246,28 @@ router.route('/project')
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/ProjectDetails'
+ *               type: object
+ *               properties:
+ *                 projectName:
+ *                   type: string
+ *                   description: New name of the project
+ *                 projectDescription:
+ *                   type: string
+ *                   description: New description of the project
+ *       '400':
+ *         description: Bad request
  *       '401':
  *         description: Unauthorized
  *       '404':
  *         description: Project not found
  *       '403':
- *          description: Forbidden
+ *         description: Forbidden
  *       '500':
- *          description: Internal server error
+ *         description: Internal server error
  * 
  *   delete:
  *     tags:
- *      - management
+ *       - management
  *     summary: Delete project
  *     description: Deletes project for a given project ID, can be accessed only by project admin.
  *     parameters:
@@ -256,10 +285,11 @@ router.route('/project')
  *       '404':
  *         description: Project not found
  *       '403':
- *          description: Forbidden
+ *         description: Forbidden
  *       '500':
- *          description: Internal server error
+ *         description: Internal server error
  */
+
 
 router.route('/project/:projectId')
   .get(memberValidationMiddleware, getProjectDetailsById)

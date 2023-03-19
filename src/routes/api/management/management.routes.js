@@ -13,7 +13,8 @@ const {
   getMemberDetailsById,
   updateMemberInfo,
   deleteMember,
-  currentUserDetails
+  currentUserDetails,
+  getProjectMemberDetailsById
 } = require('../../../controllers/management/management.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
@@ -33,15 +34,6 @@ router.route('/project/:projectId')
     roleValidationMiddleware, 
     updateProjectInfo)
   .delete(roleValidationMiddleware, deleteProject);
-
-router.route('/member')
-  .post(createNewMember);
-
-router.route('/member/:memberId')
-  .get(getMemberDetailsById)
-  .patch(updateMemberInfo)
-  .delete(deleteMember);
-  
 
 router.route('/project/:projectId/member')
   .get(
@@ -63,8 +55,19 @@ router.route('/project/:projectId/member')
     removeMemberFromProject
   );
 
+router.route('/project/:projectId/member/:memberId')
+  .get(memberValidationMiddleware, getProjectMemberDetailsById);
+
 router.route('/me')
   .get(currentUserDetails);
 
+// TODO: these routes are not to be used, parked for future enhancement
+router.route('/member')
+  .post(createNewMember);
+
+router.route('/member/:memberId')
+  .get(getMemberDetailsById)
+  .patch(updateMemberInfo)
+  .delete(deleteMember);
 
 module.exports = router;

@@ -11,7 +11,8 @@ const {
   createNewMemberInDb,
   getMemberDetailsByIdInDb,
   updateMemberInfoInDb,
-  deleteMemberInDb
+  deleteMemberInDb,
+  getProjectMemberDetailsByIdInDb
 } = require('../../services/management/management.service');
 
 const createNewProject = async (req, res, next) => {
@@ -200,6 +201,21 @@ const currentUserDetails = async (req, res, next) => {
   }
 };
 
+const getProjectMemberDetailsById = async (req, res, next) => {
+  try {
+    const { projectId, memberId } = req.params;
+    const result = await getProjectMemberDetailsByIdInDb(
+      parseInt(projectId), parseInt(memberId)
+    );
+    res.status(200).json(result);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
+
 module.exports = {
   createNewProject,
   listAllProjectsByCurrentUserEmail,
@@ -214,5 +230,6 @@ module.exports = {
   getMemberDetailsById,
   updateMemberInfo,
   deleteMember,
-  currentUserDetails
+  currentUserDetails,
+  getProjectMemberDetailsById,
 };

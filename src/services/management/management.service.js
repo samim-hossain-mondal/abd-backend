@@ -339,6 +339,33 @@ const getProjectDetailsByIdInDb = async (projectId) => {
   return project;
 };
 
+
+const getProjectMemberDetailsByIdInDb = async (projectId, memberId) => {
+  const projectMember = await managementPrisma.projectMember.findFirst({
+    where: {
+      projectId,
+      memberId
+    },
+    select: {
+      projectId: true,
+      role: true,
+      member: {
+        select: {
+          email: true,
+          name: true,
+          memberId: true
+        }
+      }
+    }
+  });
+
+  if (!projectMember) {
+    throw new HttpError(404, 'Member not found in project.');
+  }
+
+  return projectMember;
+};
+
 // REVIEW: these are not used endpoints
 
 const createNewMemberInDb = async (email, name = null, role) => {
@@ -447,5 +474,6 @@ module.exports = {
   getMemberDetailsByIdInDb,
   updateMemberInfoInDb,
   deleteMemberInDb,
+  getProjectMemberDetailsByIdInDb,
 };
 

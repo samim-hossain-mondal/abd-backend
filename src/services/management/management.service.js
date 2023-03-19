@@ -153,7 +153,7 @@ const addProjectMemberInDb = async (projectId, email, role) => {
 
 };
 
-const removeProjectMemberInDb = async (projectId, email) => {
+const removeProjectMemberByEmailInDb = async (projectId, email) => {
   const project = await managementPrisma.project.findUnique({
     where: {
       projectId,
@@ -339,7 +339,6 @@ const getProjectDetailsByIdInDb = async (projectId) => {
   return project;
 };
 
-
 const getProjectMemberDetailsByIdInDb = async (projectId, memberId) => {
   const projectMember = await managementPrisma.projectMember.findFirst({
     where: {
@@ -379,10 +378,12 @@ const updateMemberRoleByIdInDb = async (projectId, memberId, role) => {
     throw new HttpError(404, 'Project not found.');
   }
 
-  const projectMember = await managementPrisma.projectMember.findFirst({
+  const projectMember = await managementPrisma.projectMember.findUnique({
     where: {
-      projectId,
-      memberId
+      projectId_memberId: {
+        projectId,
+        memberId
+      }
     }
   });
 
@@ -405,6 +406,39 @@ const updateMemberRoleByIdInDb = async (projectId, memberId, role) => {
   return updatedProjectMember;
 };
 
+const removeProjectMemberByIdInDb = async (projectId, memberId) => {
+  const project = await managementPrisma.project.findUnique({
+    where: {
+      projectId
+    }
+  });
+
+  if (!project || project.isDeleted) {
+    throw new HttpError(404, 'Project not found.');
+  }
+
+  const projectMember = await managementPrisma.projectMember.findUnique({
+    where: {
+      projectId_memberId: {
+        projectId,
+        memberId
+      }
+    }
+  });
+
+  if (!projectMember) {
+    throw new HttpError(404, 'Member not found in project.');
+  }
+
+  await managementPrisma.projectMember.delete({
+    where: {
+      projectId_memberId: {
+        projectId,
+        memberId
+      }
+    }
+  });
+};
 
 
 
@@ -507,7 +541,8 @@ module.exports = {
   allProjectsByCurrentUserInDb,
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
-  removeProjectMemberInDb,
+  removeProjectMemberByEmailInDb,
+  removeProjectMemberByIdInDb,
   updateMemberRoleByEmailInDb,
   updateMemberRoleByIdInDb,
   updateProjectInfoInDb,

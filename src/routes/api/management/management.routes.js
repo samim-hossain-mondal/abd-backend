@@ -19,7 +19,13 @@ const {
 
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
-const { createProjectSchema, addMemberSchema, projectInfoSchema, updateMemberSchema } = require('../../../schemas/management/managementSchema');
+const { 
+  createProjectSchema, 
+  addMemberSchema, 
+  projectInfoSchema, 
+  updateMemberSchema, 
+  removeMemberSchema 
+} = require('../../../schemas/management/managementSchema');
 
 /**
  * @openapi
@@ -417,17 +423,18 @@ router.route('/project/:projectId/member')
     listAllMembersByProjectId
   )
   .post(
-    generateValidationMiddleware(addMemberSchema),
     roleValidationMiddleware,
+    generateValidationMiddleware(addMemberSchema),
     addNewProjectMember
   )
   .patch(
-    generateValidationMiddleware(addMemberSchema),
     roleValidationMiddleware,
+    generateValidationMiddleware(addMemberSchema),
     updateMemberRole
   )
   .delete(
     roleValidationMiddleware,
+    generateValidationMiddleware(removeMemberSchema),
     removeMemberFromProject
   );
 
@@ -476,8 +483,8 @@ router.route('/project/:projectId/member/:memberId')
     roleValidationMiddleware, 
     generateValidationMiddleware(updateMemberSchema), 
     updateMemberRole
-  );
-// .delete(roleValidationMiddleware, removeMemberFromProject);
+  )
+  .delete(roleValidationMiddleware, removeMemberFromProject);
 
 /**
  * @openapi

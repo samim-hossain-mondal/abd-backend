@@ -27,10 +27,18 @@ const updateMemberSchema = joi.object({
 
 const addMemberSchema = updateMemberSchema.fork('email', (field) => field.required());
 
+const removeMemberSchema = joi.object({
+  email: joi
+    .string()
+    .email()
+    .required()
+});
+
 module.exports = {
   createProjectSchema,
   addMemberSchema,
   updateMemberSchema,
-  projectInfoSchema
+  projectInfoSchema,
+  removeMemberSchema
 };
 

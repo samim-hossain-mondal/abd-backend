@@ -3,7 +3,8 @@ const {
   allProjectsByCurrentUserInDb,
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
-  removeProjectMemberInDb,
+  removeProjectMemberByEmailInDb,
+  removeProjectMemberByIdInDb,
   updateMemberRoleByEmailInDb,
   updateMemberRoleByIdInDb,
   updateProjectInfoInDb,
@@ -77,9 +78,12 @@ const addNewProjectMember = async (req, res, next) => {
 
 const removeMemberFromProject = async (req, res, next) => {
   try {
-    const { projectId } = req.params;
+    const { projectId, memberId } = req.params;
     const { email } = req.body;
-    await removeProjectMemberInDb(parseInt(projectId), email);
+    memberId ? 
+      await removeProjectMemberByIdInDb(parseInt(projectId), parseInt(memberId)) :
+      await removeProjectMemberByEmailInDb(parseInt(projectId), email);
+      
     res.status(204).json({ message: `Successfully removed member with email ${email} from project with id ${projectId}.` });
   }
   catch (er) {
@@ -95,7 +99,7 @@ const updateMemberRole = async (req, res, next) => {
     const result = memberId ?
       await updateMemberRoleByIdInDb(parseInt(projectId), parseInt(memberId), role) :
       await updateMemberRoleByEmailInDb(parseInt(projectId), email, role);
-      
+
     res.status(200).json(result);
   }
   catch (er) {

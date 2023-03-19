@@ -78,8 +78,8 @@ const removeMemberFromProject = async (req, res, next) => {
   try {
     const { projectId } = req.params;
     const { email } = req.body;
-    const result = await removeProjectMemberInDb(parseInt(projectId), email);
-    res.status(200).json(result);
+    await removeProjectMemberInDb(parseInt(projectId), email);
+    res.status(204).json({ message: `Successfully removed member with email ${email} from project with id ${projectId}.` });
   }
   catch (er) {
     console.log(er);
@@ -118,7 +118,7 @@ const deleteProject = async (req, res, next) => {
   try {
     const { projectId } = req.params;
     await deleteProjectInDb(parseInt(projectId));
-    res.status(200).json({ message: `Successfully deleted project with id ${projectId}.`});
+    res.status(204).json({ message: `Successfully deleted project with id ${projectId}.`});
   }
   catch (er) {
     console.log(er);
@@ -132,6 +132,20 @@ const getProjectDetailsById = async (req, res, next) => {
     const project = await getProjectDetailsByIdInDb(parseInt(projectId));
 
     return res.status(200).json(project);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
+const getProjectMemberDetailsById = async (req, res, next) => {
+  try {
+    const { projectId, memberId } = req.params;
+    const result = await getProjectMemberDetailsByIdInDb(
+      parseInt(projectId), parseInt(memberId)
+    );
+    res.status(200).json(result);
   }
   catch (er) {
     console.log(er);
@@ -183,7 +197,7 @@ const deleteMember = async (req, res, next) => {
   try {
     const { memberId } = req.params;
     const result = await deleteMemberInDb(parseInt(memberId));
-    res.status(200).json({ message: `Member ${result.email} deleted successfully.` });
+    res.status(204).json({ message: `Member ${result.email} deleted successfully.` });
   }
   catch (er) {
     console.log(er);
@@ -197,20 +211,6 @@ const currentUserDetails = async (req, res, next) => {
     res.status(200).json(user);
   }
   catch (er) {
-    next(er);
-  }
-};
-
-const getProjectMemberDetailsById = async (req, res, next) => {
-  try {
-    const { projectId, memberId } = req.params;
-    const result = await getProjectMemberDetailsByIdInDb(
-      parseInt(projectId), parseInt(memberId)
-    );
-    res.status(200).json(result);
-  }
-  catch (er) {
-    console.log(er);
     next(er);
   }
 };

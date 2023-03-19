@@ -86,12 +86,15 @@ const editPONote = async (req, res, next) => {
       type
     } = req.body;
 
+    const { memberId } = req.user;
+
     const updatedNote =
       await poNoteServices.updatePONoteById(
         noteId, note,
         status, dueDate,
         issueLink, type,
-        parseInt(projectId)
+        parseInt(projectId),
+        parseInt(memberId)
       );
 
     res.status(200).json(updatedNote);
@@ -106,10 +109,11 @@ const deletePONote = async (req, res, next) => {
   try {
     const { projectId, id: noteId } = req.params;
     const deleteType = req.body.deleteType;
+    const { memberId } = req.user;
 
     deleteType === 'HARD' ?
-      await poNoteServices.hardDeletePONoteById(noteId, parseInt(projectId)) :
-      await poNoteServices.softDeletePONoteById(noteId, parseInt(projectId));
+      await poNoteServices.hardDeletePONoteById(noteId, parseInt(projectId), parseInt(memberId)) :
+      await poNoteServices.softDeletePONoteById(noteId, parseInt(projectId), parseInt(memberId));
 
     res.status(204).json();
   }

@@ -121,8 +121,23 @@ const createValidPONote = async (
 const updatePONoteById = async (
   noteId, note,
   status, dueDate,
-  issueLink, type, projectId
+  issueLink, type, projectId, memberId
 ) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(UPDATE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to update this note.');
 
   const updateDetails = {
     ...(note && { note }),
@@ -161,12 +176,29 @@ const updatePONoteById = async (
 };
 
 // soft delete a note
-const softDeletePONoteById = async (noteId, projectId) => {
-  const noteObj = await dashboardPrisma.PONote.updateMany({
+const softDeletePONoteById = async (noteId, projectId, memberId) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
       isDeleted: false,
       projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(DELETE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to delete this note.');
+
+  const noteObj = await dashboardPrisma.PONote.updateMany({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId,
+      memberId
     },
     data: {
       isDeleted: true
@@ -178,12 +210,29 @@ const softDeletePONoteById = async (noteId, projectId) => {
 };
 
 // hard delete a note
-const hardDeletePONoteById = async (noteId, projectId) => {
-  const noteObj = await dashboardPrisma.PONote.deleteMany({
+const hardDeletePONoteById = async (noteId, projectId, memberId) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
       isDeleted: false,
       projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(DELETE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to delete this note.');
+
+  const noteObj = await dashboardPrisma.PONote.deleteMany({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId,
+      memberId
     },
   });
 

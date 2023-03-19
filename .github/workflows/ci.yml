@@ -26,7 +26,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run test-coverage
+    - run: npm run test:coverage
   
   # leaks-check:
   #  runs-on: ubuntu-latest 

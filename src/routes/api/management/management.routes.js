@@ -475,6 +475,78 @@ router.route('/project/:projectId/member')
  *         description: Not Found
  *       '500':
  *         description: Internal Server Error
+ *   patch:
+ *     tags:
+ *       - management
+ *     summary: Update member role by ID
+ *     description: Update member role by ID, only admin can update
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         description: Project ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 description: Role of the member to update
+ *     responses:
+ *       '200':
+ *         description: Member role updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ProjectMember'
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ *   delete:
+ *     tags:
+ *       - management
+ *     summary: Remove a member from a project
+ *     description: Remove a member from a project
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         description: Project ID to remove the member from
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID to remove from the project
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '204':
+ *         description: Member removed successfully
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
  */
 
 router.route('/project/:projectId/member/:memberId')

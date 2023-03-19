@@ -3,12 +3,18 @@ const announcementServices = require('../../../src/services/dsm/announcements.se
 const getRandomNumber = require('../../../src/utils/randomGenerator');
 const { announcementList, announcementByID } = require('../../../src/mocks/dsm/announcements');
 
-describe('When any team member/leadership or PO himself tries to fetch all the announcements',()=>{
+describe('When any team member/leadership or PO himself tries to fetch all the announcements', () => {
   const announcements = announcementList;
 
   it('should return array of announcements as objects', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -26,6 +32,12 @@ describe('When any team member/leadership or PO himself tries to fetch all the a
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -40,14 +52,18 @@ describe('When any team member/leadership or PO himself tries to fetch all the a
   });
 });
 
-describe('When any team member/leadership or PO himself tries to fetch an announcement',()=>{
+describe('When any team member/leadership or PO himself tries to fetch an announcement', () => {
   const announcement = announcementByID;
 
   it('should return the announcement object', async () => {
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -67,7 +83,11 @@ describe('When any team member/leadership or PO himself tries to fetch an announ
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -83,12 +103,19 @@ describe('When any team member/leadership or PO himself tries to fetch an announ
   });
 });
 
-describe('When any team member/leadership or PO himself tries to create an announcements',()=>{
+describe('When any team member/leadership or PO himself tries to create an announcements', () => {
   const announcement = announcementByID;
 
   it('should return the announcement object', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+        id: 1
+      },
+      user: {
+        memberId: 1
+      },
       body: {
         content: 'This is the first announcement'
       }
@@ -101,7 +128,7 @@ describe('When any team member/leadership or PO himself tries to create an annou
 
     jest.spyOn(announcementServices, 'createAnnouncement').mockResolvedValue(announcement);
     jest.spyOn(getRandomNumber, 'getRandomNumber').mockResolvedValue(1);
-    
+
     await announcementController.createAnnouncement(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(201);
     expect(mockRes.json).toBeCalledWith(announcement);
@@ -112,7 +139,15 @@ describe('When any team member/leadership or PO himself tries to create an annou
       query: {},
       body: {
         content: 'This is the first announcement'
+      },
+      params: {
+        projectId: 1,
+        id: 1
+      },
+      user: {
+        memberId: 1
       }
+
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -127,7 +162,7 @@ describe('When any team member/leadership or PO himself tries to create an annou
   });
 });
 
-describe('when the author of the announcement tries to update the announcement',()=>{
+describe('when the author of the announcement tries to update the announcement', () => {
   const announcement = announcementByID;
 
   xit('should throw error if user is not the author of the announcement', async () => {
@@ -137,7 +172,11 @@ describe('when the author of the announcement tries to update the announcement',
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       },
       body: {
         content: 'This is the updated announcement'
@@ -149,18 +188,22 @@ describe('when the author of the announcement tries to update the announcement',
     };
     const next = jest.fn();
 
-    jest.spyOn(announcementServices, 'editAnnouncement').mockResolvedValue({...announcement, content: 'This is the updated announcement'});
+    jest.spyOn(announcementServices, 'editAnnouncement').mockResolvedValue({ ...announcement, content: 'This is the updated announcement' });
 
     await announcementController.editAnnouncement(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(200);
-    expect(mockRes.json).toBeCalledWith({...announcement,content: 'This is the updated announcement'});
+    expect(mockRes.json).toBeCalledWith({ ...announcement, content: 'This is the updated announcement' });
   });
 
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       },
       body: {
         content: 'This is the updated announcement'
@@ -179,7 +222,7 @@ describe('when the author of the announcement tries to update the announcement',
   });
 });
 
-describe('when the author of the announcement tries to delete the announcement',()=>{
+describe('when the author of the announcement tries to delete the announcement', () => {
   xit('should throw error if user is not the author of the announcement', async () => {
   });
 
@@ -187,7 +230,11 @@ describe('when the author of the announcement tries to delete the announcement',
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -207,7 +254,11 @@ describe('when the author of the announcement tries to delete the announcement',
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {

@@ -1,7 +1,7 @@
 const express = require('express');
-// const { authMiddleware } = require('../../middlewares/auth');
+const { authMiddleware } = require('../../middlewares/auth');
 const router = express.Router();
-// router.use(authMiddleware);
+router.use(authMiddleware);
 router.use('/po-notes', require('./poNotes.routes'));
 router.use('/po-notes', require('./poNotes.routes'));
 router.use('/dsm/team-requests',require('./dsm/teamRequests.routes'));

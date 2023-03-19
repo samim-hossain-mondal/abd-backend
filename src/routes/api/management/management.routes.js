@@ -305,7 +305,7 @@ router.route('/project/:projectId')
  *   post:
  *     tags:
  *       - management
- *     summary: Add a new member to a project
+ *     summary: Add a new member to a project by email
  *     description: Add a new member to a project, only accessible by project admin
  *     parameters:
  *       - in: path
@@ -345,7 +345,7 @@ router.route('/project/:projectId')
  *   patch:
  *     tags:
  *       - management
- *     summary: Update the role of a member in a project
+ *     summary: Update the role of a member in a project by email
  *     description: Update the role of a member in a project
  *     parameters:
  *       - in: path
@@ -385,7 +385,7 @@ router.route('/project/:projectId')
  *   delete:
  *     tags:
  *       - management
- *     summary: Remove a member from a project
+ *     summary: Remove a member from a project by email
  *     description: Remove a member from a project
  *     parameters:
  *       - in: path
@@ -478,7 +478,7 @@ router.route('/project/:projectId/member')
  *   patch:
  *     tags:
  *       - management
- *     summary: Update member role by ID
+ *     summary: Update member role by member ID 
  *     description: Update member role by ID, only admin can update
  *     parameters:
  *       - in: path
@@ -521,7 +521,7 @@ router.route('/project/:projectId/member')
  *   delete:
  *     tags:
  *       - management
- *     summary: Remove a member from a project
+ *     summary: Remove a member from a project by member ID
  *     description: Remove a member from a project
  *     parameters:
  *       - in: path

@@ -1,5 +1,5 @@
 const { HttpError } = require('../errors');
-const prisma = require('../prismaClient');
+const { dashboardPrisma: prisma } = require('../prismaClient');
 
 // service to create a new madeToStick
 const createMadeToStick = async (

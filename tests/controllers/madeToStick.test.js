@@ -5,6 +5,13 @@ describe('getAllMadeToStick', () => {
   it('should return all madeToStick item when called', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -21,7 +28,7 @@ describe('getAllMadeToStick', () => {
       'type': 'string',
       'emailId': 'string',
       'backgroundColor': 'string',
-        
+
     };
     jest.spyOn(madeToStickServices, 'getAllMadeToStick').mockResolvedValue(mockMadeToStick);
     await madeToStickControllers.getAllMadeToStick(mockReq, mockRes, next);
@@ -31,6 +38,13 @@ describe('getAllMadeToStick', () => {
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -47,6 +61,13 @@ describe('addMadeToStick', () => {
   it('should return added madeToStick item when called', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
+      },
       body: {
         'value': 'string',
         'x': 0,
@@ -55,7 +76,7 @@ describe('addMadeToStick', () => {
         'h': 0,
         'type': 'string',
         'emailId': 'string',
-        'backgroundColor': 'string',     
+        'backgroundColor': 'string',
       },
     };
     const mockRes = {
@@ -72,7 +93,7 @@ describe('addMadeToStick', () => {
       'h': 0,
       'type': 'string',
       'emailId': 'string',
-      'backgroundColor': 'string',          
+      'backgroundColor': 'string',
     };
     jest.spyOn(madeToStickServices, 'createMadeToStick').mockResolvedValue(mockMadeToStick);
     await madeToStickControllers.createMadeToStick(mockReq, mockRes, next);
@@ -90,7 +111,14 @@ describe('addMadeToStick', () => {
         'h': 0,
         'type': 'string',
         'emailId': 'string',
-        'backgroundColor': 'string',           
+        'backgroundColor': 'string',
+      },
+      params: {
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -116,10 +144,14 @@ describe('editMadeToStick', () => {
         'h': 0,
         'type': 'string',
         'emailId': 'string',
-        'backgroundColor': 'string',               
+        'backgroundColor': 'string',
       },
       params: {
-        i: 1,
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -136,7 +168,7 @@ describe('editMadeToStick', () => {
       'h': 0,
       'type': 'string',
       'emailId': 'string',
-      'backgroundColor': 'string',               
+      'backgroundColor': 'string',
     };
     jest.spyOn(madeToStickServices, 'editMadeToStick').mockResolvedValue(mockMadeToStick);
     await madeToStickControllers.editMadeToStick(mockReq, mockRes, next);
@@ -158,7 +190,11 @@ describe('editMadeToStick', () => {
         'backgroundColor': 'string',
       },
       params: {
-        i: 1,
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -177,7 +213,11 @@ describe('deleteMadeToStick', () => {
     const mockReq = {
       query: {},
       params: {
-        i: 1,
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -194,7 +234,7 @@ describe('deleteMadeToStick', () => {
       'h': 0,
       'type': 'string',
       'emailId': 'string',
-      'backgroundColor': 'string',                    
+      'backgroundColor': 'string',
     };
     jest.spyOn(madeToStickServices, 'deleteMadeToStick').mockResolvedValue(mockMadeToStick);
     await madeToStickControllers.deleteMadeToStick(mockReq, mockRes, next);
@@ -204,9 +244,13 @@ describe('deleteMadeToStick', () => {
   );
   it('should return error when service throws error', async () => {
     const mockReq = {
-      query: {  },
+      query: {},
       params: {
-        i: 1,
+        projectId: 1,
+        i: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {

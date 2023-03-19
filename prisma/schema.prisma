@@ -105,6 +105,18 @@ model Leave {
   isRisk Boolean
 }
 
+model teamInformation {
+  id Int @id @unique @default(autoincrement())
+  emailId String 
+  name String
+  bio String
+  role String
+  message String
+  projectId String
+  startDate DateTime
+  endDate DateTime
+}
+
 // Enums
 
 enum MadeToStickType {

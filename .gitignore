@@ -134,5 +134,3 @@ dist
 
 # Filesystem
 .DS_Store
-
-src/generated

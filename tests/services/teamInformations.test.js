@@ -62,7 +62,7 @@ describe('teamInformationsServices', () => {
   
       await expect(async () => {
         await teamInformationsService.updateTeamInformation(id);
-      }).rejects.toThrowError(new HttpError(404, '(DELETE) : No Record Found'));
+      }).rejects.toThrowError(new HttpError(404, '(UPDATE) : No Record Found'));
       expect(spiedEdit).toBeCalled();
     });
 

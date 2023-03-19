@@ -67,21 +67,22 @@ const getAllTeamRequests = async (type,
 };
 // service to edit team requests
 const editTeamRequest = async (
-  requestId, author, content, status, type, createdAt, taggedIndividuals, memberId
+  requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId
 ) => {
   // check is request belongs to member
-  const request = await dashboardPrisma.Request.findUnique({
+  const request = await dashboardPrisma.Request.findFirst({
     where: {
-      requestId: requestId
+      requestId: requestId,
+      projectId
     },
     select: {
       memberId: true
     }
   });
 
-  if(!request) throw new HttpError(404, 'Team Request not found');
+  if (!request) throw new HttpError(404, 'Team Request not found');
   if (request.memberId !== memberId) throw new HttpError(403, 'You are not authorized to edit this request');
-  
+
   const updatedRequest = await dashboardPrisma.Request.update({
     where: {
       requestId: requestId,
@@ -102,18 +103,19 @@ const editTeamRequest = async (
   return updatedRequest;
 };
 // service to delete team request by team request id
-const deleteTeamRequest = async (requestId, memberId) => {
+const deleteTeamRequest = async (requestId, memberId, projectId) => {
   // check is request belongs to member
-  const request = await dashboardPrisma.Request.findUnique({
+  const request = await dashboardPrisma.Request.findFirst({
     where: {
-      requestId: requestId
+      requestId: requestId,
+      projectId
     },
     select: {
       memberId: true
     }
   });
 
-  if(!request) throw new HttpError(404, 'Team Request not found');
+  if (!request) throw new HttpError(404, 'Team Request not found');
   if (request.memberId !== memberId) throw new HttpError(403, 'You are not authorized to delete this request');
 
   const deleteRequest = await dashboardPrisma.Request.delete(

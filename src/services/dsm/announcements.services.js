@@ -18,7 +18,7 @@ const selectOnlyValidAnnouncementFields = {
 */
 const getAnnouncements = async (projectId) => {
   const announcements = await dashboardPrisma.Announcement.findMany({
-    where : {
+    where: {
       projectId
     },
     orderBy: {
@@ -35,10 +35,11 @@ const getAnnouncements = async (projectId) => {
   * @returns {Object} - Announcement object
   * @throws {HttpError} - Throws an error if announcement not found
 */
-const getAnnouncementByID = async (announcementId) => {
-  const announcement = await dashboardPrisma.Announcement.findUnique({
+const getAnnouncementByID = async (announcementId, projectId) => {
+  const announcement = await dashboardPrisma.Announcement.findFirst({
     where: {
       announcementId,
+      projectId
     },
     ...selectOnlyValidAnnouncementFields
   });
@@ -74,10 +75,11 @@ const createAnnouncement = async (author, memberId, content, projectId) => {
   * @returns {Object} - Updated announcement object
   * @throws {HttpError} - Throws an error if announcement not found
 */
-const editAnnouncement = async (announcementId, content, memberId) => {
-  const availableAnnouncement = await dashboardPrisma.Announcement.findUnique({
+const editAnnouncement = async (announcementId, content, memberId, projectId) => {
+  const availableAnnouncement = await dashboardPrisma.Announcement.findFirst({
     where: {
-      announcementId
+      announcementId,
+      projectId
     },
     ...selectOnlyValidAnnouncementFields
   });
@@ -110,10 +112,11 @@ const editAnnouncement = async (announcementId, content, memberId) => {
   * @returns {void} - No return value
   * @throws {HttpError} - Throws an error if announcement not found
 */
-const deleteAnnouncement = async (announcementId, memberId) => {
+const deleteAnnouncement = async (announcementId, memberId, projectId) => {
   const announcement = await dashboardPrisma.Announcement.findUnique({
     where: {
-      announcementId
+      announcementId,
+      projectId
     },
     ...selectOnlyValidAnnouncementFields
   });
@@ -135,7 +138,7 @@ const deleteAnnouncement = async (announcementId, memberId) => {
   });
 };
 
-module.exports={
+module.exports = {
   getAnnouncements,
   getAnnouncementByID,
   createAnnouncement,

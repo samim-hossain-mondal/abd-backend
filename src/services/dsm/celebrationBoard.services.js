@@ -64,10 +64,11 @@ const listCelebrations = async (projectId) => {
 };
 
 // get a celebration by id
-const getCelebrationById = async (celebrationId) => {
-  const celebration = await dashboardPrisma.Celebration.findUnique({
+const getCelebrationById = async (celebrationId, projectId) => {
+  const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
-      celebrationId
+      celebrationId,
+      projectId
     },
     ...selectOnlyValidCelebrationBoardFields
   }
@@ -94,11 +95,12 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
 };
 
 // update a celebration
-const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId) => {
+const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId, projectId) => {
 
-  const celebration = await dashboardPrisma.Celebration.findUnique({
+  const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
-      celebrationId
+      celebrationId,
+      projectId
     },
     select: {
       memberId: true
@@ -119,16 +121,17 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
     },
     ...selectOnlyValidCelebrationBoardFields
   });
-  
+
   return updatedCelebration;
 };
 
 // delete a celebration
-const deleteCelebrationById = async (celebrationId, memberId) => {
+const deleteCelebrationById = async (celebrationId, memberId, projectId) => {
 
-  const celebration = await dashboardPrisma.Celebration.findUnique({
+  const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
-      celebrationId
+      celebrationId,
+      projectId
     },
     select: {
       memberId: true
@@ -155,11 +158,12 @@ const deleteCelebrationById = async (celebrationId, memberId) => {
   return deletedCelebration;
 };
 
-const updateReaction = async (celebrationId, memberId, isReacted) => {
+const updateReaction = async (celebrationId, memberId, isReacted, projectId) => {
 
-  const celebration = await dashboardPrisma.Celebration.findUnique({
+  const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
-      celebrationId
+      celebrationId,
+      projectId
     },
     select: {
       memberId: true
@@ -187,11 +191,12 @@ const updateReaction = async (celebrationId, memberId, isReacted) => {
   return updatedReaction;
 };
 
-const getReaction = async (celebrationId, memberId) => {
+const getReaction = async (celebrationId, memberId, projectId) => {
   const reaction = await dashboardPrisma.celebrationReactedUser.findMany({
     where: {
       celebrationId,
-      memberId
+      memberId,
+      projectId
     },
     ...selectOnlyValidReactionFields
   });

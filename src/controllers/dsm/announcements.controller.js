@@ -1,5 +1,4 @@
 const announcementServices = require('../../services/dsm/announcements.services');
-// const { getRandomNumber } = require('../../utils/randomGenerator');
 
 /**
   * Controller to handle GET request for listing all announcements
@@ -26,9 +25,10 @@ const listAnnouncements = async (req, res, next) => {
 */
 const detailAnnouncement = async (req, res, next) => {
   try {
-    const { id: announcementId } = req.params;
+    const { projectId, id: announcementId } = req.params;
     const resultAnnouncement = await announcementServices.getAnnouncementByID(
-      announcementId
+      announcementId,
+      parseInt(projectId)
     );
     res.status(200).json(resultAnnouncement);
   }
@@ -71,9 +71,10 @@ const editAnnouncement = async (req, res, next) => {
   try {
     const memberId = req.user.memberId;
     const announcementId = req.params.id;
+    const { projectId } = req.params;
     const content = req.body.content;
     const resultAnnouncement = await announcementServices.editAnnouncement(
-      announcementId, content, parseInt(memberId)
+      announcementId, content, parseInt(memberId), parseInt(projectId)
     );
     res.status(200).json(resultAnnouncement);
   }
@@ -93,8 +94,10 @@ const deleteAnnouncement = async (req, res, next) => {
     // TODO: check if the user is the author of the announcement
     const memberId = req.user.memberId;
     const announcementId = req.params.id;
+    const { projectId } = req.params;
+
     await announcementServices.deleteAnnouncement(
-      announcementId, parseInt(memberId)
+      announcementId, parseInt(memberId), parseInt(projectId)
     );
     res.status(204).json();
   }

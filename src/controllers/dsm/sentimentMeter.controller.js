@@ -21,9 +21,11 @@ const createSentiment = async (req, res, next) => {
 
 const detailSentiment = async (req, res, next) => {
   try {
+    const projectId = parseInt(req.params.projectId);
     const sentimentId = parseInt(req.params.id);
     const sentiment = await sentimentMeterService.getSentimentById(
-      sentimentId
+      sentimentId,
+      projectId
     );
     res.status(200).json(sentiment);
   } catch (err) {
@@ -33,13 +35,15 @@ const detailSentiment = async (req, res, next) => {
 
 const updateSentiment = async (req, res, next) => {
   try {
+    const projectId = parseInt(req.params.projectId);
     const sentimentId = parseInt(req.params.id);
     const memberId = parseInt(req.user.memberId);
     const { sentiment } = req.body;
     const updatedSentiment = await sentimentMeterService.updateSentimentById(
       sentimentId,
       sentiment,
-      memberId
+      memberId,
+      projectId
     );
     res.status(200).json(updatedSentiment);
   } catch (err) {
@@ -71,11 +75,13 @@ const getAllSentiment = async (req, res, next) => {
 
 const deleteSentimentById = async (req, res, next) => {
   try {
+    const projectId = parseInt(req.params.projectId);
     const sentimentId = parseInt(req.params.id);
     const memberId = parseInt(req.user.memberId);
     await sentimentMeterService.deleteSentimentById(
       sentimentId,
-      memberId
+      memberId,
+      projectId
     );
     res.status(200).json({ message: 'Sentiment deleted' });
   } catch (err) {

@@ -25,10 +25,11 @@ const createSentiment = async (author, sentiment, projectId, memberId) => {
   return newSentiment;
 };
 
-const getSentimentById = async (sentimentId) => {
-  const sentiment = await dashboardPrisma.sentimentMeter.findUnique({
+const getSentimentById = async (sentimentId, projectId) => {
+  const sentiment = await dashboardPrisma.sentimentMeter.findFirst({
     where: {
       sentimentId,
+      projectId
     },
     ...selectOnlyValidSentimentMeterFields,
   });
@@ -38,11 +39,12 @@ const getSentimentById = async (sentimentId) => {
   return sentiment;
 };
 
-const updateSentimentById = async (sentimentId, sentiment, memberId) => {
+const updateSentimentById = async (sentimentId, sentiment, memberId, projectId) => {
   // check if sentiment exists and belongs to memeber
-  const sentimentExists = await dashboardPrisma.sentimentMeter.findUnique({
+  const sentimentExists = await dashboardPrisma.sentimentMeter.findFirst({
     where: {
       sentimentId,
+      projectId
     },
     select: {
       memberId: true,
@@ -51,7 +53,7 @@ const updateSentimentById = async (sentimentId, sentiment, memberId) => {
 
   if (!sentimentExists) throw new HttpError(404, 'No Record Found');
   if (sentimentExists.memberId !== memberId) throw new HttpError(403, 'You are not authorized to update this record');
-  
+
   const updatedSentiment = await dashboardPrisma.sentimentMeter.update({
     where: {
       sentimentId,
@@ -82,7 +84,7 @@ const countSentimentByDate = async (createdAt, projectId) => {
       sentiment: true,
     },
   });
-  
+
   if (countSentiment.length === 0)
     throw new HttpError(404, 'No Data found for the date' + createdAt);
 
@@ -108,10 +110,11 @@ const getAllSentiment = async (projectId) => {
   return allSentiment;
 };
 
-const deleteSentimentById = async (sentimentId, memberId) => {
+const deleteSentimentById = async (sentimentId, memberId, projectId) => {
   const sentimentExists = await dashboardPrisma.sentimentMeter.findUnique({
     where: {
       sentimentId,
+      projectId
     },
     select: {
       memberId: true,

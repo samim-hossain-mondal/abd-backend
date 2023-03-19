@@ -34,6 +34,7 @@ model ProjectMember {
   member    Member @relation(fields: [memberId], references: [memberId], onDelete: Cascade)
   
   @@id([projectId, email])
+  @@unique([projectId, memberId])
 }
 
 enum Role {

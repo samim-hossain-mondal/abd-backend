@@ -32,18 +32,18 @@ const schema = require('../../schemas/teamInformationsSchema');
  *          description: The role of the individual in the project.
  *        message:
  *          type: string
- *          description: A message associated with the teamInformation.
+ *          description: slack link of the individual.
  *        bio:
  *          type: string
- *          description: A bio associated with the teamInformation.
+ *          description: bio associated with the individual in the project.
  *        startDate:
  *          type: string
  *          format: date
- *          description: The start date associated with the teamInformation.
+ *          description:  start date of the member in the project.
  *        endDate:
  *          type: string
  *          format: date
- *          description: The end date associated with the teamInformation.
+ *          description:  end date of the member with the project.
  */
 
 /**
@@ -104,18 +104,18 @@ const schema = require('../../schemas/teamInformationsSchema');
  *                 description: The role of the individual in the project.
  *               message:
  *                 type: string
- *                 description: A message associated with the teamInformation.
+ *                 description: slack link of the individual.
  *               bio:
  *                 type: string
- *                 description: A bio associated with the teamInformation.
+ *                 description: bio associated with the individual with the project.
  *               startDate:
  *                 type: string
  *                 format: date
- *                 description: The start date associated with the teamInformation.
+ *                 description: start date of the individual with the project.
  *               endDate:
  *                 type: string
  *                 format: date
- *                 description: The end date associated with the teamInformation.
+ *                 description: end date of the individual with the project.
  *     responses:
  *       201:
  *         description: teamInformation created successfully
@@ -179,7 +179,7 @@ router.route('/')
  *         schema:
  *           type: integer
  *         required: true
- *         description: The teamInformation id
+ *         description:  teamInformation id
  *     requestBody:
  *       required: true
  *       content:
@@ -211,18 +211,18 @@ router.route('/')
  *                 description: The role of the individual in the project.
  *               message:
  *                 type: string
- *                 description: A message associated with the teamInformation.
+ *                 description: slack link of the individual.
  *               bio:
  *                 type: string
- *                 description: A bio associated with the teamInformation.
+ *                 description: bio associated with the individual in the project.
  *               startDate:
  *                 type: string
  *                 format: date
- *                 description: The start date associated with the teamInformation.
+ *                 description: start date of the individual in the project.
  *               endDate:
  *                 type: string
  *                 format: date
- *                 description: The end date associated with the teamInformation.
+ *                 description: end date of the individual in the project.
  *     responses:
  *       200:
  *         description: teamInformation edited successfully

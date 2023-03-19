@@ -7,32 +7,30 @@ const {ErrorCodeRecordNotExist} = require('../constants/index.js');
 // either coming from the routes/controllers/services
 // like joi validation, prisma query errors or custom http errors
 function errorHandlingMiddleware(err, req, res, next) {
-  console.log(err);
   if (res.headersSent) {
     return next(err);
+  }
+
+  if (err.constructor === joi.ValidationError) {
+    return res.status(400).json({ message: 'Bad Request - ' + err.message });
+  }
+  if (err.constructor instanceof Prisma.constructor) {
+    if(err.code === ErrorCodeRecordNotExist) {
+      return res.status(404).json({ message: 'Data does not exist' });
+    } 
+    else if ((/2\d{3}/g).exec(err.code)) {
+      return res.status(500).json({ message: 'Internal Server Error - Query Engine Went Wrong' });
+    }
+    else if ((/1\d{3}/g).exec(err.code)) {
+      return res.status(400).json({ message: 'Bad Request - Invalid Inputs' + err.message });
+    }
   }
   switch (err.constructor) {
   case joi.ValidationError: {
     return res.status(400).json({ message: 'Bad Request - ' + err.message });
   }
-  // this is the error thrown by prisma client
-  // when the input data is not valid
-  case Prisma.PrismaClientValidationError: {
-    return res.status(400).json({ message: 'Bad Request - Invalid Inputs' + err.message });
-  }
   case HttpError: {
     return res.status(err.code).json({ message: err.message });
-  }
-  case Prisma.PrismaClientKnownRequestError: {
-    // seperatly handling the internal db or query errors
-    // thrown prisma  ("2***" error codes)
-    if(err.code === ErrorCodeRecordNotExist) {
-      return res.status(404).json({ message: 'Record does not exist' });
-    } else
-    if ((/2\d{3}/g).exec(err.code)) {
-      return res.status(500).json({ message: 'Internal Server Error - Query Engine Went Wrong' });
-    }
-    return res.status(500).json({ message: 'Internal Server Error - Something Went Wrong' });
   }
   default: {
     res.status(500).json({ message: 'Internal Server Error - Something Went Wrong' });

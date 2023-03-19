@@ -1,5 +1,5 @@
 
-const teamRequests=[
+const teamRequests = [
   {
     'requestId': 28,
     'author': 'string',
@@ -7,7 +7,9 @@ const teamRequests=[
     'status': 'PENDING',
     'type': 'RESOURCE',
     'createdAt': '2023-03-04T12:11:41.080Z',
-    'taggedIndividuals': []
+    'taggedIndividuals': [],
+    memberId: 1,
+    projectId: 1
   },
   {
     'requestId': 27,
@@ -16,8 +18,10 @@ const teamRequests=[
     'status': 'PENDING',
     'type': 'RESOURCE',
     'createdAt': '2023-03-03T15:05:55.778Z',
-    'taggedIndividuals': []
+    'taggedIndividuals': [],
+    memberId: 1,
+    projectId: 1
   }
 ];
-  
+
 module.exports = teamRequests;

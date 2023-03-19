@@ -35,8 +35,7 @@ describe('teamInformationsServices', () => {
       const teamInformation = await teamInformationsService.getAllTeamInformations();
       expect(teamInformation).toEqual(mockTeamInformation);
     });
-  });
-    
+  }); 
   describe('updateteamInformation', () => {
     it('should update a teamInformation when called', async () => {
       const mockTeamInformation = {
@@ -55,17 +54,14 @@ describe('teamInformationsServices', () => {
     });
     it('should throw error when not existing id is passed', async () => {
       const id = 8;
-  
       const deleteResult = { count: 0 };
       const spiedEdit = jest.spyOn(prisma.teamInformation, 'update')
-        .mockResolvedValue(deleteResult);
-  
+        .mockResolvedValue(deleteResult); 
       await expect(async () => {
         await teamInformationsService.updateTeamInformation(id);
       }).rejects.toThrowError(new HttpError(404, '(UPDATE) : No Record Found'));
       expect(spiedEdit).toBeCalled();
     });
-
   });
   describe('deleteteamInformation', () => {
     it('should delete a teamInformation when called', async () => {
@@ -85,11 +81,9 @@ describe('teamInformationsServices', () => {
     });
     it('should throw error when not existing id is passed', async () => {
       const id = 8;
-  
       const deleteResult = { count: 0 };
       const spiedDelete = jest.spyOn(prisma.teamInformation, 'delete')
         .mockResolvedValue(deleteResult);
-  
       await expect(async () => {
         await teamInformationsService.deleteTeamInformation(id);
       }).rejects.toThrowError(new HttpError(404, '(DELETE) : No Record Found'));

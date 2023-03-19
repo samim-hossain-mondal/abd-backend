@@ -42,7 +42,6 @@ describe('get all teamInformations', () => {
     expect(next).toBeCalledWith(new Error('Bad Request'));
   }
   );
- 
 });
 describe('create teamInformations', () => {
   it('should return created teamInformations when called', async () => {

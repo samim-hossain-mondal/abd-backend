@@ -4,7 +4,8 @@ const {
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
   removeProjectMemberInDb,
-  updateMemberRoleInDb,
+  updateMemberRoleByEmailInDb,
+  updateMemberRoleByIdInDb,
   updateProjectInfoInDb,
   deleteProjectInDb,
   getProjectDetailsByIdInDb,
@@ -89,10 +90,12 @@ const removeMemberFromProject = async (req, res, next) => {
 
 const updateMemberRole = async (req, res, next) => {
   try {
-    const { projectId } = req.params;
+    const { projectId, memberId } = req.params;
     const { email, role } = req.body;
-
-    const result = await updateMemberRoleInDb(parseInt(projectId), email, role);
+    const result = memberId ?
+      await updateMemberRoleByIdInDb(parseInt(projectId), parseInt(memberId), role) :
+      await updateMemberRoleByEmailInDb(parseInt(projectId), email, role);
+      
     res.status(200).json(result);
   }
   catch (er) {

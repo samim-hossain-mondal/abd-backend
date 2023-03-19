@@ -15,20 +15,22 @@ const createProjectSchema = projectInfoSchema.fork([
   'projectName', 'projectDescription'
 ], (field) => field.required());
 
-const addMemberSchema = joi.object({
+const updateMemberSchema = joi.object({
   email: joi
     .string()
-    .email()
-    .required(),
+    .email(),
   role: joi
     .string()
     .valid('ADMIN', 'LEADER', 'MEMBER')
     .required()
 });
 
+const addMemberSchema = updateMemberSchema.fork('email', (field) => field.required());
+
 module.exports = {
   createProjectSchema,
   addMemberSchema,
+  updateMemberSchema,
   projectInfoSchema
 };
 

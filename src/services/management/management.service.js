@@ -199,7 +199,7 @@ const removeProjectMemberInDb = async (projectId, email) => {
   return projectMember;
 };
 
-const updateMemberRoleInDb = async (projectId, email, role) => {
+const updateMemberRoleByEmailInDb = async (projectId, email, role) => {
   role = convertToRoleEnum(role);
 
   const member = await managementPrisma.member.findUnique({
@@ -366,6 +366,48 @@ const getProjectMemberDetailsByIdInDb = async (projectId, memberId) => {
   return projectMember;
 };
 
+const updateMemberRoleByIdInDb = async (projectId, memberId, role) => {
+  role = convertToRoleEnum(role);
+
+  const project = await managementPrisma.project.findUnique({
+    where: {
+      projectId
+    }
+  });
+
+  if (!project || project.isDeleted) {
+    throw new HttpError(404, 'Project not found.');
+  }
+
+  const projectMember = await managementPrisma.projectMember.findFirst({
+    where: {
+      projectId,
+      memberId
+    }
+  });
+
+  if (!projectMember) {
+    throw new HttpError(404, 'Member not found in project.');
+  }
+
+  const updatedProjectMember = await managementPrisma.projectMember.update({
+    where: {
+      projectId_memberId: {
+        projectId,
+        memberId
+      }
+    },
+    data: {
+      role
+    }
+  });
+      
+  return updatedProjectMember;
+};
+
+
+
+
 // REVIEW: these are not used endpoints
 
 const createNewMemberInDb = async (email, name = null, role) => {
@@ -466,7 +508,8 @@ module.exports = {
   allMembersByProjectIdInDb,
   addProjectMemberInDb,
   removeProjectMemberInDb,
-  updateMemberRoleInDb,
+  updateMemberRoleByEmailInDb,
+  updateMemberRoleByIdInDb,
   updateProjectInfoInDb,
   deleteProjectInDb,
   getProjectDetailsByIdInDb,

@@ -1,5 +1,6 @@
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 const { OIDC } = require('../config');
+const { managementPrisma } = require('../prismaClient');
 
 const oktaJwtVerifier = new OktaJwtVerifier(OIDC);
 
@@ -28,14 +29,26 @@ async function authMiddleware(req, res, next) {
 
     const accessToken = match[1];
     const audience = OIDC.assertClaims.aud;
+
     return oktaJwtVerifier.verifyAccessToken(accessToken, audience)
-      .then((jwt) => {
+      .then(async (jwt) => {
+        const email = jwt.claims.sub;
+        let memberId = null;
+        const member = await managementPrisma.member.findUnique({
+          where: {
+            email,
+          },
+        });
+
+        if (member) {
+          memberId = member.memberId;
+        }
         const user = {
           uid: jwt.claims.uid,
           email: jwt.claims.sub,
           groups: jwt.claims.groups,
-          firstName: jwt.claims.firstName,
-          lastName: jwt.claims.lastName,
+          name: jwt.claims.firstName.concat(' ', jwt.claims.lastName),
+          memberId: memberId
         };
         req.user = user;
         next();

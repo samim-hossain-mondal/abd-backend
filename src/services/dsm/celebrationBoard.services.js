@@ -1,10 +1,11 @@
 const { HttpError } = require('../../errors');
-const prisma = require('../../prismaClient');
+const { dashboardPrisma } = require('../../prismaClient');
 
 const selectOnlyValidReactionFields = {
   select: {
     reactionId: true,
-    celebrationId: true
+    celebrationId: true,
+    memberId: true
   }
 };
 
@@ -21,7 +22,7 @@ const selectOnlyValidCelebrationBoardFields = {
     reaction: {
       take: 3,
       select: {
-        userId: true,
+        memberId: true,
       }
     },
     // reaction: {
@@ -32,7 +33,9 @@ const selectOnlyValidCelebrationBoardFields = {
     //     reactionId: true
     //   }
     // },
-    createdAt: true
+    createdAt: true,
+    projectId: true,
+    memberId: true,
   }
 };
 
@@ -46,8 +49,11 @@ const filterByAnonymous = (celebrations) => {
 };
 
 // get list of all celebrations
-const listCelebrations = async () => {
-  const celebrations = await prisma.Celebration.findMany({
+const listCelebrations = async (projectId) => {
+  const celebrations = await dashboardPrisma.Celebration.findMany({
+    where: {
+      projectId
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -58,10 +64,11 @@ const listCelebrations = async () => {
 };
 
 // get a celebration by id
-const getCelebrationById = async (celebrationId) => {
-  const celebration = await prisma.Celebration.findUnique({
+const getCelebrationById = async (celebrationId, projectId) => {
+  const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
-      celebrationId
+      celebrationId,
+      projectId
     },
     ...selectOnlyValidCelebrationBoardFields
   }
@@ -71,13 +78,15 @@ const getCelebrationById = async (celebrationId) => {
 };
 
 // create a new celebration
-const createCelebration = async (author, content, type, isAnonymous = false) => {
-  const newCelebration = await prisma.Celebration.create({
+const createCelebration = async (author, memberId, content, type, isAnonymous = false, projectId) => {
+  const newCelebration = await dashboardPrisma.Celebration.create({
     data: {
       author,
+      memberId,
       isAnonymous,
       content,
       type,
+      projectId
     },
     ...selectOnlyValidCelebrationBoardFields
   }
@@ -86,32 +95,59 @@ const createCelebration = async (author, content, type, isAnonymous = false) => 
 };
 
 // update a celebration
-const updateCelebrationById = async (celebrationId, content, type, isAnonymous) => {
-  // console.log(celebrationId, content, type, isAnonymous);
-  const updatedCelebration = await prisma.Celebration.update({
+const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId, projectId) => {
+
+  const celebration = await dashboardPrisma.Celebration.findFirst({
+    where: {
+      celebrationId,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!celebration) throw new HttpError(404, 'No Record Found');
+  if (celebration.memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
+
+  const updatedCelebration = await dashboardPrisma.Celebration.update({
     where: {
       celebrationId
     },
     data: {
       content,
       type,
-      isAnonymous,
+      isAnonymous
     },
     ...selectOnlyValidCelebrationBoardFields
-  }
-  );
-  if (!updatedCelebration) throw new HttpError(404, 'No Record Found');
+  });
+
   return updatedCelebration;
 };
 
 // delete a celebration
-const deleteCelebrationById = async (celebrationId) => {
-  await prisma.celebrationReactedUser.deleteMany({
+const deleteCelebrationById = async (celebrationId, memberId, projectId) => {
+
+  const celebration = await dashboardPrisma.Celebration.findFirst({
+    where: {
+      celebrationId,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!celebration) throw new HttpError(404, 'No Record Found');
+  if (celebration.memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
+
+  await dashboardPrisma.celebrationReactedUser.deleteMany({
     where: {
       celebrationId
     }
   });
-  const deletedCelebration = await prisma.Celebration.delete({
+
+  const deletedCelebration = await dashboardPrisma.Celebration.delete({
     where: {
       celebrationId
     },
@@ -122,30 +158,45 @@ const deleteCelebrationById = async (celebrationId) => {
   return deletedCelebration;
 };
 
-const updateReaction = async (celebrationId, userId, isReacted) => {
+const updateReaction = async (celebrationId, memberId, isReacted, projectId) => {
+
+  const celebration = await dashboardPrisma.Celebration.findFirst({
+    where: {
+      celebrationId,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!celebration) throw new HttpError(404, 'No Record Found');
+  if (celebration.memberId === memberId) throw new HttpError(403, 'You are not authorized to perform this action');
+
   const updatedReaction = isReacted ?
-    await prisma.celebrationReactedUser.create({
+    await dashboardPrisma.celebrationReactedUser.create({
       data: {
         celebrationId,
-        userId
+        memberId
       },
       ...selectOnlyValidReactionFields
     }) :
-    await prisma.celebrationReactedUser.deleteMany({
+    await dashboardPrisma.celebrationReactedUser.deleteMany({
       where: {
         celebrationId,
-        userId
+        memberId
       },
     });
   if (!isReacted & updatedReaction.count === 0) throw new HttpError(404, 'No Reaction Found');
   return updatedReaction;
 };
 
-const getReaction = async (celebrationId, userId) => {
-  const reaction = await prisma.celebrationReactedUser.findMany({
+const getReaction = async (celebrationId, memberId, projectId) => {
+  const reaction = await dashboardPrisma.celebrationReactedUser.findMany({
     where: {
       celebrationId,
-      userId
+      memberId,
+      projectId
     },
     ...selectOnlyValidReactionFields
   });

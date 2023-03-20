@@ -1,13 +1,16 @@
 const teamRequestsServices = require('../../services/dsm/teamRequests.services');
 // controller for creating team request
 const createTeamRequest = async (req, res, next) => {
-  try{
+  try {
     const { author, content, status, type, createdAt, taggedIndividuals } = req.body;
-    const createdRequest = await teamRequestsServices.createValidTeamRequest(author, content, status, type, createdAt, taggedIndividuals);
+    const projectId = parseInt(req.params.projectId);
+    const memberId = parseInt(req.user.memberId);
+    const createdRequest = await teamRequestsServices.createValidTeamRequest(
+      author, content, status, type, createdAt, taggedIndividuals, projectId, memberId
+    );
     res.status(201).json(createdRequest);
   }
-  catch(error)
-  {
+  catch (error) {
     next(error);
   }
 };
@@ -24,7 +27,8 @@ const listTeamRequests = async (req, res, next) => {
     page,
     limit
   } = req.query;
-  try{
+  const projectId = parseInt(req.params.projectId);
+  try {
     const teamRequests = await teamRequestsServices.getAllTeamRequests(
       type,
       author,
@@ -33,38 +37,44 @@ const listTeamRequests = async (req, res, next) => {
       search,
       status,
       page,
-      limit
+      limit,
+      projectId
     );
     res.status(200).json(teamRequests);
   }
-  catch(error)
-  {  
+  catch (error) {
     next(error);
   }
 };
 // controller for editing team request
 const editTeamRequest = async (req, res, next) => {
-  try{
+  try {
+    const projectId = parseInt(req.params.projectId);
     const { requestId } = req.params;
+    const memberId = parseInt(req.user.memberId);
     const { author, content, status, type, createdAt, taggedIndividuals } = req.body;
-    const updatedRequest = await teamRequestsServices.editTeamRequest(requestId, author, content, status, type, createdAt, taggedIndividuals);
+    const updatedRequest = await teamRequestsServices.editTeamRequest(
+      requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId
+    );
     res.status(200).json(updatedRequest);
   }
-  catch(error)
-  {
+  catch (error) {
     next(error);
   }
 };
 // controller for deleting team request
 const deleteTeamRequest = async (req, res, next) => {
-  try{
-    const { requestId } = req.params;
-    const deletedRequest = await teamRequestsServices.deleteTeamRequest(requestId);
+  try {
+    const projectId = parseInt(req.params.projectId);
+    const requestId = parseInt(req.params.requestId);
+    const memberId = parseInt(req.user.memberId);
+    const deletedRequest = await teamRequestsServices.deleteTeamRequest(
+      requestId, memberId, projectId
+    );
     res.status(204).json(deletedRequest);
   }
-  catch(error)
-  { 
+  catch (error) {
     next(error);
   }
 };
-module.exports={createTeamRequest, listTeamRequests , editTeamRequest,deleteTeamRequest};
+module.exports = { createTeamRequest, listTeamRequests, editTeamRequest, deleteTeamRequest };

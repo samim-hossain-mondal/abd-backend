@@ -1,11 +1,19 @@
-const {describe, it, expect} = require('@jest/globals');
+const { describe, it, expect } = require('@jest/globals');
 const leavesController = require('../../src/controllers/leaves.controller');
 const leavesServices = require('../../src/services/leaves.services');
 
 describe('Leaves Controller', () => {
   describe('getAllLeaves', () => {
     it('should go to next middleware if there is an error', async () => {
-      const req = {};
+      const req = {
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
+      };
       const res = {};
       const next = jest.fn();
 
@@ -16,20 +24,36 @@ describe('Leaves Controller', () => {
     });
 
     it('should send a list of all leaves', async () => {
-      const req = {};
-      const res = {json: jest.fn()};
+      const req = {
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
+      };
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       const next = jest.fn();
 
       jest.spyOn(leavesServices, 'getAllLeaves').mockResolvedValue([]);
       await leavesController.getAllLeaves(req, res, next);
       expect(res.json).toHaveBeenCalledWith([]);
+      expect(res.status).toHaveBeenCalledWith(200);
     });
   });
 
   describe('createLeave', () => {
     it('should go to next middleware if there is an error', async () => {
       const req = {
-        body: {}
+        body: {},
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
       };
       const res = {};
       const next = jest.fn();
@@ -42,9 +66,16 @@ describe('Leaves Controller', () => {
 
     it('should send leave object after creation', async () => {
       const req = {
-        body: {}
+        body: {},
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
       };
-      const res = {status: jest.fn().mockReturnThis(), json: jest.fn()};
+      const res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
       const next = jest.fn();
 
       jest.spyOn(leavesServices, 'createLeave').mockResolvedValue({});
@@ -57,8 +88,14 @@ describe('Leaves Controller', () => {
   describe('editLeave', () => {
     it('should go to next middleware if there is an error', async () => {
       const req = {
-        params: {id: 1},
-        body: {}
+        body: {},
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
       };
       const res = {};
       const next = jest.fn();
@@ -71,10 +108,16 @@ describe('Leaves Controller', () => {
 
     it('should send leave object after editing', async () => {
       const req = {
-        params: {id: 1},
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        },
         body: {}
       };
-      const res = {json: jest.fn()};
+      const res = { json: jest.fn() };
       const next = jest.fn();
 
       jest.spyOn(leavesServices, 'editLeave').mockResolvedValue({});
@@ -86,7 +129,13 @@ describe('Leaves Controller', () => {
   describe('deleteLeave', () => {
     it('should go to next middleware if there is an error', async () => {
       const req = {
-        params: {id: 1}
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
       };
       const res = {};
       const next = jest.fn();
@@ -99,9 +148,15 @@ describe('Leaves Controller', () => {
 
     it('should send 204 status after deleting', async () => {
       const req = {
-        params: {id: 1}
+        params: {
+          projectId: 1,
+          id: 1
+        },
+        user: {
+          memberId: 1
+        }
       };
-      const res = {sendStatus: jest.fn()};
+      const res = { sendStatus: jest.fn() };
       const next = jest.fn();
 
       jest.spyOn(leavesServices, 'deleteLeave').mockResolvedValue({});

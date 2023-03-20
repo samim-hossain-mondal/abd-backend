@@ -9,6 +9,7 @@ const {
 const { generateValidationMiddleware } = require('../../middlewares/validation');
 const poNotesSchema = require('../../schemas/poNotesSchema');
 const {paramParser} = require('../../middlewares/paramParser');
+const { roleValidationMiddleware, memberValidationMiddleware } = require('../../middlewares/roleValidation');
 
 /**
  * @openapi
@@ -178,13 +179,16 @@ const {paramParser} = require('../../middlewares/paramParser');
  *       500:
  *         description: Internal server error
 */
-router.route('')
+
+router.route('/:projectId') // TODO: refactor route url
   .get(
     generateValidationMiddleware(poNotesSchema.poNotesQuerySchema, 'query'),
+    memberValidationMiddleware,
     listPONotes
   )
   .post(
     generateValidationMiddleware(poNotesSchema.createPONoteSchema),
+    roleValidationMiddleware,
     createPONote
   );
 
@@ -300,29 +304,32 @@ router.route('')
 */
 
 const requiredParams = {
-  id:'number'
+  id: 'number',
 };
 
 // to validate params using joi
-const paramValidationMiddleware = generateValidationMiddleware(poNotesSchema.poNotesParamSchema, 'params');
+// const paramValidationMiddleware = generateValidationMiddleware(poNotesSchema.poNotesParamSchema, 'params');
 const paramParsingMiddleware = paramParser(requiredParams);
 
-router.route('/:id')
+router.route('/:projectId/:id') // TODO: refactor route url
   .get(
-    paramValidationMiddleware,
+    // paramValidationMiddleware,
     paramParsingMiddleware,
+    memberValidationMiddleware,
     detailPONote
   )
   .patch(
-    paramValidationMiddleware,
+    // paramValidationMiddleware,
     generateValidationMiddleware(poNotesSchema.patchPONoteSchema),
     paramParsingMiddleware,
+    roleValidationMiddleware,
     editPONote
   )
   .delete(
-    paramValidationMiddleware,
+    // paramValidationMiddleware,
     generateValidationMiddleware(poNotesSchema.deletePONoteSchema),
     paramParsingMiddleware,
+    roleValidationMiddleware,
     deletePONote
   );
 

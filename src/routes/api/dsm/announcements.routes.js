@@ -9,6 +9,7 @@ const {
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { paramParser } = require('../../../middlewares/paramParser');
 const announcementsSchema = require('../../../schemas/dsm/announcementsSchema');
+const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
 
 /**
  * @openapi
@@ -85,15 +86,21 @@ const announcementsSchema = require('../../../schemas/dsm/announcementsSchema');
  *         description: Internal server error
 */
 
-router.route('/')
-  .get(listAnnouncements)
-  .post(generateValidationMiddleware(announcementsSchema.createAnnouncementSchema), createAnnouncement);
+router.route('/:projectId')
+  .get(
+    memberValidationMiddleware,
+    listAnnouncements
+  )
+  .post(
+    memberValidationMiddleware,
+    generateValidationMiddleware(announcementsSchema.createAnnouncementSchema), 
+    createAnnouncement);
 
 const requiredParams = {
   id: 'number'
 };
 
-const paramValidationMiddleware = generateValidationMiddleware(announcementsSchema.announcementsParamSchema, 'params');
+// const paramValidationMiddleware = generateValidationMiddleware(announcementsSchema.announcementsParamSchema, 'params');
 const paramParsingMiddleware = paramParser(requiredParams);
 
 /**
@@ -181,20 +188,23 @@ const paramParsingMiddleware = paramParser(requiredParams);
  *      '500':
  *        description: Internal server error
 */
-router.route('/:id')
+router.route('/:projectId/:id')
   .get(
-    paramValidationMiddleware,
+    // paramValidationMiddleware,
+    memberValidationMiddleware,
     paramParsingMiddleware,
     detailAnnouncement
   )
   .patch(
-    paramValidationMiddleware,
+    memberValidationMiddleware,
+    // paramValidationMiddleware,
     generateValidationMiddleware(announcementsSchema.patchAnnouncementSchema),
     paramParsingMiddleware,
     editAnnouncement
   )
   .delete(
-    paramValidationMiddleware,
+    memberValidationMiddleware,
+    // paramValidationMiddleware,
     paramParsingMiddleware,
     deleteAnnouncement
   );

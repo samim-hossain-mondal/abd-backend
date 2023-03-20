@@ -81,8 +81,7 @@ const createPONoteSchema = joi.object({
       otherwise: joi
         .string()
         .valid('DRAFT', 'COMPLETED', 'PENDING'),
-    })
-
+    }),
 });
 
 const patchPONoteSchema = joi.object({

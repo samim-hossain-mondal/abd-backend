@@ -1,5 +1,5 @@
 const poNotesController = require('../../src/controllers/poNotes.controller');
-const poNotesServices = require('../../src/services/poNoteServices');
+const poNoteServices = require('../../src/services/poNoteServices');
 
 const { HttpError } = require('../../src/errors');
 describe('get PO Notes (all/list)', () => {
@@ -10,7 +10,7 @@ describe('get PO Notes (all/list)', () => {
       'note': 'string',
       'status': 'PENDING',
       'dueDate': null,
-      'issueLink': null
+      'issueLink': null,
     },
     {
       'noteId': 7,
@@ -25,6 +25,10 @@ describe('get PO Notes (all/list)', () => {
   it('should return array of PO notes as objects', async () => {
     const mockReq = {
       query: {},
+      params: {
+        projectId: 1,
+        id: 1
+      },
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -32,7 +36,7 @@ describe('get PO Notes (all/list)', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'getPONotesByQuickFilter').mockResolvedValue(poNotes);
+    jest.spyOn(poNoteServices, 'getPONotesByQuickFilter').mockResolvedValue(poNotes);
 
     await poNotesController.listPONotes(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(200);
@@ -42,7 +46,11 @@ describe('get PO Notes (all/list)', () => {
     const mockReq = {
       query: {
         xyz: ''
+      }, params: {
+        projectId: 1,
+        id: 1
       },
+
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -50,7 +58,7 @@ describe('get PO Notes (all/list)', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'getPONotesByQuickFilter').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'getPONotesByQuickFilter').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.listPONotes(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -70,8 +78,9 @@ describe('get PO Notes by ID', () => {
     const mockReq = {
       query: {},
       params: {
+        projectId: 1,
         id: 1
-      }
+      },
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -79,7 +88,7 @@ describe('get PO Notes by ID', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'getPONoteByID').mockResolvedValue(poNote);
+    jest.spyOn(poNoteServices, 'getPONoteByID').mockResolvedValue(poNote);
 
     await poNotesController.detailPONote(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(200);
@@ -88,8 +97,9 @@ describe('get PO Notes by ID', () => {
   it('should return error when service throws error', async () => {
     const mockReq = {
       params: {
+        projectId: 1,
         id: 1
-      }
+      },
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -97,7 +107,7 @@ describe('get PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'getPONoteByID').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'getPONoteByID').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.detailPONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -110,7 +120,8 @@ describe('create PO Notes by ID', () => {
     'note': 'string',
     'status': 'PENDING',
     'dueDate': null,
-    'issueLink': null
+    'issueLink': null,
+    memberId: 1
   };
 
   it('should return new created PO note as an object', async () => {
@@ -120,7 +131,10 @@ describe('create PO Notes by ID', () => {
         'type': 'AGENDA_ITEM'
       },
       params: {
-        id: 1
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -129,7 +143,7 @@ describe('create PO Notes by ID', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'createValidPONote').mockResolvedValue(poNote);
+    jest.spyOn(poNoteServices, 'createValidPONote').mockResolvedValue(poNote);
 
     await poNotesController.createPONote(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(201);
@@ -140,7 +154,10 @@ describe('create PO Notes by ID', () => {
       body: {
       },
       params: {
-        id: 1
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -149,7 +166,7 @@ describe('create PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'createValidPONote').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'createValidPONote').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.createPONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -160,7 +177,10 @@ describe('create PO Notes by ID', () => {
         'type': 'AGENDA_ITEM'
       },
       params: {
-        id: 1
+        projectId: 1,
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -169,7 +189,7 @@ describe('create PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'createValidPONote').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'createValidPONote').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.createPONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -182,7 +202,8 @@ describe('update PO Notes by ID', () => {
     'note': 'string',
     'status': 'PENDING',
     'dueDate': null,
-    'issueLink': null
+    'issueLink': null,
+    memberId: 1
   };
 
   it('should return updated PO note as an object', async () => {
@@ -195,7 +216,11 @@ describe('update PO Notes by ID', () => {
         'issueLink': 'http://dummyUrl.com'
       },
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -204,7 +229,7 @@ describe('update PO Notes by ID', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'updatePONoteById').mockResolvedValue(poNote);
+    jest.spyOn(poNoteServices, 'updatePONoteById').mockResolvedValue(poNote);
 
     await poNotesController.editPONote(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(200);
@@ -215,7 +240,11 @@ describe('update PO Notes by ID', () => {
       body: {
       },
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -224,7 +253,7 @@ describe('update PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'updatePONoteById').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'updatePONoteById').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.editPONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -238,7 +267,11 @@ describe('update PO Notes by ID', () => {
         'issueLink': 'http://dummyUrl.com'
       },
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -247,7 +280,7 @@ describe('update PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'updatePONoteById').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'updatePONoteById').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.editPONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -262,7 +295,11 @@ describe('SOFT delete PO Notes by ID', () => {
     const mockReq = {
       body: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -271,7 +308,7 @@ describe('SOFT delete PO Notes by ID', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'softDeletePONoteById').mockResolvedValue(deleteNoteObj);
+    jest.spyOn(poNoteServices, 'softDeletePONoteById').mockResolvedValue(deleteNoteObj);
 
     await poNotesController.deletePONote(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(204);
@@ -281,7 +318,11 @@ describe('SOFT delete PO Notes by ID', () => {
     const mockReq = {
       body: {},
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -290,7 +331,7 @@ describe('SOFT delete PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'softDeletePONoteById').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'softDeletePONoteById').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.deletePONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });
@@ -298,7 +339,11 @@ describe('SOFT delete PO Notes by ID', () => {
     const mockReq = {
       body: {},
       params: {
-        k: 1
+        projectId: 1,
+        id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -307,7 +352,7 @@ describe('SOFT delete PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'softDeletePONoteById').mockRejectedValue(new HttpError(400, 'Bad Request'));
+    jest.spyOn(poNoteServices, 'softDeletePONoteById').mockRejectedValue(new HttpError(400, 'Bad Request'));
     await poNotesController.deletePONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new HttpError(400, 'Bad Request'));
   });
@@ -324,7 +369,11 @@ describe('HARD delete PO Notes by ID', () => {
         'deleteType': 'HARD'
       },
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -333,7 +382,7 @@ describe('HARD delete PO Notes by ID', () => {
     };
     const next = () => { };
 
-    jest.spyOn(poNotesServices, 'hardDeletePONoteById').mockResolvedValue(deleteNoteObj);
+    jest.spyOn(poNoteServices, 'hardDeletePONoteById').mockResolvedValue(deleteNoteObj);
 
     await poNotesController.deletePONote(mockReq, mockRes, next);
     expect(mockRes.status).toBeCalledWith(204);
@@ -345,7 +394,11 @@ describe('HARD delete PO Notes by ID', () => {
         deleteType: 'HARD'
       },
       params: {
+        projectId: 1,
         id: 1
+      },
+      user: {
+        memberId: 1
       }
     };
     const mockRes = {
@@ -354,7 +407,7 @@ describe('HARD delete PO Notes by ID', () => {
     };
     const next = jest.fn();
 
-    jest.spyOn(poNotesServices, 'hardDeletePONoteById').mockRejectedValue(new Error('Bad Request'));
+    jest.spyOn(poNoteServices, 'hardDeletePONoteById').mockRejectedValue(new Error('Bad Request'));
     await poNotesController.deletePONote(mockReq, mockRes, next);
     expect(next).toBeCalledWith(new Error('Bad Request'));
   });

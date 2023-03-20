@@ -1,5 +1,4 @@
 const announcementServices = require('../../services/dsm/announcements.services');
-const { getRandomNumber } = require('../../utils/randomGenerator');
 
 /**
   * Controller to handle GET request for listing all announcements
@@ -9,7 +8,8 @@ const { getRandomNumber } = require('../../utils/randomGenerator');
 */
 const listAnnouncements = async (req, res, next) => {
   try {
-    const announcements = await announcementServices.getAnnouncements();
+    const { projectId } = req.params;
+    const announcements = await announcementServices.getAnnouncements(parseInt(projectId));
     res.status(200).json(announcements);
   }
   catch (er) {
@@ -25,8 +25,11 @@ const listAnnouncements = async (req, res, next) => {
 */
 const detailAnnouncement = async (req, res, next) => {
   try {
-    const announcementId = req.params.id;
-    const resultAnnouncement = await announcementServices.getAnnouncementByID(announcementId);
+    const { projectId, id: announcementId } = req.params;
+    const resultAnnouncement = await announcementServices.getAnnouncementByID(
+      announcementId,
+      parseInt(projectId)
+    );
     res.status(200).json(resultAnnouncement);
   }
   catch (er) {
@@ -44,9 +47,13 @@ const createAnnouncement = async (req, res, next) => {
   try {
     // author ID is set as random(between 1 to 1000) for now
     // const author = req.user.id;
-    const author = getRandomNumber(1, 1000).toString();
-    const content = req.body.content;
-    const resultAnnouncement = await announcementServices.createAnnouncement(author, content);
+    const author = req.user.name || 'ANON';
+    const { memberId } = req.user;
+    const { projectId } = req.params;
+    const { content } = req.body;
+    const resultAnnouncement = await announcementServices.createAnnouncement(
+      author, memberId, content, parseInt(projectId)
+    );
     res.status(201).json(resultAnnouncement);
   }
   catch (er) {
@@ -62,10 +69,13 @@ const createAnnouncement = async (req, res, next) => {
 */
 const editAnnouncement = async (req, res, next) => {
   try {
-    //TODO: check if the user is the author of the announcement
+    const memberId = req.user.memberId;
     const announcementId = req.params.id;
+    const { projectId } = req.params;
     const content = req.body.content;
-    const resultAnnouncement = await announcementServices.editAnnouncement(announcementId, content);
+    const resultAnnouncement = await announcementServices.editAnnouncement(
+      announcementId, content, parseInt(memberId), parseInt(projectId)
+    );
     res.status(200).json(resultAnnouncement);
   }
   catch (er) {
@@ -82,8 +92,13 @@ const editAnnouncement = async (req, res, next) => {
 const deleteAnnouncement = async (req, res, next) => {
   try {
     // TODO: check if the user is the author of the announcement
+    const memberId = req.user.memberId;
     const announcementId = req.params.id;
-    await announcementServices.deleteAnnouncement(announcementId);
+    const { projectId } = req.params;
+
+    await announcementServices.deleteAnnouncement(
+      announcementId, parseInt(memberId), parseInt(projectId)
+    );
     res.status(204).json();
   }
   catch (er) {

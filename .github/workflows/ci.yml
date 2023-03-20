@@ -3,6 +3,10 @@
 
 name: MyAgileBoard - Test/GitLeaks Checks
 
+env:
+  DASHBOARD_DATABASE_URL: postgresql://postgres:@localhost:5433/AgileBoard?schema=public
+  MANAGEMENT_DATABASE_URL: postgresql://postgres:@localhost:5433/managment?schema=public
+
 on:
   push:
     branches: [ "main" ]
@@ -26,7 +30,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci
-    - run: npm run test-coverage
+    - run: npm run generate
+    - run: npm run test:coverage
   
   # leaks-check:
   #  runs-on: ubuntu-latest 

@@ -5,7 +5,7 @@ const createAnnouncementSchema = joi.object({
     .string()
     .min(1)
     .max(1500)
-    .required()
+    .required(),
 });
 
 const announcementsParamSchema = joi.object({

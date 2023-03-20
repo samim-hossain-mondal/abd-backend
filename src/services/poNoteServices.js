@@ -1,5 +1,5 @@
 const { HttpError } = require('../errors');
-const prisma = require('../prismaClient');
+const { dashboardPrisma } = require('../prismaClient');
 const prismaUtils = require('../utils/prismaUtils');
 
 const selectOnlyValidPONoteFields = {
@@ -11,6 +11,8 @@ const selectOnlyValidPONoteFields = {
     dueDate: true,
     issueLink: true,
     createdAt: true,
+    projectId: true,
+    memberId: true,
   }
 };
 
@@ -22,7 +24,8 @@ const getPONotesByQuickFilter = async (
   searchKeyword,
   status,
   page,
-  limit
+  limit,
+  projectId
 ) => {
   let filterObj = {};
 
@@ -46,10 +49,11 @@ const getPONotesByQuickFilter = async (
     ...filterObj, type
   } : filterObj;
 
-  const notes = await prisma.PONote.findMany({
+  const notes = await dashboardPrisma.PONote.findMany({
     where: {
       ...filterObj,
-      isDeleted: false
+      isDeleted: false,
+      projectId
     },
     orderBy: {
       createdAt: 'desc',
@@ -63,11 +67,12 @@ const getPONotesByQuickFilter = async (
 };
 
 // get specific note by id
-const getPONoteByID = async (noteId) => {
-  const noteObj = await prisma.PONote.findFirst({
+const getPONoteByID = async (noteId, projectId) => {
+  const noteObj = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
-      isDeleted: false
+      isDeleted: false,
+      projectId
     },
     ...selectOnlyValidPONoteFields
   });
@@ -80,7 +85,7 @@ const getPONoteByID = async (noteId) => {
 const createValidPONote = async (
   type, note,
   status, dueDate,
-  issueLink
+  issueLink, projectId, memberId
 ) => {
 
   const noteDetails = {
@@ -98,10 +103,12 @@ const createValidPONote = async (
     }),
     ...(issueLink === undefined || issueLink === null && {
       issueLink: null
-    })
+    }),
+    projectId,
+    memberId
   };
 
-  const createdNote = await prisma.PONote.create({
+  const createdNote = await dashboardPrisma.PONote.create({
     data: noteDetails,
     ...selectOnlyValidPONoteFields
   },
@@ -114,8 +121,23 @@ const createValidPONote = async (
 const updatePONoteById = async (
   noteId, note,
   status, dueDate,
-  issueLink, type
+  issueLink, type, projectId, memberId
 ) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(UPDATE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to update this note.');
 
   const updateDetails = {
     ...(note && { note }),
@@ -136,10 +158,11 @@ const updatePONoteById = async (
   };
 
   const noteObj =
-    await prisma.PONote.updateMany({
+    await dashboardPrisma.PONote.updateMany({
       where: {
         noteId,
-        isDeleted: false
+        isDeleted: false,
+        projectId
       },
       data: updateDetails,
     });
@@ -153,11 +176,29 @@ const updatePONoteById = async (
 };
 
 // soft delete a note
-const softDeletePONoteById = async (noteId) => {
-  const noteObj = await prisma.PONote.updateMany({
+const softDeletePONoteById = async (noteId, projectId, memberId) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
-      isDeleted: false
+      isDeleted: false,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(DELETE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to delete this note.');
+
+  const noteObj = await dashboardPrisma.PONote.updateMany({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId,
+      memberId
     },
     data: {
       isDeleted: true
@@ -169,11 +210,29 @@ const softDeletePONoteById = async (noteId) => {
 };
 
 // hard delete a note
-const hardDeletePONoteById = async (noteId) => {
-  const noteObj = await prisma.PONote.deleteMany({
+const hardDeletePONoteById = async (noteId, projectId, memberId) => {
+
+  // check if note belongs to member
+  const targetNote = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
-      isDeleted: false
+      isDeleted: false,
+      projectId
+    },
+    select: {
+      memberId: true
+    }
+  });
+
+  if (!targetNote) throw new HttpError(404, '(DELETE) : No Record Found');
+  if (targetNote.memberId !== memberId) throw new HttpError(403, 'You are not allowed to delete this note.');
+
+  const noteObj = await dashboardPrisma.PONote.deleteMany({
+    where: {
+      noteId,
+      isDeleted: false,
+      projectId,
+      memberId
     },
   });
 

@@ -2,8 +2,10 @@ const leavesServices = require('../services/leaves.services');
 
 async function getAllLeaves(req, res, next) {
   try {
-    const leaves = await leavesServices.getAllLeaves();
-    res.json(leaves);
+    const projectId = parseInt(req.params.projectId);
+
+    const leaves = await leavesServices.getAllLeaves(projectId);
+    res.status(200).json(leaves);
   } catch (err) {
     next(err);
   }
@@ -11,13 +13,16 @@ async function getAllLeaves(req, res, next) {
 
 async function createLeave(req, res, next) {
   try {
+    const projectId = parseInt(req.params.projectId);
+
     const { event, startDate, endDate, isRisk } = req.body;
     const leave = await leavesServices.createLeave(
       event,
       isRisk,
       new Date(startDate),
       new Date(endDate),
-      req.user
+      req.user,
+      projectId
     );
 
     res.status(201).json(leave);
@@ -28,6 +33,8 @@ async function createLeave(req, res, next) {
 
 async function editLeave(req, res, next) {
   try {
+    const projectId = parseInt(req.params.projectId);
+
     const { event, startDate, endDate, isRisk } = req.body;
     const leave = await leavesServices.editLeave(
       req.params.id,
@@ -35,7 +42,8 @@ async function editLeave(req, res, next) {
       isRisk,
       new Date(startDate),
       new Date(endDate),
-      req.user
+      req.user,
+      projectId
     );
 
     res.json(leave);
@@ -46,7 +54,9 @@ async function editLeave(req, res, next) {
 
 async function deleteLeave(req, res, next) {
   try {
-    await leavesServices.deleteLeave(req.params.id, req.user);
+    const projectId = parseInt(req.params.projectId);
+
+    await leavesServices.deleteLeave(req.params.id, req.user, projectId);
     res.sendStatus(204);
   } catch (err) {
     next(err);

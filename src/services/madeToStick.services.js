@@ -1,15 +1,20 @@
-const {HttpError} = require('../errors');
-const prisma = require('../prismaClient');
+const { HttpError } = require('../errors');
+const { dashboardPrisma: prisma } = require('../prismaClient');
+
 // service to create a new madeToStick
-const createMadeToStick = async ( value ,
-  x ,
+const createMadeToStick = async (
+  value,
+  x,
   y,
-  w ,
-  h ,
+  w,
+  h,
   type,
-  emailId ,
-  backgroundColor) => {
-  const madeToStickDetails={
+  emailId,
+  backgroundColor,
+  memberId,
+  projectId
+) => {
+  const madeToStickDetails = {
     value,
     backgroundColor,
     x,
@@ -17,23 +22,30 @@ const createMadeToStick = async ( value ,
     w,
     h,
     type,
-    emailId
+    emailId,
+    memberId,
+    projectId
   };
   const madeToStickItem = await prisma.madeToStick.create({
-    data:madeToStickDetails
+    data: madeToStickDetails
   });
   return madeToStickItem;
 };
+
 // service to edit a madeToStick
-const editMadeToStick = async ( value ,
-  x ,
+const editMadeToStick = async (value,
+  x,
   y,
-  w ,
-  h ,
+  w,
+  h,
   type,
-  emailId ,
-  backgroundColor,i) => {
-  const madeToStickDetails={
+  emailId,
+  backgroundColor,
+  i,
+  memberId,
+  projectId
+) => {
+  const madeToStickDetails = {
     value,
     backgroundColor,
     x,
@@ -43,35 +55,68 @@ const editMadeToStick = async ( value ,
     type,
     emailId
   };
-  const madeToStickItem = await prisma.madeToStick.update({
-    where:{
-      i:i
-    },
-    data:madeToStickDetails
-  });
-  if(madeToStickItem.count === 0)
-  {
-    throw new HttpError(404, '(UPDATE) : No Record Found');
-  }
-  return madeToStickItem;
-};
-const deleteMadeToStick = async (i) => {
-  const madeToStickItem = await prisma.madeToStick.delete({
-    where:{
-      i:i
+
+  const madeToStickItem = await prisma.madeToStick.findFirst({
+    where: {
+      i: i,
+      projectId
     }
   });
-  if(madeToStickItem.count === 0)
-  {
-    throw new HttpError(404, '(DELETE) : No Record Found');
+
+  if (!madeToStickItem) {
+    throw new HttpError(404, 'StickItem not found');
   }
+
+  if (madeToStickItem.memberId !== memberId) {
+    throw new HttpError(403, 'You are not allowed to edit this StickItem');
+  }
+
+  await prisma.madeToStick.update({
+    where: {
+      i: i
+    },
+    data: madeToStickDetails
+  });
+
   return madeToStickItem;
 };
-const getAllMadeToStick = async () => {
-  const madeToStickItem = await prisma.madeToStick.findMany();
+
+const deleteMadeToStick = async (i, memberId, projectId) => {
+
+  const madeToStickItem = await prisma.madeToStick.findFirst({
+    where: {
+      i: i,
+      projectId
+    }
+  });
+
+  if (!madeToStickItem) {
+    throw new HttpError(404, 'StickItem not found');
+  }
+
+  if (madeToStickItem.memberId !== memberId) {
+    throw new HttpError(403, 'You are not allowed to delete this StickItem');
+  }
+
+  await prisma.madeToStick.delete({
+    where: {
+      i: i,
+      projectId
+    }
+  });
+
   return madeToStickItem;
 };
-module.exports={
+
+const getAllMadeToStick = async (projectId) => {
+  const madeToStickItem = await prisma.madeToStick.findMany({
+    where: {
+      projectId
+    }
+  });
+  return madeToStickItem;
+};
+module.exports = {
   createMadeToStick,
   editMadeToStick,
   deleteMadeToStick,

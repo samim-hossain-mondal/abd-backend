@@ -3,6 +3,10 @@
 
 name: MyAgileBoard - Test/GitLeaks Checks
 
+env:
+  DASHBOARD_DATABASE_URL: postgresql://postgres:@localhost:5433/AgileBoard?schema=public
+  MANAGEMENT_DATABASE_URL: postgresql://postgres:@localhost:5433/managment?schema=public
+
 on:
   push:
     branches: [ "main" ]

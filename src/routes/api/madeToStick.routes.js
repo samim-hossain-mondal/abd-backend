@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { generateValidationMiddleware } = require('../../middlewares/validation');
 const schema = require('../../schemas/madeToStick');
-const madeToStickController= require('../../controllers/madeToStick.controller');
+const madeToStickController = require('../../controllers/madeToStick.controller');
+const { paramParser } = require('../../middlewares/paramParser');
 /**
  * @openapi
  * components:
@@ -126,8 +127,8 @@ const madeToStickController= require('../../controllers/madeToStick.controller')
  *         description: Internal server error
 */
 
-router.get('/',madeToStickController.getAllMadeToStick);
-router.post('/',generateValidationMiddleware(schema.madeToStickCreateSchema),madeToStickController.createMadeToStick);
+router.get('/', madeToStickController.getAllMadeToStick);
+router.post('/', generateValidationMiddleware(schema.madeToStickCreateSchema), madeToStickController.createMadeToStick);
 
 /**
  * @openapi
@@ -225,9 +226,13 @@ router.post('/',generateValidationMiddleware(schema.madeToStickCreateSchema),mad
  *         description: Internal server error
 */
 
-router.put('/:i',generateValidationMiddleware(schema.madeToStickEditSchema),madeToStickController.editMadeToStick);
-router.delete('/:i',generateValidationMiddleware(schema.madeToStickDeleteParamSchema,'params'),madeToStickController.deleteMadeToStick);
+router.put('/:i',
+  paramParser({ i: 'number' }),
+  generateValidationMiddleware(schema.madeToStickEditSchema), madeToStickController.editMadeToStick);
+router.delete('/:i',
+  paramParser({ i: 'number' }),
+  generateValidationMiddleware(schema.madeToStickDeleteParamSchema, 'params'), madeToStickController.deleteMadeToStick);
 
-module.exports= router;
+module.exports = router;
 
 

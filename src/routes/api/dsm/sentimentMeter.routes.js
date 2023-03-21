@@ -12,7 +12,8 @@ const {
 } = require('../../../middlewares/validation');
 const sentimentMeterSchema = require('../../../schemas/dsm/sentimentMeterSchema');
 const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
- 
+const { paramParser } = require('../../../middlewares/paramParser');
+
 /**
  * @openapi
  * components:
@@ -103,9 +104,12 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *         description: Internal server error
  */
 
-router.get('/:projectId', memberValidationMiddleware, getAllSentiment);
+router.get('/:projectId',
+  paramParser({ projectId: 'number' }),
+  memberValidationMiddleware, getAllSentiment);
 router.post(
   '/:projectId',
+  paramParser({ projectId: 'number' }),
   memberValidationMiddleware,
   generateValidationMiddleware(sentimentMeterSchema.createSentiment),
   createSentiment
@@ -144,6 +148,7 @@ router.post(
 
 router.get(
   '/:projectId/date/:createdAt',
+  paramParser({ projectId: 'number' }),
   memberValidationMiddleware,
   generateValidationMiddleware(sentimentMeterSchema.dateSchema, 'params'),
   countSentimentByDate
@@ -242,18 +247,21 @@ router.get(
 
 router.get(
   '/:projectId/:id',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // generateValidationMiddleware(sentimentMeterSchema.getByIdSchema, 'params'),
   detailSentiment
 );
 router.patch(
   '/:projectId/:id',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // generateValidationMiddleware(sentimentMeterSchema.patchSentiment, 'params'),
   updateSentiment
 );
 router.delete(
   '/:projectId/:id',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // generateValidationMiddleware(sentimentMeterSchema.getByIdSchema, 'params'),
   deleteSentimentById

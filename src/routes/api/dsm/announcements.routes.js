@@ -88,12 +88,14 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
 
 router.route('/:projectId')
   .get(
+    paramParser({ projectId: 'number' }),
     memberValidationMiddleware,
     listAnnouncements
   )
   .post(
+    paramParser({ projectId: 'number' }),
     memberValidationMiddleware,
-    generateValidationMiddleware(announcementsSchema.createAnnouncementSchema), 
+    generateValidationMiddleware(announcementsSchema.createAnnouncementSchema),
     createAnnouncement);
 
 const requiredParams = {
@@ -190,12 +192,14 @@ const paramParsingMiddleware = paramParser(requiredParams);
 */
 router.route('/:projectId/:id')
   .get(
+    paramParser({ projectId: 'number', id: 'number' }),
     // paramValidationMiddleware,
     memberValidationMiddleware,
     paramParsingMiddleware,
     detailAnnouncement
   )
   .patch(
+    paramParser({ projectId: 'number', id: 'number' }),
     memberValidationMiddleware,
     // paramValidationMiddleware,
     generateValidationMiddleware(announcementsSchema.patchAnnouncementSchema),
@@ -203,6 +207,7 @@ router.route('/:projectId/:id')
     editAnnouncement
   )
   .delete(
+    paramParser({ projectId: 'number', id: 'number' }),
     memberValidationMiddleware,
     // paramValidationMiddleware,
     paramParsingMiddleware,

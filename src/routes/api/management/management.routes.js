@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { 
-  createNewProject, 
-  listAllProjectsByCurrentUserEmail, 
+const {
+  createNewProject,
+  listAllProjectsByCurrentUserEmail,
   listAllMembersByProjectId,
   addNewProjectMember,
   removeMemberFromProject,
@@ -19,13 +19,14 @@ const {
 
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
-const { 
-  createProjectSchema, 
-  addMemberSchema, 
-  projectInfoSchema, 
-  updateMemberSchema, 
-  removeMemberSchema 
+const {
+  createProjectSchema,
+  addMemberSchema,
+  projectInfoSchema,
+  updateMemberSchema,
+  removeMemberSchema
 } = require('../../../schemas/management/managementSchema');
+const { paramParser } = require('../../../middlewares/paramParser');
 
 /**
  * @openapi
@@ -160,7 +161,7 @@ const {
 router.route('/project')
   .get(listAllProjectsByCurrentUserEmail)
   .post(
-    generateValidationMiddleware(createProjectSchema), 
+    generateValidationMiddleware(createProjectSchema),
     createNewProject
   );
 
@@ -292,10 +293,13 @@ router.route('/project')
 
 
 router.route('/project/:projectId')
-  .get(memberValidationMiddleware, getProjectDetailsById)
+  .get(
+    paramParser({ projectId: 'number' }),
+    memberValidationMiddleware, getProjectDetailsById)
   .patch(
+    paramParser({ projectId: 'number' }),
     generateValidationMiddleware(projectInfoSchema),
-    roleValidationMiddleware, 
+    roleValidationMiddleware,
     updateProjectInfo
   )
   .delete(roleValidationMiddleware, deleteProject);
@@ -449,15 +453,18 @@ router.route('/project/:projectId')
 
 router.route('/project/:projectId/member')
   .get(
-    memberValidationMiddleware, 
+    paramParser({ projectId: 'number' }),
+    memberValidationMiddleware,
     listAllMembersByProjectId
   )
   .post(
+    paramParser({ projectId: 'number' }),
     roleValidationMiddleware,
     generateValidationMiddleware(addMemberSchema),
     addNewProjectMember
   )
   .patch(
+    paramParser({ projectId: 'number' }),
     roleValidationMiddleware,
     generateValidationMiddleware(addMemberSchema),
     updateMemberRole
@@ -580,10 +587,13 @@ router.route('/project/:projectId/member')
  */
 
 router.route('/project/:projectId/member/:memberId')
-  .get(memberValidationMiddleware, getProjectMemberDetailsById)
+  .get(
+    paramParser({ projectId: 'number', memberId: 'number' }),
+    memberValidationMiddleware, getProjectMemberDetailsById)
   .patch(
-    roleValidationMiddleware, 
-    generateValidationMiddleware(updateMemberSchema), 
+    paramParser({ projectId: 'number', memberId: 'number' }),
+    roleValidationMiddleware,
+    generateValidationMiddleware(updateMemberSchema),
     updateMemberRole
   )
   .delete(roleValidationMiddleware, removeMemberFromProject);
@@ -631,7 +641,9 @@ router.route('/member')
   .post(createNewMember);
 
 router.route('/member/:memberId')
-  .get(getMemberDetailsById)
+  .get(
+    paramParser({ memberId: 'number' }),
+    getMemberDetailsById)
   .patch(updateMemberInfo)
   .delete(deleteMember);
 

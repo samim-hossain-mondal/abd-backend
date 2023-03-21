@@ -117,7 +117,16 @@ model Leave {
   projectId Int
   memberId  Int
 }
-
+model teamInformation {
+  id Int @id @unique @default(autoincrement())
+  memberId Int 
+  bio String
+  role String
+  projectId Int
+  startDate DateTime
+  endDate DateTime
+  @@unique([memberId, projectId])
+}
 // Enums
 
 enum MadeToStickType {

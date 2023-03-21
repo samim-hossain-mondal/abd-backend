@@ -1,37 +1,57 @@
 const { HttpError } = require('../errors');
-const prisma = require('../prismaClient');
+const { dashboardPrisma } = require('../prismaClient');
+const { managementPrisma } = require('../prismaClient');
 // service to create a new teamInformation
-const createTeamInformation = async (emailId,
-  name ,
+const createTeamInformation = async (
+  memberId,
   bio ,
   role,
-  message ,
   projectId ,
   startDate ,
   endDate) => {
   const profileDetails={
-    emailId,
-    name ,
+    memberId,
     bio ,
     role,
-    message ,
     projectId ,
     startDate ,
     endDate
   };
-  const profile = await prisma.teamInformation.create({
+  const profile = await dashboardPrisma.teamInformation.create({
     data:profileDetails
   });
+  const memberDetails = await managementPrisma.Member.findUnique({
+    where:{
+      memberId
+    }
+  });
+  profile.name = memberDetails.name;
+  profile.emailId = memberDetails.email;
+  profile.message= memberDetails.slackLink;
   return profile;
 };
 // service to get all teamInformations
 const getAllTeamInformations = async () => {
-  const profiles = await prisma.teamInformation.findMany();
+  const profiles = await dashboardPrisma.teamInformation.findMany();
+  for (let i = 0; i < profiles.length; i++) {
+    const profile = profiles[i];
+    const memberId = profile.memberId;
+    const memberDetails = await managementPrisma.Member.findUnique({
+      where:{
+        memberId
+      }
+    });
+    profile.name = memberDetails.name;
+    profile.emailId = memberDetails.email;
+    profile.message= memberDetails.slackLink;
+  }
   return profiles;
 };
 // service to update a teamInformation
-const updateTeamInformation = async (id,emailId,
-  name ,
+const updateTeamInformation = async (
+  id,
+  name,
+  memberId,
   bio ,
   role,
   message ,
@@ -39,16 +59,25 @@ const updateTeamInformation = async (id,emailId,
   startDate ,
   endDate) => {
   const profileDetails={
-    emailId,
-    name ,
+    memberId,
     bio ,
     role,
-    message ,
     projectId ,
     startDate ,
     endDate
   };
-  const profile = await prisma.teamInformation.update({
+  const managementProfileDetails={
+    name,
+    slackLink: message
+  };
+  const managementProfile = await managementPrisma.Member.update({
+    where:{
+      memberId
+    },
+    data:managementProfileDetails
+  }
+  );
+  const profile = await dashboardPrisma.teamInformation.update({
     where:{
       id:id
     },
@@ -58,11 +87,13 @@ const updateTeamInformation = async (id,emailId,
   {
     throw new HttpError(404, '(UPDATE) : No Record Found');
   }
+  profile.name = managementProfile.name;
+  profile.message = managementProfile.message;
   return profile;
 };
 // service to delete a teamInformation
 const deleteTeamInformation = async (id) => {
-  const profile = await prisma.teamInformation.delete({
+  const profile = await dashboardPrisma.teamInformation.delete({
     where:{
       id:id
     }
@@ -75,11 +106,23 @@ const deleteTeamInformation = async (id) => {
 };
 // service to get teamInformations by projectId
 const getTeamInformationsByProjectId = async (projectId) => {
-  const profiles = await prisma.teamInformation.findMany({
+  const profiles = await dashboardPrisma.teamInformation.findMany({
     where:{
-      projectId:projectId
+      projectId:parseInt(projectId)
     }
   });
+  for (let i = 0; i < profiles.length; i++) {
+    const profile = profiles[i];
+    const memberId = profile.memberId;
+    const memberDetails = await managementPrisma.Member.findUnique({
+      where:{
+        memberId
+      }
+    });
+    profile.name = memberDetails.name;
+    profile.emailId = memberDetails.email;
+    profile.message= memberDetails.slackLink;
+  }
   return profiles;
 };
 module.exports = {

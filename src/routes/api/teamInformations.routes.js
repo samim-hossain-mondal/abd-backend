@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const teamInformationsController = require('../../controllers/teamInformations.controller');
-const { generateValidationMiddleware } = require('../../middlewares/validation');
-const schema = require('../../schemas/teamInformationsSchema');
+// const { generateValidationMiddleware } = require('../../middlewares/validation');
+// const schema = require('../../schemas/teamInformationsSchema');
 /**
  * @openapi
  * components:
@@ -9,8 +9,7 @@ const schema = require('../../schemas/teamInformationsSchema');
  *    TeamInformation:
  *      type: object
  *      required:
- *        - name
- *        - emailId
+ *        - memberId
  *        - projectId
  *        - role
  *        - message
@@ -18,14 +17,11 @@ const schema = require('../../schemas/teamInformationsSchema');
  *        - startDate
  *        - endDate
  *      properties:
- *        name:
- *          type: string
- *          description: The name of the individual.
- *        emailId:
- *          type: string
- *          description: The email address of the individual who created the card.
+ *        memberId:
+ *          type: integer
+ *          description: member id of the individual who created the card.
  *        projectId:
- *          type: string
+ *          type: integer
  *          description: The project ID associated with the teamInformation.
  *        role:
  *          type: string
@@ -80,8 +76,7 @@ const schema = require('../../schemas/teamInformationsSchema');
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - email
+ *               - memberId
  *               - projectId
  *               - role
  *               - message
@@ -89,15 +84,11 @@ const schema = require('../../schemas/teamInformationsSchema');
  *               - startDate
  *               - endDate
  *             properties:
- *               name:
- *                 type: string
- *                 description: The name of the individual.
- *               emailId:
- *                 type: string
- *                 format: email
- *                 description: The email address of the individual who created the card.
+ *               memberId:
+ *                 type: integer
+ *                 description: member id of the individual who created the card.
  *               projectId:
- *                 type: string
+ *                 type: integer
  *                 description: The project ID associated with the teamInformation.
  *               role:
  *                 type: string
@@ -133,7 +124,7 @@ const schema = require('../../schemas/teamInformationsSchema');
 
 router.route('/')
   .post(
-    generateValidationMiddleware(schema.createTeamInformationSchema),
+    // generateValidationMiddleware(schema.createTeamInformationSchema),
     teamInformationsController.createTeamInformation
   )
   .get(
@@ -187,8 +178,7 @@ router.route('/')
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - email
+ *               - memberId
  *               - projectId
  *               - role
  *               - message
@@ -196,16 +186,15 @@ router.route('/')
  *               - startDate
  *               - endDate
  *             properties:
+ *               memberId:
+ *                 type: integer
+ *                 description: member id of the individual who created the card.
+ *               projectId:
+ *                 type: integer
+ *                 description: The project ID associated with the teamInformation.
  *               name:
  *                 type: string
- *                 description: The name of the individual.
- *               emailId:
- *                 type: string
- *                 format : email
- *                 description: The email address of the individual who created the card.
- *               projectId:
- *                 type: string
- *                 description: The project ID associated with the teamInformation.
+ *                 description: The name of the individual in the project.
  *               role:
  *                 type: string
  *                 description: The role of the individual in the project.
@@ -239,13 +228,13 @@ router.route('/')
  */
 router.route('/:id')
   .put(
-    generateValidationMiddleware(schema.updateTeamInformationParamSchema,'params'),
-    generateValidationMiddleware(schema.updateTeamInformationSchema),
+    // generateValidationMiddleware(schema.updateTeamInformationParamSchema,'params'),
+    // generateValidationMiddleware(schema.updateTeamInformationSchema),
 
     teamInformationsController.updateTeamInformation
   )
   .delete(
-    generateValidationMiddleware(schema.deleteTeamInformationParamSchema,'params'),
+    // generateValidationMiddleware(schema.deleteTeamInformationParamSchema,'params'),
     teamInformationsController.deleteTeamInformation
   );
 /**
@@ -261,7 +250,7 @@ router.route('/:id')
  *         name: projectId
  *         required: true
  *         schema:
- *           type: string
+ *           type: integer
  *         description: The project ID
  *     responses:
  *       200:
@@ -281,8 +270,8 @@ router.route('/:id')
 // Get teamInformations by project ID
 router.route('/projectId/:projectId')
   .get(
-    generateValidationMiddleware(schema.getTeamInformationsByProjectIdParamSchema,'params')
-    ,
+    // generateValidationMiddleware(schema.getTeamInformationsByProjectIdParamSchema,'params'),
+    
     teamInformationsController.getTeamInformationsByProjectId
   );
 module.exports = router;

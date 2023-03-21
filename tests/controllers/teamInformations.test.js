@@ -14,8 +14,11 @@ describe('get all teamInformations', () => {
       {
         'id': 1,
         'name': 'string',
-        'email': 'string',
-        'phone': 'string',
+        'emailId': 'string',
+        'memberId': 1,
+        'bio': 'string',
+        'role': 'string',
+        'message': 'string',
         'projectId': 1,
         'createdBy': 1,
         'createdAt': '2021-06-16T18:05:37.000Z',
@@ -48,11 +51,12 @@ describe('create teamInformations', () => {
     const mockReq = {
       query: {},
       body: {
-        'name': 'string',
-        'email': 'string',
-        'phone': 'string',
+        'memberId': 1,
+        'bio': 'string',
+        'role': 'string',
         'projectId': 1,
-        'createdBy': 1,
+        'startedDate': '2021-06-16T18:05:37.000Z',
+        'endDate': '2021-06-16T18:05:37.000Z',
       },
     };
     const mockRes = {
@@ -62,13 +66,15 @@ describe('create teamInformations', () => {
     const next = () => { };
     const mockTeamInformation = {
       'id': 1,
+      'memberId': 1,
       'name': 'string',
-      'email': 'string',
-      'phone': 'string',
+      'emailId': 'string',
+      'message': 'string',
+      'bio': 'string',
+      'role': 'string',
       'projectId': 1,
-      'createdBy': 1,
-      'createdAt': '2021-06-16T18:05:37.000Z',
-      'updatedAt': '2021-06-16T18:05:37.000Z'
+      'startedDate': '2021-06-16T18:05:37.000Z',
+      'endDate': '2021-06-16T18:05:37.000Z',
     };
     jest.spyOn(teamInformationsServices, 'createTeamInformation').mockResolvedValue(mockTeamInformation);
     await teamInformationsController.createTeamInformation(mockReq, mockRes, next);
@@ -80,11 +86,12 @@ describe('create teamInformations', () => {
     const mockReq = {
       query: {},
       body: {
-        'name': 'string',
-        'email': 'string',
-        'phone': 'string',
+        'memberId': 1,
+        'bio': 'string',
+        'role': 'string',
         'projectId': 1,
-        'createdBy': 1,
+        'startedDate': '2021-06-16T18:05:37.000Z',
+        'endDate': '2021-06-16T18:05:37.000Z',
       },
     };
     const mockRes = {
@@ -104,10 +111,13 @@ describe('updateTeamInformation', () => {
       query: {},
       body: {
         'name': 'string',
-        'email': 'string',
-        'phone': 'string',
+        'memberId': 1,
+        'bio': 'string',
+        'role': 'string',
         'projectId': 1,
-        'createdBy': 1,
+        'message': 'string',
+        'startDate': '2021-06-16T18:05:37.000Z',
+        'endDate': '2021-06-16T18:05:37.000Z',
       },
       params: {
         id: 1
@@ -121,12 +131,13 @@ describe('updateTeamInformation', () => {
     const mockTeamInformation = {
       'id': 1,
       'name': 'string',
-      'email': 'string',
-      'phone': 'string',
+      'memberId': 1,
+      'bio': 'string',
+      'role': 'string',
       'projectId': 1,
-      'createdBy': 1,
-      'createdAt': '2021-06-16T18:05:37.000Z',
-      'updatedAt': '2021-06-16T18:05:37.000Z'
+      'message': 'string',
+      'startDate': '2021-06-16T18:05:37.000Z',
+      'endDate': '2021-06-16T18:05:37.000Z',
     };
     jest.spyOn(teamInformationsServices, 'updateTeamInformation').mockResolvedValue(mockTeamInformation);
     await teamInformationsController.updateTeamInformation(mockReq, mockRes, next);
@@ -175,12 +186,13 @@ describe('deleteTeamInformation', () => {
     const mockTeamInformation = {
       'id': 1,
       'name': 'string',
-      'email': 'string',
-      'phone': 'string',
+      'memberId': 1,
+      'bio': 'string',
+      'role': 'string',
       'projectId': 1,
-      'createdBy': 1,
-      'createdAt': '2021-06-16T18:05:37.000Z',
-      'updatedAt': '2021-06-16T18:05:37.000Z'
+      'message': 'string',
+      'startDate': '2021-06-16T18:05:37.000Z',
+      'endDate': '2021-06-16T18:05:37.000Z',
     };
     jest.spyOn(teamInformationsServices, 'deleteTeamInformation').mockResolvedValue(mockTeamInformation);
     await teamInformationsController.deleteTeamInformation(mockReq, mockRes, next);
@@ -224,12 +236,13 @@ describe('get teamInformations by project id', () => {
       {
         'id': 1,
         'name': 'string',
-        'email': 'string',
-        'phone': 'string',
+        'memberId': 1,
+        'bio': 'string',
+        'role': 'string',
         'projectId': 1,
-        'createdBy': 1,
-        'createdAt': '2021-06-16T18:05:37.000Z',
-        'updatedAt': '2021-06-16T18:05:37.000Z'
+        'message': 'string',
+        'startDate': '2021-06-16T18:05:37.000Z',
+        'endDate': '2021-06-16T18:05:37.000Z',
       }
     ];
     jest.spyOn(teamInformationsServices, 'getTeamInformationsByProjectId').mockResolvedValue(mockTeamInformation);

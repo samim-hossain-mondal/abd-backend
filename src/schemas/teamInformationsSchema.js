@@ -1,11 +1,16 @@
 const joi = require('joi');
 const createTeamInformationSchema = joi.object({
-  
+  name: joi
+    .string()
+    .required(),
+  memberId: joi
+    .number()
+    .integer(),
   projectId: joi
     .number()
     .integer()
     .required(),
-  role: joi
+  projectRole: joi
     .string()
     .required(),
   message: joi
@@ -32,7 +37,7 @@ const updateTeamInformationSchema = joi.object({
     .number()
     .integer()
     .required(),
-  role: joi
+  projectRole: joi
     .string()
     .required(),
   message: joi

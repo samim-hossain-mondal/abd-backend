@@ -76,21 +76,25 @@ const schema = require('../../schemas/teamInformationsSchema');
  *           schema:
  *             type: object
  *             required:
+ *               - name
  *               - memberId
  *               - projectId
- *               - role
+ *               - projectRole
  *               - message
  *               - bio
  *               - startDate
  *               - endDate
  *             properties:
+ *               name:
+ *                 type: string
+ *                 description: name of the individual who created the card.
  *               memberId:
  *                 type: integer
  *                 description: member id of the individual who created the card.
  *               projectId:
  *                 type: integer
  *                 description: The project ID associated with the teamInformation.
- *               role:
+ *               projectRole:
  *                 type: string
  *                 description: The role of the individual in the project.
  *               message:
@@ -180,7 +184,7 @@ router.route('/')
  *             required:
  *               - memberId
  *               - projectId
- *               - role
+ *               - projectRole
  *               - message
  *               - bio
  *               - startDate
@@ -195,7 +199,7 @@ router.route('/')
  *               name:
  *                 type: string
  *                 description: The name of the individual in the project.
- *               role:
+ *               projectRole:
  *                 type: string
  *                 description: The role of the individual in the project.
  *               message:

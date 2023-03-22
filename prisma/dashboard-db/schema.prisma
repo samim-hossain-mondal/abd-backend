@@ -121,7 +121,7 @@ model teamInformation {
   id Int @id @unique @default(autoincrement())
   memberId Int 
   bio String
-  role String
+  projectRole String 
   projectId Int
   startDate DateTime
   endDate DateTime

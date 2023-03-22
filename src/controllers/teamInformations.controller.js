@@ -3,22 +3,27 @@ const teamInformationService = require('../services/teamInformations.service');
 const createTeamInformation = async (req, res, next) => {
   try {
     const {
+      name,
+      message,
       memberId,
       bio ,
-      role,
+      projectRole,
       projectId ,
       startDate ,
       endDate } = req.body;
     const profile = await teamInformationService.createTeamInformation(
+      name,
+      message,
       memberId,
       bio ,
-      role,
+      projectRole,
       projectId ,
       new Date(startDate) ,
       new Date(endDate));
     res.status(201).json(profile);
   }
   catch (er) {
+    console.log(er);
     next(er);
   }
 };
@@ -38,7 +43,7 @@ const updateTeamInformation = async (req, res, next) => {
     const {
       name,
       bio ,
-      role,
+      projectRole,
       message ,
       projectId ,
       startDate ,
@@ -50,7 +55,7 @@ const updateTeamInformation = async (req, res, next) => {
       name,
       memberId,
       bio ,
-      role,
+      projectRole,
       message ,
       projectId ,
       new Date(startDate) ,

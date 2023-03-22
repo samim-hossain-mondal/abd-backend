@@ -3,16 +3,18 @@ const { dashboardPrisma } = require('../prismaClient');
 const { managementPrisma } = require('../prismaClient');
 // service to create a new teamInformation
 const createTeamInformation = async (
+  name,
+  message,
   memberId,
   bio ,
-  role,
+  projectRole,
   projectId ,
   startDate ,
   endDate) => {
   const profileDetails={
     memberId,
     bio ,
-    role,
+    projectRole,
     projectId ,
     startDate ,
     endDate
@@ -20,9 +22,13 @@ const createTeamInformation = async (
   const profile = await dashboardPrisma.teamInformation.create({
     data:profileDetails
   });
-  const memberDetails = await managementPrisma.Member.findUnique({
+  const memberDetails = await managementPrisma.Member.update({
     where:{
       memberId
+    },
+    data:{
+      slackLink:message,
+      name  
     }
   });
   profile.name = memberDetails.name;
@@ -57,7 +63,7 @@ const updateTeamInformation = async (
   name,
   memberId,
   bio ,
-  role,
+  projectRole,
   message ,
   projectId ,
   startDate ,
@@ -65,7 +71,7 @@ const updateTeamInformation = async (
   const profileDetails={
     memberId,
     bio ,
-    role,
+    projectRole,
     projectId ,
     startDate ,
     endDate

@@ -23,7 +23,6 @@ const createTeamInformation = async (req, res, next) => {
     res.status(201).json(profile);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };

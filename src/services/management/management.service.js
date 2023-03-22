@@ -59,6 +59,12 @@ const allProjectsByCurrentUserInDb = async (email) => {
     select: {
       projectId: true,
       projectName: true,
+      projectDescription: true,
+      _count : {
+        select: {
+          projectMembers: true
+        }
+      }
     }
   });
 

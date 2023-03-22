@@ -33,17 +33,21 @@ const createTeamInformation = async (
 // service to get all teamInformations
 const getAllTeamInformations = async () => {
   const profiles = await dashboardPrisma.teamInformation.findMany();
-  for (let i = 0; i < profiles.length; i++) {
-    const profile = profiles[i];
+  const memberDetailsList= await Promise.all(profiles.map(async (profile) => {
     const memberId = profile.memberId;
     const memberDetails = await managementPrisma.Member.findUnique({
       where:{
         memberId
       }
     });
+    return memberDetails;
+  }));
+  for (let i = 0; i < profiles.length; i++) {
+    const profile = profiles[i];
+    const memberDetails = memberDetailsList[i];
     profile.name = memberDetails.name;
     profile.emailId = memberDetails.email;
-    profile.message= memberDetails.slackLink;
+    profile.message= memberDetails.slackLink; 
   }
   return profiles;
 };
@@ -111,17 +115,21 @@ const getTeamInformationsByProjectId = async (projectId) => {
       projectId:parseInt(projectId)
     }
   });
-  for (let i = 0; i < profiles.length; i++) {
-    const profile = profiles[i];
+  const memberDetailsList= await Promise.all(profiles.map(async (profile) => {
     const memberId = profile.memberId;
     const memberDetails = await managementPrisma.Member.findUnique({
       where:{
         memberId
       }
     });
+    return memberDetails;
+  }));
+  for (let i = 0; i < profiles.length; i++) {
+    const profile = profiles[i];
+    const memberDetails = memberDetailsList[i];
     profile.name = memberDetails.name;
     profile.emailId = memberDetails.email;
-    profile.message= memberDetails.slackLink;
+    profile.message= memberDetails.slackLink; 
   }
   return profiles;
 };

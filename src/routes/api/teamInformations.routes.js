@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const teamInformationsController = require('../../controllers/teamInformations.controller');
-// const { generateValidationMiddleware } = require('../../middlewares/validation');
-// const schema = require('../../schemas/teamInformationsSchema');
+const { generateValidationMiddleware } = require('../../middlewares/validation');
+const schema = require('../../schemas/teamInformationsSchema');
 /**
  * @openapi
  * components:
@@ -124,7 +124,7 @@ const teamInformationsController = require('../../controllers/teamInformations.c
 
 router.route('/')
   .post(
-    // generateValidationMiddleware(schema.createTeamInformationSchema),
+    generateValidationMiddleware(schema.createTeamInformationSchema),
     teamInformationsController.createTeamInformation
   )
   .get(
@@ -228,13 +228,13 @@ router.route('/')
  */
 router.route('/:id')
   .put(
-    // generateValidationMiddleware(schema.updateTeamInformationParamSchema,'params'),
-    // generateValidationMiddleware(schema.updateTeamInformationSchema),
+    generateValidationMiddleware(schema.updateTeamInformationParamSchema,'params'),
+    generateValidationMiddleware(schema.updateTeamInformationSchema),
 
     teamInformationsController.updateTeamInformation
   )
   .delete(
-    // generateValidationMiddleware(schema.deleteTeamInformationParamSchema,'params'),
+    generateValidationMiddleware(schema.deleteTeamInformationParamSchema,'params'),
     teamInformationsController.deleteTeamInformation
   );
 /**
@@ -270,8 +270,7 @@ router.route('/:id')
 // Get teamInformations by project ID
 router.route('/projectId/:projectId')
   .get(
-    // generateValidationMiddleware(schema.getTeamInformationsByProjectIdParamSchema,'params'),
-    
+    generateValidationMiddleware(schema.getTeamInformationsByProjectIdParamSchema,'params'),
     teamInformationsController.getTeamInformationsByProjectId
   );
 module.exports = router;

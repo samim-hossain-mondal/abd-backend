@@ -119,6 +119,9 @@ describe('updateTeamInformation', () => {
         'startDate': '2021-06-16T18:05:37.000Z',
         'endDate': '2021-06-16T18:05:37.000Z',
       },
+      user:{
+        memberId:1
+      },
       params: {
         id: 1
       }
@@ -148,6 +151,9 @@ describe('updateTeamInformation', () => {
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
+      user:{
+        memberId:1
+      },
       body: {
         'name': 'string',
         'email': 'string',

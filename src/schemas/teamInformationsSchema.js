@@ -1,14 +1,9 @@
 const joi = require('joi');
 const createTeamInformationSchema = joi.object({
-  name: joi
-    .string()
-    .required(),
-  emailId: joi
-    .string()
-    .email()
-    .required(),
+  
   projectId: joi
-    .string()
+    .number()
+    .integer()
     .required(),
   role: joi
     .string()
@@ -27,22 +22,21 @@ const createTeamInformationSchema = joi.object({
     .required()
 });
 const updateTeamInformationSchema = joi.object({
+  memberId: joi
+    .number()
+    .integer(),
   name: joi
     .string()
     .required(),
-  emailId: joi
-    .string()
-    .email()
-    .required(),
   projectId: joi
-    .string()
+    .number()
+    .integer()
     .required(),
   role: joi
     .string()
     .required(),
   message: joi
-    .string()
-    .required(),
+    .string(),
   bio: joi
     .string()
     .required(),
@@ -65,7 +59,8 @@ const updateTeamInformationParamSchema = joi.object({
 });
 const getTeamInformationsByProjectIdParamSchema = joi.object({
   projectId: joi
-    .string()
+    .number()
+    .integer()
     .required()
 });
 module.exports = {

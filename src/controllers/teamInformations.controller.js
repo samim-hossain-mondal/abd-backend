@@ -37,13 +37,13 @@ const updateTeamInformation = async (req, res, next) => {
   try {
     const {
       name,
-      memberId,
       bio ,
       role,
       message ,
       projectId ,
       startDate ,
       endDate } = req.body;
+    const {memberId}= req.user;
     const {id}= req.params;
     const profile = await teamInformationService.updateTeamInformation(
       parseInt(id),

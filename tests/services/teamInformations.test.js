@@ -35,19 +35,38 @@ describe('teamInformationsServices', () => {
   });
   describe('getAllteamInformations', () => {
     it('should return all teamInformations when called', async () => {
-      const mockTeamInformation = {
-        'name': 'test',
-        'emailId':'test',
+      const mockTeamInformation = [{
+        'memberId': 1,
+        'bio':'test',
+        'role':'test',
+        'projectId':'test',
+        'startDate':'2021-01-01',
+        'endDate':'2021-01-01'
+      }];
+      const mockManagementDBInformation =
+        [
+          {
+            'name': 'test',
+            'email':'test',
+            'slackLink':'test',
+            'memberId': 1,
+          }
+        ];
+      const mockResult = [{
+        'memberId': 1,
         'bio':'test',
         'role':'test',
         'message':'test',
         'projectId':'test',
         'startDate':'2021-01-01',
-        'endDate':'2021-01-01'
-      };
+        'endDate':'2021-01-01',
+        'name': 'test',
+        'emailId':'test',
+      }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockTeamInformation);
+      jest.spyOn(managementPrisma.Member, 'findMany').mockResolvedValue(mockManagementDBInformation);
       const teamInformation = await teamInformationsService.getAllTeamInformations();
-      expect(teamInformation).toEqual(mockTeamInformation);
+      expect(teamInformation).toEqual(mockResult);
     });
   }); 
   describe('getAllTeamInformation', () => {

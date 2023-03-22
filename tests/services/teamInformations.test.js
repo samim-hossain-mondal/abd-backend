@@ -6,7 +6,7 @@ describe('teamInformationsServices', () => {
       const mockTeamInformation = {    
         'memberId': 1,
         'bio': 'string',
-        'role': 'string',
+        'projectRole': 'string',
         'projectId': 1,
         'startDate': '2021-06-16T18:05:37.000Z',
         'endDate': '2021-06-16T18:05:37.000Z',
@@ -19,7 +19,7 @@ describe('teamInformationsServices', () => {
       const mockResult ={
         'memberId': 1,
         'bio': 'string',
-        'role': 'string',
+        'projectRole': 'string',
         'message': 'test',
         'projectId': 1,
         'startDate': '2021-06-16T18:05:37.000Z',
@@ -28,7 +28,7 @@ describe('teamInformationsServices', () => {
         'emailId':'test',
       };
       jest.spyOn(dashboardPrisma.teamInformation, 'create').mockResolvedValue(mockTeamInformation);
-      jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
+      jest.spyOn(managementPrisma.Member, 'update').mockResolvedValue(mockManagementDBInformation);
       const teamInformation = await teamInformationsService.createTeamInformation(mockTeamInformation);
       expect(teamInformation).toEqual(mockResult);
     });
@@ -38,24 +38,22 @@ describe('teamInformationsServices', () => {
       const mockTeamInformation = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'projectId':'test',
         'startDate':'2021-01-01',
         'endDate':'2021-01-01'
       }];
       const mockManagementDBInformation =
-        [
           {
             'name': 'test',
             'email':'test',
             'slackLink':'test',
             'memberId': 1,
-          }
-        ];
+          };
       const mockResult = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'message':'test',
         'projectId':'test',
         'startDate':'2021-01-01',
@@ -64,7 +62,7 @@ describe('teamInformationsServices', () => {
         'emailId':'test',
       }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockTeamInformation);
-      jest.spyOn(managementPrisma.Member, 'findMany').mockResolvedValue(mockManagementDBInformation);
+      jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
       const teamInformation = await teamInformationsService.getAllTeamInformations();
       expect(teamInformation).toEqual(mockResult);
     });
@@ -74,25 +72,23 @@ describe('teamInformationsServices', () => {
       const mockDashBoardDBInformation = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
         'endDate':'2021-01-01'
       }];
       const mockManagementDBInformation = 
-        [
           {
             'name': 'test',
             'email':'test',
             'slackLink':'test',
             'memberId': 1,
-          }
-        ];   
+          };
       const mockResult = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
@@ -101,7 +97,7 @@ describe('teamInformationsServices', () => {
         'emailId':'test'
       }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockDashBoardDBInformation);
-      jest.spyOn(managementPrisma.Member, 'findMany').mockResolvedValue(mockManagementDBInformation);
+      jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
       const teamInformation = await teamInformationsService.getAllTeamInformations();
       expect(teamInformation).toEqual(mockResult);
     });
@@ -111,7 +107,7 @@ describe('teamInformationsServices', () => {
       const mockResult = {
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
@@ -122,7 +118,7 @@ describe('teamInformationsServices', () => {
       const mockDashBoardDBInformation = {
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
@@ -176,24 +172,21 @@ describe('teamInformationsServices', () => {
       const mockDashBoardDBInformation = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'projectId':1,
         'startDate':'2021-01-01',
         'endDate':'2021-01-01'
       }];
-      const mockManagementDBInformation =
-        [
-          {
-            'name': 'test',
-            'email':'test',
-            'slackLink':'test',
-            'memberId': 1,
-          }
-        ];
+      const mockManagementDBInformation =    {
+        'name': 'test',
+        'email':'test',
+        'slackLink':'test',
+        'memberId': 1,
+      };
       const mockResult = [{
         'memberId': 1,
         'bio':'test',
-        'role':'test',
+        'projectRole':'test',
         'projectId':1,
         'startDate':'2021-01-01',
         'endDate':'2021-01-01',
@@ -202,7 +195,7 @@ describe('teamInformationsServices', () => {
         'message':'test'
       }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockDashBoardDBInformation);
-      jest.spyOn(managementPrisma.Member, 'findMany').mockResolvedValue(mockManagementDBInformation);
+      jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
       const teamInformation = await teamInformationsService.getTeamInformationsByProjectId(projectId);
       expect(teamInformation).toEqual(mockResult);
     });

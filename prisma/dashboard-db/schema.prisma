@@ -36,13 +36,12 @@ model SentimentMeter {
 
 // CelebrationReactedUser Model
 model CelebrationReactedUser {
-  // userId        String
   memberId      Int
   celebrationId Int
+  isRemoved  Boolean   @default(false)
   reactionId    Int         @id @unique @default(autoincrement())
-  request       Celebration @relation(fields: [celebrationId], references: [celebrationId])
-
-  // @@unique([userId, celebrationId])
+  celebration       Celebration @relation(fields: [celebrationId], references: [celebrationId], onDelete: Cascade)
+  
   @@unique([memberId, celebrationId])
 }
 
@@ -65,7 +64,7 @@ model RequestTaggedUser {
   memberId  Int
   requestId Int
   tagId     Int     @id @unique @default(autoincrement())
-  request   Request @relation(fields: [requestId], references: [requestId])
+  request   Request @relation(fields: [requestId], references: [requestId], onDelete: Cascade)
 }
 
 // Request Model

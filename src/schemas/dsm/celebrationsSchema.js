@@ -33,6 +33,9 @@ const patchcelebrationSchema = joi.object({
   type: joi
     .string()
     .valid('CELEBRATION', 'IMPEDIMENT'),
+
+  isAnonymous: joi
+    .valid(true, false)
 });
 
 const patchReactionSchema = joi.object({

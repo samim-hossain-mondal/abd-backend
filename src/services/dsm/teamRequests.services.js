@@ -47,7 +47,6 @@ const getAllTeamRequests = async (type,
   const paginationObj = prismaUtils.getPaginationObject(page, limit);
   const filterObj = prismaUtils.queryParamFilterTeamRequests(
     type,
-    author,
     startDate,
     endDate,
     searchKeyword,

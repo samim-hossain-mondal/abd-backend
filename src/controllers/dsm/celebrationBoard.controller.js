@@ -7,9 +7,10 @@ const celebrationBoardServices = require('../../services/dsm/celebrationBoard.se
 // controller to handle GET request for listing all celebrations
 const listCelebrations = async (req, res, next) => {
   try {
+    const memberId = parseInt(req.user.memberId);
     const projectId = parseInt(req.params.projectId);
     const celebrations =
-      await celebrationBoardServices.listCelebrations(projectId);
+      await celebrationBoardServices.listCelebrations(projectId, memberId);
     res.status(200).json(celebrations);
   }
   catch (er) {
@@ -20,12 +21,14 @@ const listCelebrations = async (req, res, next) => {
 // controller to handle GET request for getting a celebration by id
 const detailCelebration = async (req, res, next) => {
   try {
+    const memberId = parseInt(req.user.memberId);
     const celebrationId = parseInt(req.params.id);
     const projectId = parseInt(req.params.projectId);
     const celebration =
       await celebrationBoardServices.getCelebrationById(
         celebrationId,
-        projectId
+        projectId,
+        memberId
       );
     res.status(200).json(celebration);
   }

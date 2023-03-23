@@ -2,7 +2,8 @@ const teamRequestsServices = require('../../services/dsm/teamRequests.services')
 // controller for creating team request
 const createTeamRequest = async (req, res, next) => {
   try {
-    const { author, content, status, type, createdAt, taggedIndividuals } = req.body;
+    const { name: author } = req.user;
+    const { content, status, type, createdAt, taggedIndividuals } = req.body;
     const projectId = parseInt(req.params.projectId);
     const memberId = parseInt(req.user.memberId);
     const createdRequest = await teamRequestsServices.createValidTeamRequest(
@@ -17,9 +18,9 @@ const createTeamRequest = async (req, res, next) => {
 // controller for listing all team requests
 const listTeamRequests = async (req, res, next) => {
   // query params for filetring on startDate, endDate, search keyword, status, page , limit and author
+  const { name: author } = req.user;
   const {
     type,
-    author,
     startDate,
     endDate,
     search,
@@ -49,10 +50,11 @@ const listTeamRequests = async (req, res, next) => {
 // controller for editing team request
 const editTeamRequest = async (req, res, next) => {
   try {
+    const { name: author } = req.user;
     const projectId = parseInt(req.params.projectId);
     const { requestId } = req.params;
     const memberId = parseInt(req.user.memberId);
-    const { author, content, status, type, createdAt, taggedIndividuals } = req.body;
+    const { content, status, type, createdAt, taggedIndividuals } = req.body;
     const updatedRequest = await teamRequestsServices.editTeamRequest(
       requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId
     );

@@ -22,6 +22,7 @@ model Member {
   role      Role?
   memberId  Int     @id @default(autoincrement())
   isDeleted Boolean @default(false)
+  slackLink String? 
   projectMembers    ProjectMember[]
 }
 

@@ -10,7 +10,7 @@
     "lint": "eslint . --ext .js --fix",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
-    "migrate": "cd prisma/management-db/ && npx prisma migrate dev && cd ../dashboard-db && npx prisma migrate dev",
+    "migrate": "cd prisma/management-db/ && npx prisma migrate dev && cd ../dashboard-db && npx prisma migrate dev && cd ../../ && npm run generate", 
     "generate": "cd prisma/management-db/ && npx prisma generate && cd ../dashboard-db && npx prisma generate"
   },
   "devDependencies": {

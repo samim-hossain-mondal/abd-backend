@@ -36,13 +36,15 @@ async function authMiddleware(req, res, next) {
         const email = jwt.claims.sub;
         const fullName = jwt.claims.firstName.concat(' ', jwt.claims.lastName);
         let memberId = null;
-        const member = await managementPrisma.member.findUnique({
+        const member = await managementPrisma.member.upsert({
           where: {
             email,
           },
-          update: {},
+          update: {
+          },
           create: {
-            email
+            email,
+            name: fullName
           },
         });
 
@@ -50,16 +52,6 @@ async function authMiddleware(req, res, next) {
           memberId = member.memberId;
         }
 
-        if(member && member.name !==  fullName) {
-          await managementPrisma.member.update({
-            where: {
-              memberId: member.memberId,
-            },
-            data: {
-              name: fullName,
-            },
-          });
-        }
         const user = {
           uid: jwt.claims.uid,
           email: jwt.claims.sub,

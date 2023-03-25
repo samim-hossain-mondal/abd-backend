@@ -1,6 +1,6 @@
-const { managementPrisma } = require('../../prismaClient');
-const { HttpError } = require('../../errors');
-const { convertToRoleEnum } = require('../../utils/managementDbUtils');
+const { managementPrisma } = require('../prismaClient');
+const { HttpError } = require('../errors');
+const { convertToRoleEnum } = require('../utils/managementDbUtils');
 
 const createNewAgileDashboardInDb = async (
   projectName,

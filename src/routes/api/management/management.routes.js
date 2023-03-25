@@ -15,7 +15,7 @@ const {
   deleteMember,
   currentUserDetails,
   getProjectMemberDetailsById
-} = require('../../../controllers/management/management.controller.js');
+} = require('../../../controllers/management.controller.js');
 
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
@@ -25,7 +25,7 @@ const {
   projectInfoSchema,
   updateMemberSchema,
   removeMemberSchema
-} = require('../../../schemas/management/managementSchema');
+} = require('../../../schemas/managementSchema');
 const { paramParser } = require('../../../middlewares/paramParser');
 
 /**

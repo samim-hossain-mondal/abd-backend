@@ -15,7 +15,7 @@ const {
   updateMemberInfoInDb,
   deleteMemberInDb,
   getProjectMemberDetailsByIdInDb
-} = require('../../services/management/management.service');
+} = require('../services/management.service');
 
 const createNewProject = async (req, res, next) => {
   try {

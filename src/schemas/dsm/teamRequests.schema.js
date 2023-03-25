@@ -1,10 +1,5 @@
 const joi = require('joi');
 const createValidTeamRequest = joi.object({
-  author: joi
-    .string()
-    .min(1)
-    .max(1500)
-    .required(),
   content: joi
     .string()
     .min(1)
@@ -18,10 +13,6 @@ const createValidTeamRequest = joi.object({
 });
 const editTeamRequest = joi.object(
   {
-    author: joi
-      .string()
-      .min(1)
-      .max(1500),
     content: joi
       .string()
       .min(1)

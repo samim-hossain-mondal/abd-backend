@@ -11,6 +11,7 @@ const {
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const celebrationsSchema = require('../../../schemas/dsm/celebrationsSchema');
 const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+const { paramParser } = require('../../../middlewares/paramParser');
 
 /**
  * @openapi
@@ -115,10 +116,14 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
 */
 
 // GET /api/dsm/celebration
-router.get('/:projectId', memberValidationMiddleware, listCelebrations);
+router.get('/:projectId',
+  paramParser({ projectId: 'number' }),
+  memberValidationMiddleware, listCelebrations);
 
 // POST /api/dsm/celebration
-router.post('/:projectId', memberValidationMiddleware, generateValidationMiddleware(celebrationsSchema.createCelebrationSchema), createCelebration);
+router.post('/:projectId',
+  paramParser({ projectId: 'number' }),
+  memberValidationMiddleware, generateValidationMiddleware(celebrationsSchema.createCelebrationSchema), createCelebration);
 
 /**
  * @openapi
@@ -216,19 +221,22 @@ router.post('/:projectId', memberValidationMiddleware, generateValidationMiddlew
 
 // GET /api/dsm/celebration/:id
 router.get('/:projectId/:id',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // paramValidationMiddleware, 
   detailCelebration);
 
 // PATCH /api/dsm/celebration/:id
 router.patch('/:projectId/:id',
-  memberValidationMiddleware, 
+  paramParser({ projectId: 'number', id: 'number' }),
+  memberValidationMiddleware,
   // paramValidationMiddleware, 
-  generateValidationMiddleware(celebrationsSchema.patchcelebrationSchema), 
+  generateValidationMiddleware(celebrationsSchema.patchcelebrationSchema),
   updateCelebration);
 
 // DELETE /api/dsm/celebration/:id
-router.delete('/:projectId/:id', 
+router.delete('/:projectId/:id',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // paramValidationMiddleware, 
   deleteCelebration);
@@ -301,15 +309,17 @@ router.delete('/:projectId/:id',
 
 // GET /api/dsm/celebration/:id/react
 router.get('/:projectId/:id/react',
-  memberValidationMiddleware, 
+  paramParser({ projectId: 'number', id: 'number' }),
+  memberValidationMiddleware,
   // paramValidationMiddleware, 
   getReaction);
 
 // PATCH /api/dsm/celebration/:id/react
-router.patch('/:projectId/:id/react', 
+router.patch('/:projectId/:id/react',
+  paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
   // paramValidationMiddleware, 
-  generateValidationMiddleware(celebrationsSchema.patchReactionSchema), 
+  generateValidationMiddleware(celebrationsSchema.patchReactionSchema),
   updateReaction);
 
 

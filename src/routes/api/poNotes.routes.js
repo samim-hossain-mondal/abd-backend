@@ -8,7 +8,7 @@ const {
 } = require('../../controllers/poNotes.controller');
 const { generateValidationMiddleware } = require('../../middlewares/validation');
 const poNotesSchema = require('../../schemas/poNotesSchema');
-const {paramParser} = require('../../middlewares/paramParser');
+const { paramParser } = require('../../middlewares/paramParser');
 const { roleValidationMiddleware, memberValidationMiddleware } = require('../../middlewares/roleValidation');
 
 /**
@@ -182,11 +182,13 @@ const { roleValidationMiddleware, memberValidationMiddleware } = require('../../
 
 router.route('/:projectId') // TODO: refactor route url
   .get(
+    paramParser({ projectId: 'number' }),
     generateValidationMiddleware(poNotesSchema.poNotesQuerySchema, 'query'),
     memberValidationMiddleware,
     listPONotes
   )
   .post(
+    paramParser({ projectId: 'number' }),
     generateValidationMiddleware(poNotesSchema.createPONoteSchema),
     roleValidationMiddleware,
     createPONote
@@ -314,11 +316,13 @@ const paramParsingMiddleware = paramParser(requiredParams);
 router.route('/:projectId/:id') // TODO: refactor route url
   .get(
     // paramValidationMiddleware,
+    paramParser({ projectId: 'number', id: 'number' }),
     paramParsingMiddleware,
     memberValidationMiddleware,
     detailPONote
   )
   .patch(
+    paramParser({ projectId: 'number', id: 'number' }),
     // paramValidationMiddleware,
     generateValidationMiddleware(poNotesSchema.patchPONoteSchema),
     paramParsingMiddleware,
@@ -326,6 +330,7 @@ router.route('/:projectId/:id') // TODO: refactor route url
     editPONote
   )
   .delete(
+    paramParser({ projectId: 'number', id: 'number' }),
     // paramValidationMiddleware,
     generateValidationMiddleware(poNotesSchema.deletePONoteSchema),
     paramParsingMiddleware,

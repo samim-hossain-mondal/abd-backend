@@ -1,5 +1,6 @@
 const OktaJwtVerifier = require('@okta/jwt-verifier');
 const { OIDC } = require('../config');
+const { HttpError } = require('../errors');
 const { managementPrisma } = require('../prismaClient');
 
 const oktaJwtVerifier = new OktaJwtVerifier(OIDC);
@@ -39,6 +40,10 @@ async function authMiddleware(req, res, next) {
           where: {
             email,
           },
+          update: {},
+          create: {
+            email
+          },
         });
 
         if (member) {
@@ -66,9 +71,9 @@ async function authMiddleware(req, res, next) {
         next();
       })
       .catch((err) => {
-        res.status(401).send(err.message);
+        next(new HttpError(401, err.message));
       });
-  } catch(err) {
+  } catch (err) {
     next(err);
   }
 }

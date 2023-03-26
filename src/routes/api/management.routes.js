@@ -70,6 +70,9 @@ const { paramParser } = require('../../middlewares/paramParser');
  *         memberId:
  *           type: integer
  *           description: Unique identifier of the member
+ *         slackLink:
+ *           type: string
+ *           description: Slack link of the member
  *         isDeleted:
  *           type: boolean
  *           description: Is member deleted
@@ -637,8 +640,151 @@ router.route('/me')
   .get(currentUserDetails);
 
 // TODO: these routes are not to be used, parked for future enhancement
+
+/**
+ * @openapi
+ * /api/management/member:
+ *  post:
+ *    tags:
+ *      - management
+ *    summary: Create a new member
+ *    description: Create a new member
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                description: Name of the member to create
+ *              email:
+ *                type: string
+ *                format: email
+ *                description: Email of the member to create
+ *              slackLink:
+ *                type: string
+ *                description: Slack link of the member to create
+ *    responses:
+ *      '200':
+ *        description: Member created successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Member'
+ *      '401':
+ *        description: Unauthorized
+ *      '403':
+ *        description: Forbidden
+ *      '404':
+ *        description: Not Found
+ *      '500':
+ *        description: Internal Server Error
+ */
+
 router.route('/member')
   .post(createNewMember);
+
+/**
+ * @openapi
+ * /api/management/member/{memberId}:
+ *   get:
+ *     tags:
+ *       - management
+ *     summary: Get member details by ID
+ *     description: Get member details by ID
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Member details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Member'
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ *   patch:
+ *     tags:
+ *       - management
+ *     summary: Update member info by member ID
+ *     description: Update member info by ID, only member themselves can update their info
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the member to update
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email of the member to update
+ *               slackLink:
+ *                 type: string
+ *                 description: Slack link of the member to update
+ *     responses:
+ *       '200':
+ *         description: Member updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Member'
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ *   delete:
+ *     tags:
+ *       - management
+ *     summary: Delete member by member ID
+ *     description: Delete member by ID, only member themselves can delete
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '204':
+ *         description: Member deleted successfully
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
+
 
 router.route('/member/:memberId')
   .get(

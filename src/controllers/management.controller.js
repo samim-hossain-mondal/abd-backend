@@ -153,8 +153,8 @@ const getProjectMemberDetailsById = async (req, res, next) => {
 
 const createNewMember = async (req, res, next) => {
   try {
-    const { email, name, role, } = req.body;
-    const result = await createNewMemberInDb(email, name, role);
+    const { email, name, slackLink } = req.body;
+    const result = await createNewMemberInDb(email, name, slackLink);
     res.status(201).json(result);
   }
   catch (er) {
@@ -177,8 +177,8 @@ const getMemberDetailsById = async (req, res, next) => {
 const updateMemberInfo = async (req, res, next) => {
   try {
     const { memberId } = req.params;
-    const { name, role } = req.body;
-    const result = await updateMemberInfoInDb(parseInt(memberId), name, role);
+    const { name, email, slackLink } = req.body;
+    const result = await updateMemberInfoInDb(parseInt(memberId), name, email, slackLink);
     res.status(200).json(result);
   }
   catch (er) {

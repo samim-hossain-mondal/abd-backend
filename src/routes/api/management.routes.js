@@ -18,7 +18,7 @@ const {
 } = require('../../controllers/management.controller.js');
 
 const { generateValidationMiddleware } = require('../../middlewares/validation');
-const { roleValidationMiddleware, memberValidationMiddleware } = require('../../middlewares/roleValidation');
+const { roleValidationMiddleware, memberValidationMiddleware, userValidationMiddleware } = require('../../middlewares/roleValidation');
 const {
   createProjectSchema,
   addMemberSchema,
@@ -644,7 +644,13 @@ router.route('/member/:memberId')
   .get(
     paramParser({ memberId: 'number' }),
     getMemberDetailsById)
-  .patch(updateMemberInfo)
-  .delete(deleteMember);
+  .patch(
+    paramParser({ memberId: 'number' }),
+    userValidationMiddleware,
+    updateMemberInfo)
+  .delete(
+    paramParser({ memberId: 'number' }),
+    userValidationMiddleware,
+    deleteMember);
 
 module.exports = router;

@@ -9,47 +9,45 @@ const selectOnlyValidReactionFields = {
   }
 };
 
-const selectOnlyValidCelebrationBoardFields = {
+const selectOnlyValidCelebrationBoardFields = (isAnonymous) => ({
   select: {
     celebrationId: true,
     isAnonymous: true,
-    author: true,
+    author: !isAnonymous,
     content: true,
     type: true,
-    _count: {
-      select: { reaction: true },
-    },
     reaction: {
       take: 3,
+      where: {
+        isRemoved: false,
+      },
       select: {
         memberId: true,
       }
     },
-    // reaction: {
-    //   where: {
-    //     userId: userId
-    //   },
-    //   select: {
-    //     reactionId: true
-    //   }
-    // },
     createdAt: true,
     projectId: true,
-    memberId: true,
+    memberId: !isAnonymous,
   }
-};
+});
 
-const filterByAnonymous = (celebrations) => {
+const filterByAnonymous = (celebrations, memberId) => {
   return celebrations.map((celebration) => {
     if (celebration.isAnonymous) {
-      return { ...celebration, author: undefined };
+      return {
+        ...celebration,
+        ...(celebration.memberId !== memberId && {
+          author: undefined,
+          memberId: undefined
+        })
+      };
     }
     return celebration;
   });
 };
 
 // get list of all celebrations
-const listCelebrations = async (projectId) => {
+const listCelebrations = async (projectId, memberId) => {
   const celebrations = await dashboardPrisma.Celebration.findMany({
     where: {
       projectId
@@ -57,10 +55,10 @@ const listCelebrations = async (projectId) => {
     orderBy: {
       createdAt: 'desc',
     },
-    ...selectOnlyValidCelebrationBoardFields
+    ...selectOnlyValidCelebrationBoardFields(false)
   }
   );
-  return filterByAnonymous(celebrations);
+  return filterByAnonymous(celebrations, memberId);
 };
 
 // get a celebration by id
@@ -70,7 +68,7 @@ const getCelebrationById = async (celebrationId, projectId) => {
       celebrationId,
       projectId
     },
-    ...selectOnlyValidCelebrationBoardFields
+    ...selectOnlyValidCelebrationBoardFields(true)
   }
   );
   if (!celebration) throw new HttpError(404, 'No Record Found');
@@ -88,7 +86,7 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
       type,
       projectId
     },
-    ...selectOnlyValidCelebrationBoardFields
+    ...selectOnlyValidCelebrationBoardFields(false)
   }
   );
   return newCelebration;
@@ -119,7 +117,7 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
       type,
       isAnonymous
     },
-    ...selectOnlyValidCelebrationBoardFields
+    ...selectOnlyValidCelebrationBoardFields(false)
   });
 
   return updatedCelebration;
@@ -151,7 +149,7 @@ const deleteCelebrationById = async (celebrationId, memberId, projectId) => {
     where: {
       celebrationId
     },
-    ...selectOnlyValidCelebrationBoardFields
+    ...selectOnlyValidCelebrationBoardFields(false)
   }
   );
   if (!deletedCelebration) throw new HttpError(404, 'No Record Found');
@@ -166,39 +164,60 @@ const updateReaction = async (celebrationId, memberId, isReacted, projectId) => 
       projectId
     },
     select: {
-      memberId: true
+      reaction: {
+        where: {
+          memberId
+        },
+        select: {
+          memberId: true,
+          isRemoved: true
+        }
+      }
     }
   });
 
-  if (!celebration) throw new HttpError(404, 'No Record Found');
-  if (celebration.memberId === memberId) throw new HttpError(403, 'You are not authorized to perform this action');
+  if (celebration.reaction > 0 && celebration.reaction[0].memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
 
-  const updatedReaction = isReacted ?
+  if (celebration.reaction?.length === 0) {
     await dashboardPrisma.celebrationReactedUser.create({
       data: {
         celebrationId,
         memberId
       },
       ...selectOnlyValidReactionFields
-    }) :
-    await dashboardPrisma.celebrationReactedUser.deleteMany({
+    });
+    return { 'count': 1 };
+  }
+  const updatedReaction =
+    await dashboardPrisma.celebrationReactedUser.updateMany({
       where: {
         celebrationId,
         memberId
       },
+      data: {
+        isRemoved: !isReacted
+      }
     });
-  if (!isReacted & updatedReaction.count === 0) throw new HttpError(404, 'No Reaction Found');
   return updatedReaction;
 };
 
 const getReaction = async (celebrationId, memberId, projectId) => {
-  const reaction = await dashboardPrisma.celebrationReactedUser.findMany({
+  const reaction = await dashboardPrisma.celebration.findMany({
     where: {
       celebrationId,
       memberId,
-      projectId
+      projectId,
     },
-    ...selectOnlyValidReactionFields
+    select: {
+      reaction: {
+        where: {
+          isRemoved: false
+        },
+        select: {
+          memberId: true,
+        }
+      },
+    }
   });
   return reaction;
 };

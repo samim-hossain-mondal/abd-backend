@@ -118,7 +118,7 @@ const { leaveSchema } = require('../../schemas/leaveSchema');
  *         description: Internal server error
 */
 router
-  .route('/')
+  .route('/:projectId')
   .get(leavesController.getAllLeaves)
   .post(
     generateValidationMiddleware(leaveSchema),
@@ -206,7 +206,7 @@ router
  *         description: Internal server error
 */
 router
-  .route('/:id')
+  .route('/:projectId/:id')
   .put(
     generateValidationMiddleware(leaveSchema),
     paramParser({ id: 'number' }),

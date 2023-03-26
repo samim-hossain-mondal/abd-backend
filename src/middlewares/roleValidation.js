@@ -24,7 +24,6 @@ const roleValidationMiddleware = async (req, res, next) => {
       memberId: isAdmin.memberId,
     };
     req.user = { ...req.user, ...memberInfo };
-    console.log(req.user);
     next();
   }
   else {

@@ -3,6 +3,8 @@
  * @returns {Function} - function to be used as middleware
  */
 
+const { HttpError } = require('../errors');
+
 const paramParser = (requiredParams) => {
   return (req, res, next) => {
     Object.keys(requiredParams).map((param) => {
@@ -23,13 +25,14 @@ const paramParser = (requiredParams) => {
         parsedValue = Boolean(value);
         break;
       default:
-        return res.status(500).send(`Unsupported data type ${requiredType} for ${param}.`);
+        next(new HttpError(400, `Unsupported data type ${requiredType} for ${param}.`));
       }
-      if (parsedValue === undefined || Number.isNaN(parsedValue)) {
-        return res.status(400).send(`Invalid ${param} parameter: ${value}.`);
+      if (isNaN(parsedValue) || parsedValue === undefined || Number.isNaN(parsedValue)) {
+        next(new HttpError(400, `Invalid ${param} parameter: ${value}, expected data type - ${requiredType}.`));
       }
       req.params[param] = parsedValue;
     });
+
     next();
   };
 };

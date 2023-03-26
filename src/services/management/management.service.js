@@ -3,8 +3,8 @@ const { HttpError } = require('../../errors');
 const { convertToRoleEnum } = require('../../utils/managementDbUtils');
 
 const createNewAgileDashboardInDb = async (
-  projectName, 
-  projectDescription = null, 
+  projectName,
+  projectDescription = null,
   email,
   name
 ) => {
@@ -41,7 +41,7 @@ const createNewAgileDashboardInDb = async (
     include: {
       projectMembers: true
     }
-  });  
+  });
 
   return newProject;
 };
@@ -59,10 +59,15 @@ const allProjectsByCurrentUserInDb = async (email) => {
     select: {
       projectId: true,
       projectName: true,
+      _count: {
+        select: {
+          projectMembers: true
+        }
+      }
     }
   });
 
-  if(!projects) {
+  if (!projects) {
     throw new HttpError(404, 'No projects found.');
   }
 
@@ -71,7 +76,7 @@ const allProjectsByCurrentUserInDb = async (email) => {
 
 const allMembersByProjectIdInDb = async (projectId) => {
 
-  const projectMembers = await managementPrisma.project.findUnique({
+  const projectMembers = await managementPrisma.project.findFirst({
     where: {
       projectId,
     },
@@ -107,21 +112,21 @@ const addProjectMemberInDb = async (projectId, email, role) => {
     throw new HttpError(404, `Project with id ${projectId} not found`);
   }
 
-  let member = await managementPrisma.member.findUnique({ 
-    where: { 
-      email 
-    } 
+  let member = await managementPrisma.member.findUnique({
+    where: {
+      email
+    }
   });
 
   if (!member) {
-    member = await managementPrisma.member.create({ 
-      data: { 
-        email, 
-      } 
+    member = await managementPrisma.member.create({
+      data: {
+        email,
+      }
     });
   }
 
-  if(member.isDeleted) {
+  if (member.isDeleted) {
     await managementPrisma.member.update({
       where: {
         memberId: member.memberId
@@ -328,6 +333,12 @@ const getProjectDetailsByIdInDb = async (projectId) => {
           email: true,
           role: true,
           memberId: true,
+          member: {
+            select: {
+              name: true,
+              email: true,
+            }
+          }
         }
       }
     },
@@ -403,7 +414,7 @@ const updateMemberRoleByIdInDb = async (projectId, memberId, role) => {
       role
     }
   });
-      
+
   return updatedProjectMember;
 };
 
@@ -445,7 +456,7 @@ const removeProjectMemberByIdInDb = async (projectId, memberId) => {
 
 // REVIEW: these are not used endpoints
 
-const createNewMemberInDb = async (email, name = null, role) => {
+const createNewMemberInDb = async (email, name = null) => {
   // role = convertToRoleEnum(role);
 
   const member = await managementPrisma.member.create({
@@ -469,11 +480,11 @@ const getMemberDetailsByIdInDb = async (memberId) => {
   if (!member || member.isDeleted) {
     throw new HttpError(404, 'Member not found.');
   }
-  
+
   return member;
 };
 
-const updateMemberInfoInDb = async (memberId, name, role) => {
+const updateMemberInfoInDb = async (memberId, name) => {
 
   const member = await managementPrisma.member.findUnique({
     where: {

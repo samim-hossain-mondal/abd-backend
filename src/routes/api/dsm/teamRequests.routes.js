@@ -156,13 +156,15 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
 */
 router.route('/:projectId')
   .get(
+    paramParser({ projectId: 'number' }),
     memberValidationMiddleware,
-    generateValidationMiddleware(requestSchema.dsmRequestQuerySchema,'query'),
+    generateValidationMiddleware(requestSchema.dsmRequestQuerySchema, 'query'),
     listTeamRequests
   )
   .post(
+    paramParser({ projectId: 'number' }),
     memberValidationMiddleware,
-    generateValidationMiddleware(requestSchema.createValidTeamRequest), 
+    generateValidationMiddleware(requestSchema.createValidTeamRequest),
     createTeamRequest
   );
 /**
@@ -249,15 +251,17 @@ const paramParsingMiddleware = paramParser(requiredParams);
 
 router.route('/:projectId/:requestId')
   .put(
+    paramParser({ projectId: 'number', requestId: 'number' }),
     memberValidationMiddleware,
     paramParsingMiddleware,
-    generateValidationMiddleware(requestSchema.editTeamRequest), 
+    generateValidationMiddleware(requestSchema.editTeamRequest),
     editTeamRequest
   )
   .delete(
+    paramParser({ projectId: 'number', requestId: 'number' }),
     memberValidationMiddleware,
     paramParsingMiddleware,
-    generateValidationMiddleware(requestSchema.deleteTeamRequest), 
+    generateValidationMiddleware(requestSchema.deleteTeamRequest),
     deleteTeamRequest
   );
 module.exports = router;

@@ -176,7 +176,6 @@ const updateReaction = async (celebrationId, memberId, isReacted, projectId) => 
     }
   });
 
-  console.log(celebration);
   if (celebration.reaction > 0 && celebration.reaction[0].memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
 
   if (celebration.reaction?.length === 0) {

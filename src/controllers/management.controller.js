@@ -33,7 +33,6 @@ const createNewProject = async (req, res, next) => {
     });
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -41,12 +40,10 @@ const createNewProject = async (req, res, next) => {
 const listAllProjectsByCurrentUserEmail = async (req, res, next) => {
   try {
     const { email } = req.user; 
-    console.log(req.user);
     const result = await allProjectsByCurrentUserInDb(email);
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -58,7 +55,6 @@ const listAllMembersByProjectId = async (req, res, next) => {
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -71,7 +67,6 @@ const addNewProjectMember = async (req, res, next) => {
     res.status(201).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -87,7 +82,6 @@ const removeMemberFromProject = async (req, res, next) => {
     res.status(204).json({ message: `Successfully removed member with email ${email} from project with id ${projectId}.` });
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -103,7 +97,6 @@ const updateMemberRole = async (req, res, next) => {
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -116,7 +109,6 @@ const updateProjectInfo = async (req, res, next) => {
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -128,7 +120,6 @@ const deleteProject = async (req, res, next) => {
     res.status(204).json({ message: `Successfully deleted project with id ${projectId}.`});
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -141,7 +132,6 @@ const getProjectDetailsById = async (req, res, next) => {
     return res.status(200).json(project);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -155,7 +145,6 @@ const getProjectMemberDetailsById = async (req, res, next) => {
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -169,7 +158,6 @@ const createNewMember = async (req, res, next) => {
     res.status(201).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 }; 
@@ -182,7 +170,6 @@ const getMemberDetailsById = async (req, res, next) => {
     return res.status(200).json(member);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -195,7 +182,6 @@ const updateMemberInfo = async (req, res, next) => {
     res.status(200).json(result);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };
@@ -207,7 +193,6 @@ const deleteMember = async (req, res, next) => {
     res.status(204).json({ message: `Member ${result.email} deleted successfully.` });
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };

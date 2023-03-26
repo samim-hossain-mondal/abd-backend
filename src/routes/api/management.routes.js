@@ -15,18 +15,18 @@ const {
   deleteMember,
   currentUserDetails,
   getProjectMemberDetailsById
-} = require('../../../controllers/management.controller.js');
+} = require('../../controllers/management.controller.js');
 
-const { generateValidationMiddleware } = require('../../../middlewares/validation');
-const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+const { generateValidationMiddleware } = require('../../middlewares/validation');
+const { roleValidationMiddleware, memberValidationMiddleware } = require('../../middlewares/roleValidation');
 const {
   createProjectSchema,
   addMemberSchema,
   projectInfoSchema,
   updateMemberSchema,
   removeMemberSchema
-} = require('../../../schemas/managementSchema');
-const { paramParser } = require('../../../middlewares/paramParser');
+} = require('../../schemas/managementSchema');
+const { paramParser } = require('../../middlewares/paramParser');
 
 /**
  * @openapi

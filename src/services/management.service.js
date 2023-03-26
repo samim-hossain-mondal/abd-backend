@@ -39,7 +39,12 @@ const createNewAgileDashboardInDb = async (
       }
     },
     include: {
-      projectMembers: true
+      projectMembers: true,
+      _count: {
+        select: {
+          projectMembers: true
+        }
+      }
     }
   });
 

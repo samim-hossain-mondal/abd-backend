@@ -358,19 +358,52 @@ router.route('/project/:projectId')
  *           schema:
  *             type: object
  *             properties:
- *              email:
- *               type: string
- *               description: Email of the member to add
- *              role:
- *               type: string
- *               description: Role of the member to add
+ *               email:
+ *                 type: string
+ *                 description: Email of the member to add
+ *               role:
+ *                 type: string
+ *                 description: Role of the member to add
+ *               message:
+ *                 type: string
+ *                 description: Slack link of member
+ *               startDate:
+ *                 type: string
+ *                 description: Start date of member in project
+ *               endDate:
+ *                 type: string
+ *                 description: End date of member in project
  *     responses:
  *       '201':
  *         description: Member added successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Member'
+ *               {
+ *                 "type": "object",
+ *                 "properties": {
+ *                   "newProjectMember": {
+ *                     "type": "object",
+ *                     "properties": {
+ *                       "id": {"type": "string"},
+ *                       "projectId": {"type": "string"},
+ *                       "memberId": {"type": "string"},
+ *                       "email": {"type": "string"},
+ *                       "role": {"type": "string"}
+ *                     }
+ *                   },
+ *                   "newTeamInformation": {
+ *                     "type": "object",
+ *                     "properties": {
+ *                       "id": {"type": "string"},
+ *                       "projectId": {"type": "string"},
+ *                       "memberId": {"type": "string"},
+ *                       "startDate": {"type": "string", "format": "date-time"},
+ *                       "endDate": {"type": "string", "format": "date-time"}
+ *                     }
+ *                   }
+ *                 }
+ *               }
  *       '401':
  *         description: Unauthorized
  *       '403':

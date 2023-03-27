@@ -1,11 +1,8 @@
 const { HttpError } = require('../errors');
 const joi = require('joi');
 const { Prisma } = require('@prisma/client');
-const {ErrorCodeRecordNotExist} = require('../constants/index.js');
-// ERROR HANDLING MIDDLEWARE
-// here handle all the errors,
-// either coming from the routes/controllers/services
-// like joi validation, prisma query errors or custom http errors
+const { ErrorCodeRecordNotExist } = require('../constants/index.js');
+
 function errorHandlingMiddleware(err, req, res, next) {
   if (res.headersSent) {
     return next(err);
@@ -14,9 +11,9 @@ function errorHandlingMiddleware(err, req, res, next) {
     return res.status(400).json({ message: 'Bad Request - ' + err.message });
   }
   if (err.constructor instanceof Prisma.constructor) {
-    if(err.code === ErrorCodeRecordNotExist) {
+    if (err.code === ErrorCodeRecordNotExist) {
       return res.status(404).json({ message: 'Data does not exist' });
-    } 
+    }
     else if ((/2\d{3}/g).exec(err.code)) {
       return res.status(500).json({ message: 'Internal Server Error - Query Engine Went Wrong' });
     }
@@ -25,15 +22,15 @@ function errorHandlingMiddleware(err, req, res, next) {
     }
   }
   switch (err.constructor) {
-  case joi.ValidationError: {
-    return res.status(400).json({ message: 'Bad Request - ' + err.message });
-  }
-  case HttpError: {
-    return res.status(err.code).json({ message: err.message });
-  }
-  default: {
-    res.status(500).json({ message: 'Internal Server Error - Something Went Wrong' });
-  }
+    case joi.ValidationError: {
+      return res.status(400).json({ message: 'Bad Request - ' + err.message });
+    }
+    case HttpError: {
+      return res.status(err.code).json({ message: err.message });
+    }
+    default: {
+      res.status(500).json({ message: 'Internal Server Error - Something Went Wrong' });
+    }
   }
 }
 module.exports = {

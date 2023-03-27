@@ -94,7 +94,6 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
 
 // update a celebration
 const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId, projectId) => {
-
   const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
       celebrationId,
@@ -104,7 +103,6 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
       memberId: true
     }
   });
-
   if (!celebration) throw new HttpError(404, 'No Record Found');
   if (celebration.memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
 
@@ -125,7 +123,6 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
 
 // delete a celebration
 const deleteCelebrationById = async (celebrationId, memberId, projectId) => {
-
   const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
       celebrationId,
@@ -135,7 +132,6 @@ const deleteCelebrationById = async (celebrationId, memberId, projectId) => {
       memberId: true
     }
   });
-
   if (!celebration) throw new HttpError(404, 'No Record Found');
   if (celebration.memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
 

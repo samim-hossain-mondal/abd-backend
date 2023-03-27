@@ -62,9 +62,15 @@ const listAllMembersByProjectId = async (req, res, next) => {
 const addNewProjectMember = async (req, res, next) => {
   try {
     const { projectId } = req.params;
-    const { email, role } = req.body;
-    const result = await addProjectMemberInDb(parseInt(projectId), email, role);
-    res.status(201).json(result);
+    const { email, role, message, startDate, endDate } = req.body;
+    const { newProjectMember, newTeamInformation } = await addProjectMemberInDb(
+      parseInt(projectId), email, role, message, startDate, endDate,
+    );
+    res.status(201).json({
+      message: 'Successfully added new member to project.',
+      newProjectMember,
+      newTeamInformation
+    });
   }
   catch (er) {
     next(er);

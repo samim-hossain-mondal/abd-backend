@@ -7,6 +7,7 @@ const {ErrorCodeRecordNotExist} = require('../constants/index.js');
 // either coming from the routes/controllers/services
 // like joi validation, prisma query errors or custom http errors
 function errorHandlingMiddleware(err, req, res, next) {
+  console.log(err);
   if (res.headersSent) {
     return next(err);
   }

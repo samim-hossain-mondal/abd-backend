@@ -1,4 +1,4 @@
-const { managementPrisma } = require('../prismaClient');
+const { managementPrisma, dashboardPrisma } = require('../prismaClient');
 const { HttpError } = require('../errors');
 const { convertToRoleEnum } = require('../utils/managementDbUtils');
 
@@ -104,7 +104,9 @@ const allMembersByProjectIdInDb = async (projectId) => {
   return projectMembers.projectMembers;
 };
 
-const addProjectMemberInDb = async (projectId, email, role) => {
+const addProjectMemberInDb = async (
+  projectId, email, role, message, startDate, endDate
+) => {
   role = convertToRoleEnum(role);
 
   const project = await managementPrisma.project.findUnique({
@@ -143,6 +145,20 @@ const addProjectMemberInDb = async (projectId, email, role) => {
     });
   }
 
+  await managementPrisma.member.upsert({
+    where: {
+      memberId: member.memberId
+    },
+    update: {
+      slackLink: message
+    },
+    create: {
+      memberId: member.memberId,
+      email,
+      slackLink: message
+    }
+  });
+
   const existingProjectMember = project.projectMembers.find(
     (projectMember) => projectMember.email === email
   );
@@ -160,7 +176,19 @@ const addProjectMemberInDb = async (projectId, email, role) => {
     },
   });
 
-  return newProjectMember;
+  const newTeamInformation = await dashboardPrisma.teamInformation.create({
+    data: {
+      projectId,
+      memberId: member.memberId,
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+    }
+  });
+
+  return {
+    newProjectMember,
+    newTeamInformation
+  };
 
 };
 
@@ -205,6 +233,13 @@ const removeProjectMemberByEmailInDb = async (projectId, email) => {
         },
       },
     },
+  });
+
+  await dashboardPrisma.teamInformation.deleteMany({
+    where: {
+      projectId,
+      memberId: projectMember.memberId
+    }
   });
 
   return projectMember;
@@ -314,8 +349,13 @@ const deleteProjectInDb = async (projectId) => {
     }
   });
 
-  // delete all project members
   await managementPrisma.projectMember.deleteMany({
+    where: {
+      projectId
+    }
+  });
+
+  await dashboardPrisma.teamInformation.deleteMany({
     where: {
       projectId
     }
@@ -527,7 +567,7 @@ const updateMemberInfoInDb = async (memberId, name, email, slackLink) => {
   if (updatedMember.isDeleted) {
     throw new HttpError(404, 'Member not found.');
   }
-
+  
   return updatedMember;
 };
 
@@ -554,6 +594,12 @@ const deleteMemberInDb = async (memberId) => {
 
   // delete all project members
   await managementPrisma.projectMember.deleteMany({
+    where: {
+      email: member.email,
+    },
+  });
+
+  await dashboardPrisma.teamInformation.deleteMany({
     where: {
       email: member.email,
     },

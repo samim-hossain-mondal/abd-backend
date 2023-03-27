@@ -119,8 +119,8 @@ model Leave {
 model teamInformation {
   id Int @id @unique @default(autoincrement())
   memberId Int 
-  bio String
-  projectRole String 
+  bio String?
+  projectRole String?
   projectId Int
   startDate DateTime
   endDate DateTime

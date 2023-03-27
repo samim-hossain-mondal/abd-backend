@@ -1,266 +1,138 @@
-const madeToStickControllers = require('../../src/controllers/madeToStick.controller');
-const madeToStickServices = require('../../src/services/madeToStick.services');
+const {
+  getAllMadeToStick,
+  createMadeToStick,
+  editMadeToStick,
+  deleteMadeToStick
+} = require('../../src/controllers/madeToStick.controller');
+const madeToStickService = require('../../src/services/madeToStick.services');
 
-describe('getAllMadeToStick', () => {
-  it('should return all madeToStick item when called', async () => {
-    const mockReq = {
-      query: {},
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    const next = () => { };
-    const mockMadeToStick = {
-      'i': 1,
-      'value': 'string',
-      'x': 0,
-      'y': 0,
-      'w': 0,
-      'h': 0,
-      'type': 'string',
-      'emailId': 'string',
-      'backgroundColor': 'string',
+jest.mock('../../src/services/madeToStick.services');
 
-    };
-    jest.spyOn(madeToStickServices, 'getAllMadeToStick').mockResolvedValue(mockMadeToStick);
-    await madeToStickControllers.getAllMadeToStick(mockReq, mockRes, next);
-    expect(mockRes.status).toBeCalledWith(200);
-    expect(mockRes.json).toBeCalledWith(mockMadeToStick);
+describe('getAllMadeToStick controller', () => {
+  const mockResponse = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  it('should return all madeToStick items for a given projectId', async () => {
+    const mockMadeToStickItem = [{ id: 1, projectId: 123, name: 'item1' }, { id: 2, projectId: 123, name: 'item2' }];
+    const req = { params: { projectId: '123' } };
+    const res = mockResponse();
+    madeToStickService.getAllMadeToStick.mockResolvedValue(mockMadeToStickItem);
+    await getAllMadeToStick(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockMadeToStickItem);
+    expect(madeToStickService.getAllMadeToStick).toHaveBeenCalledWith(123);
   });
-  it('should return error when service throws error', async () => {
-    const mockReq = {
-      query: {},
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
+
+  it('should call the error handling middleware if an error occurs', async () => {
+    const mockError = new Error('Error fetching madeToStick items');
+    const req = { params: { projectId: '123' } };
+    const res = mockResponse();
+    madeToStickService.getAllMadeToStick.mockRejectedValue(mockError);
     const next = jest.fn();
-    jest.spyOn(madeToStickServices, 'getAllMadeToStick').mockRejectedValue(new Error('Bad Request'));
-    await madeToStickControllers.getAllMadeToStick(mockReq, mockRes, next);
-    expect(next).toBeCalledWith(new Error('Bad Request'));
-  }
-  );
-});
-describe('addMadeToStick', () => {
-  it('should return added madeToStick item when called', async () => {
-    const mockReq = {
-      query: {},
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      },
-      body: {
-        'value': 'string',
-        'x': 0,
-        'y': 0,
-        'w': 0,
-        'h': 0,
-        'type': 'string',
-        'emailId': 'string',
-        'backgroundColor': 'string',
-      },
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    const next = () => { };
-    const mockMadeToStick = {
-      'i': 1,
-      'value': 'string',
-      'x': 0,
-      'y': 0,
-      'w': 0,
-      'h': 0,
-      'type': 'string',
-      'emailId': 'string',
-      'backgroundColor': 'string',
-    };
-    jest.spyOn(madeToStickServices, 'createMadeToStick').mockResolvedValue(mockMadeToStick);
-    await madeToStickControllers.createMadeToStick(mockReq, mockRes, next);
-    expect(mockRes.status).toBeCalledWith(200);
-    expect(mockRes.json).toBeCalledWith(mockMadeToStick);
+    await getAllMadeToStick(req, res, next);
+    expect(next).toHaveBeenCalledWith(mockError);
   });
-  it('should return error when service throws error', async () => {
-    const mockReq = {
-      query: {},
-      body: {
-        'value': 'string',
-        'x': 0,
-        'y': 0,
-        'w': 0,
-        'h': 0,
-        'type': 'string',
-        'emailId': 'string',
-        'backgroundColor': 'string',
-      },
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    const next = jest.fn();
-    jest.spyOn(madeToStickServices, 'createMadeToStick').mockRejectedValue(new Error('Bad Request'));
-    await madeToStickControllers.createMadeToStick(mockReq, mockRes, next);
-    expect(next).toBeCalledWith(new Error('Bad Request'));
-  }
-  );
 });
+
+describe('createMadeToStick controller', () => {
+  const mockResponse = () => {
+    const res = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.json = jest.fn().mockReturnValue(res);
+    return res;
+  };
+
+  it('should create a new madeToStick item for a given projectId and memberId', async () => {
+    const mockMadeToStickItem = { id: 1, projectId: 123, memberId: 456, name: 'item1' };
+    const req = {
+      params: { projectId: '123' },
+      user: { memberId: '456' },
+      body: { value: 'test', emailId: 'test@test.com', x: 0, y: 0, w: 100, h: 100, type: 'note', backgroundColor: 'blue' }
+    };
+    const res = mockResponse();
+    madeToStickService.createMadeToStick.mockResolvedValue(mockMadeToStickItem);
+    await createMadeToStick(req, res);
+    expect(res.status).toHaveBeenCalledWith(201);
+    expect(res.json).toHaveBeenCalledWith(mockMadeToStickItem);
+    expect(madeToStickService.createMadeToStick).toHaveBeenCalledWith(
+      'test', 'test@test.com', 0, 0, 100, 100, 'note', 'blue', 456, 123
+    );
+  });
+
+  it('should call the error handling middleware if an error occurs', async () => {
+    const mockError = new Error('Error creating madeToStick item');
+    const req = {
+      params: { projectId: '123' },
+      user: { memberId: '456' },
+      body: { value: 'test', emailId: 'test@test.com', x: 0, y: 0, w: 100, h: 100, type: 'note', backgroundColor: 'blue' }
+    };
+    const res = mockResponse();
+    madeToStickService.createMadeToStick.mockRejectedValue(mockError);
+    const next = jest.fn();
+    await createMadeToStick(req, res, next);
+    expect(next).toHaveBeenCalledWith(mockError);
+  });
+});
+
+const mockResponse = () => {
+  const res = {};
+  res.status = jest.fn().mockReturnValue(res);
+  res.json = jest.fn().mockReturnValue(res);
+  return res;
+};
+
 describe('editMadeToStick', () => {
-  it('should return edited madeToStick item when called', async () => {
-    const mockReq = {
-      query: {},
-      body: {
-        'value': 'string',
-        'x': 0,
-        'y': 0,
-        'w': 0,
-        'h': 0,
-        'type': 'string',
-        'emailId': 'string',
-        'backgroundColor': 'string',
-      },
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
+  it('should edit an existing madeToStick item', async () => {
+    const mockMadeToStickItem = {
+      id: 1, value: 'test', backgroundColor: 'blue', x: 0, y: 0, w: 100, h: 100, type: 'note', emailId: 'test@test.com'
     };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    const next = () => { };
-    const mockMadeToStick = {
-      'i': 1,
-      'value': 'string',
-      'x': 0,
-      'y': 0,
-      'w': 0,
-      'h': 0,
-      'type': 'string',
-      'emailId': 'string',
-      'backgroundColor': 'string',
-    };
-    jest.spyOn(madeToStickServices, 'editMadeToStick').mockResolvedValue(mockMadeToStick);
-    await madeToStickControllers.editMadeToStick(mockReq, mockRes, next);
-    expect(mockRes.status).toBeCalledWith(200);
-    expect(mockRes.json).toBeCalledWith(mockMadeToStick);
-  }
-  );
-  it('should return error when service throws error', async () => {
-    const mockReq = {
-      query: {},
-      body: {
-        'value': 'string',
-        'x': 0,
-        'y': 0,
-        'w': 0,
-        'h': 0,
-        'type': 'string',
-        'emailId': 'string',
-        'backgroundColor': 'string',
-      },
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
+    const req = { params: { i: '1' }, body: { value: 'updated test' } };
+    const res = mockResponse();
+    madeToStickService.editMadeToStick.mockResolvedValue(mockMadeToStickItem);
+    await editMadeToStick(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockMadeToStickItem);
+    expect(madeToStickService.editMadeToStick).toHaveBeenCalledWith(
+      '1', 'updated test', undefined, undefined, undefined, undefined, undefined, undefined, undefined
+    );
+  });
+
+  it('should call the error handling middleware if an error occurs', async () => {
+    const mockError = new Error('Error editing madeToStick item');
+    const req = { params: { i: '1' }, body: { value: 'updated test' } };
+    const res = mockResponse();
+    madeToStickService.editMadeToStick.mockRejectedValue(mockError);
     const next = jest.fn();
-    jest.spyOn(madeToStickServices, 'editMadeToStick').mockRejectedValue(new Error('Bad Request'));
-    await madeToStickControllers.editMadeToStick(mockReq, mockRes, next);
-    expect(next).toBeCalledWith(new Error('Bad Request'));
-  }
-  );
+    await editMadeToStick(req, res, next);
+    expect(next).toHaveBeenCalledWith(mockError);
+  });
 });
+
 describe('deleteMadeToStick', () => {
-  it('should return deleted madeToStick item when called', async () => {
-    const mockReq = {
-      query: {},
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
+  it('should delete an existing madeToStick item', async () => {
+    const mockMadeToStickItem = {
+      id: 1, value: 'test', backgroundColor: 'blue', x: 0, y: 0, w: 100, h: 100, type: 'note', emailId: 'test@test.com'
     };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
-    const next = () => { };
-    const mockMadeToStick = {
-      'i': 1,
-      'value': 'string',
-      'x': 0,
-      'y': 0,
-      'w': 0,
-      'h': 0,
-      'type': 'string',
-      'emailId': 'string',
-      'backgroundColor': 'string',
-    };
-    jest.spyOn(madeToStickServices, 'deleteMadeToStick').mockResolvedValue(mockMadeToStick);
-    await madeToStickControllers.deleteMadeToStick(mockReq, mockRes, next);
-    expect(mockRes.status).toBeCalledWith(200);
-    expect(mockRes.json).toBeCalledWith(mockMadeToStick);
-  }
-  );
-  it('should return error when service throws error', async () => {
-    const mockReq = {
-      query: {},
-      params: {
-        projectId: 1,
-        i: 1
-      },
-      user: {
-        memberId: 1
-      }
-    };
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn()
-    };
+    const req = { params: { i: '1' } };
+    const res = mockResponse();
+    madeToStickService.deleteMadeToStick.mockResolvedValue(mockMadeToStickItem);
+    await deleteMadeToStick(req, res);
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockMadeToStickItem);
+    expect(madeToStickService.deleteMadeToStick).toHaveBeenCalledWith('1');
+  });
+
+  it('should call the error handling middleware if an error occurs', async () => {
+    const mockError = new Error('Error deleting madeToStick item');
+    const req = { params: { i: '1' } };
+    const res = mockResponse();
+    madeToStickService.deleteMadeToStick.mockRejectedValue(mockError);
     const next = jest.fn();
-    jest.spyOn(madeToStickServices, 'deleteMadeToStick').mockRejectedValue(new Error('Bad Request'));
-    await madeToStickControllers.deleteMadeToStick(mockReq, mockRes, next);
-    expect(next).toBeCalledWith(new Error('Bad Request'));
-  }
-  );
+    await deleteMadeToStick(req, res, next);
+    expect(next).toHaveBeenCalledWith(mockError);
+  });
 });

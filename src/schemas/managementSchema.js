@@ -22,10 +22,20 @@ const updateMemberSchema = joi.object({
   role: joi
     .string()
     .valid('ADMIN', 'LEADER', 'MEMBER')
-    .required()
+    .required(),
+  message: joi
+    .string()
+    .min(1)
+    .max(250),
+  startDate: joi
+    .date(),
+  endDate: joi
+    .date(),
 });
 
-const addMemberSchema = updateMemberSchema.fork('email', (field) => field.required());
+const addMemberSchema = updateMemberSchema.fork(
+  ['email', 'message', 'startDate', 'endDate',], 
+  (field) => field.required());
 
 const removeMemberSchema = joi.object({
   email: joi

@@ -180,8 +180,8 @@ const addProjectMemberInDb = async (
     data: {
       projectId,
       memberId: member.memberId,
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
+      startDate: ( startDate && new Date(startDate)),
+      endDate: (endDate && new Date(endDate)),
     }
   });
 

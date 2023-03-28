@@ -34,7 +34,7 @@ const updateMemberSchema = joi.object({
 });
 
 const addMemberSchema = updateMemberSchema.fork(
-  ['email', 'message', 'startDate', 'endDate',], 
+  ['email'], 
   (field) => field.required());
 
 const removeMemberSchema = joi.object({

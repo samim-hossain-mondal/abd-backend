@@ -14,7 +14,6 @@ async function getAllLeaves(req, res, next) {
 async function createLeave(req, res, next) {
   try {
     const projectId = parseInt(req.params.projectId);
-
     const { event, startDate, endDate, isRisk } = req.body;
     const leave = await leavesServices.createLeave(
       event,

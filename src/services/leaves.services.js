@@ -21,7 +21,7 @@ async function createLeave(event, isRisk, startDate, endDate, user, projectId) {
       endDate,
       projectId,
       memberId: user.memberId,
-      userFullName: user.firstName + ' ' + user.lastName,
+      userFullName: user.name,
     },
   });
 }

@@ -818,7 +818,6 @@ router.route('/member')
  *         description: Internal Server Error
  */
 
-
 router.route('/member/:memberId')
   .get(
     paramParser({ memberId: 'number' }),

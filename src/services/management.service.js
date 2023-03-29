@@ -48,6 +48,13 @@ const createNewAgileDashboardInDb = async (
     }
   });
 
+  await dashboardPrisma.teamInformation.create({
+    data: {
+      projectId: newProject.projectId,
+      memberId: member.memberId,
+    },
+  });
+
   return newProject;
 };
 

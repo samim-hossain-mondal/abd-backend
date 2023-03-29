@@ -39,19 +39,9 @@ Steps to set up the project on your local machine:
 
         npm run migrate
     
-    In this step, the databases will be created as per the schema, in the locations specified in your `.env` file.
+    In this step, the databases will be created as per the schema, in the locations specified in your `.env` file and the Prisma clients for the databases will be generated.
 
-
-
-5. Run `npm run generate` to generate clients for databases.
-
-        npm run generate
-
-    In this step, the clients for the databases will be generated. This is required for the server to connect to the databases and perform CRUD operations.
-
-
-
-6. Run `npm run start` to start the server.
+5. Run `npm run start` to start the server.
 
         npm run start
 

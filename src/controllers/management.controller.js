@@ -15,7 +15,7 @@ const {
   updateMemberInfoInDb,
   deleteMemberInDb,
   getProjectMemberDetailsByIdInDb
-} = require('../../services/management/management.service');
+} = require('../services/management.service');
 
 const createNewProject = async (req, res, next) => {
   try {
@@ -62,9 +62,15 @@ const listAllMembersByProjectId = async (req, res, next) => {
 const addNewProjectMember = async (req, res, next) => {
   try {
     const { projectId } = req.params;
-    const { email, role } = req.body;
-    const result = await addProjectMemberInDb(parseInt(projectId), email, role);
-    res.status(201).json(result);
+    const { email, role, message, startDate, endDate } = req.body;
+    const { newProjectMember, newTeamInformation } = await addProjectMemberInDb(
+      parseInt(projectId), email, role, message, startDate, endDate,
+    );
+    res.status(201).json({
+      message: 'Successfully added new member to project.',
+      newProjectMember,
+      newTeamInformation
+    });
   }
   catch (er) {
     next(er);
@@ -153,8 +159,8 @@ const getProjectMemberDetailsById = async (req, res, next) => {
 
 const createNewMember = async (req, res, next) => {
   try {
-    const { email, name, role, } = req.body;
-    const result = await createNewMemberInDb(email, name, role);
+    const { email, name, slackLink } = req.body;
+    const result = await createNewMemberInDb(email, name, slackLink);
     res.status(201).json(result);
   }
   catch (er) {
@@ -177,8 +183,8 @@ const getMemberDetailsById = async (req, res, next) => {
 const updateMemberInfo = async (req, res, next) => {
   try {
     const { memberId } = req.params;
-    const { name, role } = req.body;
-    const result = await updateMemberInfoInDb(parseInt(memberId), name, role);
+    const { name, email, slackLink } = req.body;
+    const result = await updateMemberInfoInDb(parseInt(memberId), name, email, slackLink);
     res.status(200).json(result);
   }
   catch (er) {

@@ -34,22 +34,30 @@ async function authMiddleware(req, res, next) {
     return oktaJwtVerifier.verifyAccessToken(accessToken, audience)
       .then(async (jwt) => {
         const email = jwt.claims.sub;
+        const fullName = jwt.claims.firstName.concat(' ', jwt.claims.lastName);
+        let memberId = null;
         const member = await managementPrisma.member.upsert({
           where: {
             email,
           },
-          update: {},
+          update: {
+          },
           create: {
-            email
+            email,
+            name: fullName
           },
         });
+
+        if (member) {
+          memberId = member.memberId;
+        }
 
         const user = {
           uid: jwt.claims.uid,
           email: jwt.claims.sub,
           groups: jwt.claims.groups,
-          name: jwt.claims.firstName.concat(' ', jwt.claims.lastName),
-          memberId: member.memberId
+          name: fullName,
+          memberId: memberId
         };
         req.user = user;
         next();

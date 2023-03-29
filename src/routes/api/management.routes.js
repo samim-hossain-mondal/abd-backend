@@ -15,18 +15,18 @@ const {
   deleteMember,
   currentUserDetails,
   getProjectMemberDetailsById
-} = require('../../../controllers/management/management.controller.js');
+} = require('../../controllers/management.controller.js');
 
-const { generateValidationMiddleware } = require('../../../middlewares/validation');
-const { roleValidationMiddleware, memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+const { generateValidationMiddleware } = require('../../middlewares/validation');
+const { roleValidationMiddleware, memberValidationMiddleware, userValidationMiddleware } = require('../../middlewares/roleValidation');
 const {
   createProjectSchema,
   addMemberSchema,
   projectInfoSchema,
   updateMemberSchema,
   removeMemberSchema
-} = require('../../../schemas/management/managementSchema');
-const { paramParser } = require('../../../middlewares/paramParser');
+} = require('../../schemas/managementSchema');
+const { paramParser } = require('../../middlewares/paramParser');
 
 /**
  * @openapi
@@ -70,6 +70,9 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *         memberId:
  *           type: integer
  *           description: Unique identifier of the member
+ *         slackLink:
+ *           type: string
+ *           description: Slack link of the member
  *         isDeleted:
  *           type: boolean
  *           description: Is member deleted
@@ -355,19 +358,52 @@ router.route('/project/:projectId')
  *           schema:
  *             type: object
  *             properties:
- *              email:
- *               type: string
- *               description: Email of the member to add
- *              role:
- *               type: string
- *               description: Role of the member to add
+ *               email:
+ *                 type: string
+ *                 description: Email of the member to add
+ *               role:
+ *                 type: string
+ *                 description: Role of the member to add
+ *               message:
+ *                 type: string
+ *                 description: Slack link of member
+ *               startDate:
+ *                 type: string
+ *                 description: Start date of member in project
+ *               endDate:
+ *                 type: string
+ *                 description: End date of member in project
  *     responses:
  *       '201':
  *         description: Member added successfully
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Member'
+ *               {
+ *                 "type": "object",
+ *                 "properties": {
+ *                   "newProjectMember": {
+ *                     "type": "object",
+ *                     "properties": {
+ *                       "id": {"type": "string"},
+ *                       "projectId": {"type": "string"},
+ *                       "memberId": {"type": "string"},
+ *                       "email": {"type": "string"},
+ *                       "role": {"type": "string"}
+ *                     }
+ *                   },
+ *                   "newTeamInformation": {
+ *                     "type": "object",
+ *                     "properties": {
+ *                       "id": {"type": "string"},
+ *                       "projectId": {"type": "string"},
+ *                       "memberId": {"type": "string"},
+ *                       "startDate": {"type": "string", "format": "date-time"},
+ *                       "endDate": {"type": "string", "format": "date-time"}
+ *                     }
+ *                   }
+ *                 }
+ *               }
  *       '401':
  *         description: Unauthorized
  *       '403':
@@ -637,14 +673,162 @@ router.route('/me')
   .get(currentUserDetails);
 
 // TODO: these routes are not to be used, parked for future enhancement
+
+/**
+ * @openapi
+ * /api/management/member:
+ *  post:
+ *    tags:
+ *      - management
+ *    summary: Create a new member
+ *    description: Create a new member
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              name:
+ *                type: string
+ *                description: Name of the member to create
+ *              email:
+ *                type: string
+ *                format: email
+ *                description: Email of the member to create
+ *              slackLink:
+ *                type: string
+ *                description: Slack link of the member to create
+ *    responses:
+ *      '200':
+ *        description: Member created successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Member'
+ *      '401':
+ *        description: Unauthorized
+ *      '403':
+ *        description: Forbidden
+ *      '404':
+ *        description: Not Found
+ *      '500':
+ *        description: Internal Server Error
+ */
+
 router.route('/member')
   .post(createNewMember);
+
+/**
+ * @openapi
+ * /api/management/member/{memberId}:
+ *   get:
+ *     tags:
+ *       - management
+ *     summary: Get member details by ID
+ *     description: Get member details by ID
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '200':
+ *         description: Member details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Member'
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ *   patch:
+ *     tags:
+ *       - management
+ *     summary: Update member info by member ID
+ *     description: Update member info by ID, only member themselves can update their info
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: Name of the member to update
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: Email of the member to update
+ *               slackLink:
+ *                 type: string
+ *                 description: Slack link of the member to update
+ *     responses:
+ *       '200':
+ *         description: Member updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Member'
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ *   delete:
+ *     tags:
+ *       - management
+ *     summary: Delete member by member ID
+ *     description: Delete member by ID, only member themselves can delete
+ *     parameters:
+ *       - in: path
+ *         name: memberId
+ *         description: Member ID
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       '204':
+ *         description: Member deleted successfully
+ *       '401':
+ *         description: Unauthorized
+ *       '403':
+ *         description: Forbidden
+ *       '404':
+ *         description: Not Found
+ *       '500':
+ *         description: Internal Server Error
+ */
 
 router.route('/member/:memberId')
   .get(
     paramParser({ memberId: 'number' }),
     getMemberDetailsById)
-  .patch(updateMemberInfo)
-  .delete(deleteMember);
+  .patch(
+    paramParser({ memberId: 'number' }),
+    userValidationMiddleware,
+    updateMemberInfo)
+  .delete(
+    paramParser({ memberId: 'number' }),
+    userValidationMiddleware,
+    deleteMember);
 
 module.exports = router;

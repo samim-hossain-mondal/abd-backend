@@ -59,7 +59,19 @@ const memberValidationMiddleware = async (req, res, next) => {
   }
 };
 
+const userValidationMiddleware = async (req, res, next) => {
+  const { memberId: memberIdParam } = req.params;
+  const { memberId: memberIdUser } = req.user;
+
+  if (memberIdParam !== memberIdUser) {
+    res.status(403).json({ message: 'You are not authorized to access this service.' });
+  } else {
+    next();
+  }
+};
+
 module.exports = { 
   roleValidationMiddleware,
   memberValidationMiddleware,
+  userValidationMiddleware,
 };

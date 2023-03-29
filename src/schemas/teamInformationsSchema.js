@@ -11,14 +11,12 @@ const createTeamInformationSchema = joi.object({
     .integer()
     .required(),
   projectRole: joi
-    .string()
-    .required(),
+    .string(),
   message: joi
     .string()
     .required(),
   bio: joi
-    .string()
-    .required(),
+    .string(),
   startDate: joi
     .date()
     .required(),
@@ -38,13 +36,11 @@ const updateTeamInformationSchema = joi.object({
     .integer()
     .required(),
   projectRole: joi
-    .string()
-    .required(),
+    .string(),
   message: joi
     .string(),
   bio: joi
-    .string()
-    .required(),
+    .string(),
   startDate: joi
     .date()
     .required(),

@@ -28,7 +28,7 @@ describe('leave services', () => {
         endDate: '2021-01-02',
       };
       const createLeaveFunction = jest.spyOn(prisma.Leave, 'create').mockResolvedValue({ ...obj, leaveId: 1, memberId: 1 });
-      const leave = await leavesServices.createLeave('event', true, '2021-01-01', '2021-01-02', { memberId: 1, firstName: 'Ritik', lastName: 'Rajdev' }, 1);
+      const leave = await leavesServices.createLeave('event', true, '2021-01-01', '2021-01-02', { memberId: 1, name: 'Ritik Rajdev'}, 1);
       expect(createLeaveFunction).toBeCalledWith({
         data: {
           ...obj,

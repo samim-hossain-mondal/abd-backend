@@ -2,7 +2,6 @@ const router = require('express').Router();
 const { generateValidationMiddleware } = require('../../middlewares/validation');
 const schema = require('../../schemas/madeToStick');
 const madeToStickController = require('../../controllers/madeToStick.controller');
-
 /**
  * @openapi
  * components:

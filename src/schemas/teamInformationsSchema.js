@@ -19,9 +19,11 @@ const createTeamInformationSchema = joi.object({
     .string(),
   startDate: joi
     .date()
+    .iso()
     .required(),
   endDate: joi
     .date()
+    .iso()
     .required()
 });
 const updateTeamInformationSchema = joi.object({
@@ -43,9 +45,11 @@ const updateTeamInformationSchema = joi.object({
     .string(),
   startDate: joi
     .date()
+    .iso()
     .required(),
   endDate: joi
     .date()
+    .iso()
     .required()
 });
 const deleteTeamInformationParamSchema = joi.object({

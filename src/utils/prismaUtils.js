@@ -8,7 +8,7 @@ const getPaginationObject = (page, limit) => {
 
 // get formated date range object to filter notes,
 // that will be used in the query
-const getDateRangeObject = (startDate, endDate) => {
+const getDateRangeObject = (startDate, endDate, offSetTime = 0) => {
 
   const sDate = new Date(startDate);
   const eDate = endDate ?
@@ -19,8 +19,8 @@ const getDateRangeObject = (startDate, endDate) => {
 
   return {
     createdAt: {
-      gte: sDate,
-      lt: eDate
+      gte: new Date(new Date(sDate).getTime() + offSetTime).toISOString(),
+      lt: new Date(new Date(eDate).getTime() + offSetTime).toISOString()
     }
   };
 };
@@ -44,13 +44,12 @@ const getStatusQueryObject = (status) => {
     status
   };
 };
-const queryParamFilterTeamRequests= (type,
+const queryParamFilterTeamRequests = (type,
   author,
   startDate,
   endDate,
   searchKeyword,
-  status)=>
-{
+  status) => {
   let filterObj = {};
   // using query params for filter requests with startDate, endDate, search keyword, status, page , limit and author) 
   filterObj = startDate ? {
@@ -69,7 +68,7 @@ const queryParamFilterTeamRequests= (type,
     ...filterObj, type
   } : filterObj;
   filterObj = author ? {
-    ...filterObj,author:author
+    ...filterObj, author: author
   } : filterObj;
   return filterObj;
 };

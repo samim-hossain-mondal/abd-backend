@@ -5,13 +5,14 @@ const {
   updateSentiment,
   countSentimentByDate,
   getAllSentiment,
-  deleteSentimentById
+  deleteSentimentById,
+  getTodaySentiment
 } = require('../../../controllers/dsm/sentimentMeter.controller');
 const {
   generateValidationMiddleware,
 } = require('../../../middlewares/validation');
 const sentimentMeterSchema = require('../../../schemas/dsm/sentimentMeterSchema');
-const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+const { memberValidationMiddleware, roleValidationMiddleware } = require('../../../middlewares/roleValidation');
 const { paramParser } = require('../../../middlewares/paramParser');
 
 /**
@@ -106,7 +107,13 @@ const { paramParser } = require('../../../middlewares/paramParser');
 
 router.get('/:projectId',
   paramParser({ projectId: 'number' }),
-  memberValidationMiddleware, getAllSentiment);
+  memberValidationMiddleware,
+  roleValidationMiddleware,
+  getAllSentiment);
+router.get('/:projectId/today',
+  paramParser({ projectId: 'number' }),
+  memberValidationMiddleware,
+  getTodaySentiment);
 router.post(
   '/:projectId',
   paramParser({ projectId: 'number' }),
@@ -150,6 +157,7 @@ router.get(
   '/:projectId/date/:createdAt',
   paramParser({ projectId: 'number' }),
   memberValidationMiddleware,
+  roleValidationMiddleware,
   generateValidationMiddleware(sentimentMeterSchema.dateSchema, 'params'),
   countSentimentByDate
 );
@@ -249,6 +257,7 @@ router.get(
   '/:projectId/:id',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
+  roleValidationMiddleware,
   // generateValidationMiddleware(sentimentMeterSchema.getByIdSchema, 'params'),
   detailSentiment
 );

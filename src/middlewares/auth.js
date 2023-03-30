@@ -41,6 +41,7 @@ async function authMiddleware(req, res, next) {
             email,
           },
           update: {
+            email,
           },
           create: {
             email,

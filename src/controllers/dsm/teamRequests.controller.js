@@ -56,7 +56,7 @@ const editTeamRequest = async (req, res, next) => {
     const memberId = parseInt(req.user.memberId);
     const { content, status, type, createdAt, taggedIndividuals } = req.body;
     const updatedRequest = await teamRequestsServices.editTeamRequest(
-      requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId
+      requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId, req.user.role
     );
     res.status(200).json(updatedRequest);
   }
@@ -71,7 +71,7 @@ const deleteTeamRequest = async (req, res, next) => {
     const requestId = parseInt(req.params.requestId);
     const memberId = parseInt(req.user.memberId);
     const deletedRequest = await teamRequestsServices.deleteTeamRequest(
-      requestId, memberId, projectId
+      requestId, memberId, projectId, req.user.role
     );
     res.status(204).json(deletedRequest);
   }

@@ -68,7 +68,7 @@ const getAllTeamRequests = async (type,
 };
 // service to edit team requests
 const editTeamRequest = async (
-  requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId
+  requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId, userRole
 ) => {
   // check is request belongs to member
   const request = await dashboardPrisma.Request.findFirst({
@@ -77,12 +77,23 @@ const editTeamRequest = async (
       projectId
     },
     select: {
-      memberId: true
+      memberId: true,
+      status: true
     }
   });
 
   if (!request) throw new HttpError(404, 'Team Request not found');
-  if (request.memberId !== memberId) throw new HttpError(403, 'You are not authorized to edit this request');
+  if (request.memberId !== memberId && userRole !== 'ADMIN') throw new HttpError(403, 'You are not authorized to edit this request');
+
+  if (request.status !== status) {
+    if (userRole !== 'ADMIN') {
+      throw new HttpError(403, 'You are not authorized to change status of this request');
+    }
+  }
+
+  if (userRole === 'ADMIN') {
+    author = request.author;
+  }
 
   const updatedRequest = await dashboardPrisma.Request.update({
     where: {
@@ -104,7 +115,7 @@ const editTeamRequest = async (
   return updatedRequest;
 };
 // service to delete team request by team request id
-const deleteTeamRequest = async (requestId, memberId, projectId) => {
+const deleteTeamRequest = async (requestId, memberId, projectId, userRole) => {
   // check is request belongs to member
   const request = await dashboardPrisma.Request.findFirst({
     where: {
@@ -117,7 +128,7 @@ const deleteTeamRequest = async (requestId, memberId, projectId) => {
   });
 
   if (!request) throw new HttpError(404, 'Team Request not found');
-  if (request.memberId !== memberId) throw new HttpError(403, 'You are not authorized to delete this request');
+  if (request.memberId !== memberId && userRole !== 'ADMIN') throw new HttpError(403, 'You are not authorized to delete this request');
 
   const deleteRequest = await dashboardPrisma.Request.delete(
     {

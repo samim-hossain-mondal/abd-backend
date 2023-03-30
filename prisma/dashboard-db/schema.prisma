@@ -26,7 +26,6 @@ model PONote {
 
 // SentimentMeter Model
 model SentimentMeter {
-  author      String
   sentiment   Sentiment
   createdAt   DateTime  @default(now())
   sentimentId Int       @id @unique @default(autoincrement())
@@ -147,6 +146,7 @@ enum Type {
 }
 
 enum Sentiment {
+  NULL
   HAPPY
   GOOD
   OK

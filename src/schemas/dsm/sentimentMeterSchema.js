@@ -1,11 +1,11 @@
 const joi = require('joi');
 const createSentiment = joi.object({
-  author: joi.string(),
-  sentiment: joi.valid('OK', 'GOOD', 'BAD', 'HAPPY'),
+  sentiment: joi.valid('OK', 'GOOD', 'BAD', 'HAPPY', 'NULL'),
 });
 
 const dateSchema = joi.object({
-  createdAt: joi.date(),
+  projectId: joi.number().integer().min(1),
+  createdAt: joi.date().iso(),
 });
 
 const getByIdSchema = joi.object({
@@ -14,7 +14,7 @@ const getByIdSchema = joi.object({
 
 const patchSentiment = joi.object({
   id: joi.number().integer().min(1),
-  sentiment: joi.valid('OK', 'GOOD', 'BAD', 'HAPPY'),
+  sentiment: joi.valid('OK', 'GOOD', 'BAD', 'HAPPY', 'NULL'),
 });
 
 module.exports = { createSentiment, dateSchema, getByIdSchema, patchSentiment };

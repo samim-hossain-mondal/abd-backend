@@ -47,8 +47,8 @@ describe('getDateRangeObject', () => {
     const startDate = '2023-01-27', endDate = '2023-01-28';
     const result = {
       createdAt: {
-        gte: new Date('2023-01-27'),
-        lt: new Date('2023-01-29')
+        gte: new Date('2023-01-27').toISOString(),
+        lt: new Date('2023-01-29').toISOString()
       }
     };
     const returnedVal = prismaUtils.getDateRangeObject(startDate, endDate);
@@ -58,8 +58,8 @@ describe('getDateRangeObject', () => {
     const startDate = '2023-01-27', endDate = undefined;
     const result = {
       createdAt: {
-        gte: new Date('2023-01-27'),
-        lt: new Date('2023-01-28')
+        gte: new Date('2023-01-27').toISOString(),
+        lt: new Date('2023-01-28').toISOString()
       }
     };
     const returnedVal = prismaUtils.getDateRangeObject(startDate, endDate);
@@ -72,23 +72,23 @@ describe('getDateRangeObject', () => {
   });
   describe('queryParamFilterTeamRequests', () => {
     it('should return valid object when author, start Date,end Date, search keyword and status is passed', () => {
-      const mockFilter={
-        type:'MEETING',
-        author:'string',
-        startDate:'2023-03-04',
-        endDate:'2023-03-04',
-        searchKeyword:'string',
-        status:'PENDING'
+      const mockFilter = {
+        type: 'MEETING',
+        author: 'string',
+        startDate: '2023-03-04',
+        endDate: '2023-03-04',
+        searchKeyword: 'string',
+        status: 'PENDING'
       };
-      const mockFilterResult={
+      const mockFilterResult = {
         'author': 'string',
-        'content':  {
+        'content': {
           'contains': 'string',
           'mode': 'insensitive',
         },
-        'createdAt':  {
-          'gte':  new Date('2023-03-04'),
-          'lt': new Date('2023-03-05'),
+        'createdAt': {
+          'gte': new Date('2023-03-04').toISOString(),
+          'lt': new Date('2023-03-05').toISOString(),
         },
         'status': 'PENDING',
         'type': 'MEETING',
@@ -96,5 +96,5 @@ describe('getDateRangeObject', () => {
       const returnedVal = prismaUtils.queryParamFilterTeamRequests(...Object.values(mockFilter));
       expect(returnedVal).toEqual(mockFilterResult);
     });
-  }); 
+  });
 });

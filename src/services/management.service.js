@@ -52,9 +52,8 @@ const createNewAgileDashboardInDb = async (
     data: {
       projectId: newProject.projectId,
       memberId: member.memberId,
-    },
+    }
   });
-
   return newProject;
 };
 
@@ -506,6 +505,7 @@ const removeProjectMemberByIdInDb = async (projectId, memberId) => {
 };
 
 
+
 // REVIEW: these are not used endpoints
 
 const createNewMemberInDb = async (email, name = null, slackLink = null) => {
@@ -531,6 +531,7 @@ const createNewMemberInDb = async (email, name = null, slackLink = null) => {
     }
     return member;
   }
+
 
   const newMember = await managementPrisma.member.create({
     data: {
@@ -575,6 +576,7 @@ const updateMemberInfoInDb = async (memberId, name, email, slackLink) => {
   
   return updatedMember;
 };
+
 
 const deleteMemberInDb = async (memberId) => {
   const member = await managementPrisma.member.findUnique({

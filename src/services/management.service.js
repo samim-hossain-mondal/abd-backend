@@ -238,13 +238,6 @@ const removeProjectMemberByEmailInDb = async (projectId, email) => {
     },
   });
 
-  await dashboardPrisma.teamInformation.deleteMany({
-    where: {
-      projectId,
-      memberId: projectMember.memberId
-    }
-  });
-
   return projectMember;
 };
 
@@ -594,12 +587,6 @@ const deleteMemberInDb = async (memberId) => {
 
   // delete all project members
   await managementPrisma.projectMember.deleteMany({
-    where: {
-      email: member.email,
-    },
-  });
-
-  await dashboardPrisma.teamInformation.deleteMany({
     where: {
       email: member.email,
     },

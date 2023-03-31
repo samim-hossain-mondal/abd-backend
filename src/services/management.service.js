@@ -16,7 +16,6 @@ const createNewAgileDashboardInDb = async (
       email
     }
   });
-
   if (!member) {
     member = await managementPrisma.member.create({
       data: {
@@ -25,7 +24,6 @@ const createNewAgileDashboardInDb = async (
       }
     });
   }
-
   const newProject = await managementPrisma.project.create({
     data: {
       projectName,
@@ -47,7 +45,6 @@ const createNewAgileDashboardInDb = async (
       }
     }
   });
-
   await dashboardPrisma.teamInformation.create({
     data: {
       projectId: newProject.projectId,

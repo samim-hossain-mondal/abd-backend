@@ -180,6 +180,9 @@ describe('deleteTeamInformation', () => {
   it('should return deleted teamInformations when called', async () => {
     const mockReq = {
       query: {},
+      user:{
+        memberId:1
+      },
       params: {
         id: 1
       }
@@ -209,6 +212,9 @@ describe('deleteTeamInformation', () => {
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
+      user:{
+        memberId:1
+      },
       params: {
         id: 1
       }
@@ -260,6 +266,9 @@ describe('get teamInformations by project id', () => {
   it('should return error when service throws error', async () => {
     const mockReq = {
       query: {},
+      user:{
+        memberId:1
+      },
       params: {
         projectId: 1
       }

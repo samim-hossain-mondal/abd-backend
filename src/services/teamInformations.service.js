@@ -68,6 +68,18 @@ const updateTeamInformation = async (
   projectId ,
   startDate ,
   endDate) => {
+  const targetProfile = await dashboardPrisma.teamInformation.findUnique({
+    where:{
+      id
+    }
+  });
+  if(targetProfile.count === 0)
+  {
+    throw new HttpError(404, '(UPDATE) : No Record Found');
+  }
+  if (targetProfile.memberId !== memberId) {
+    throw new HttpError(403, 'You are not allowed to update this team information.');
+  }
   const profileDetails={
     memberId,
     bio ,
@@ -89,29 +101,34 @@ const updateTeamInformation = async (
   );
   const profile = await dashboardPrisma.teamInformation.update({
     where:{
-      id:id
+      id
     },
     data:profileDetails
   });
-  if(profile.count === 0)
-  {
-    throw new HttpError(404, '(UPDATE) : No Record Found');
-  }
   profile.name = managementProfile.name;
-  profile.message = managementProfile.message;
+  profile.message = managementProfile.slackLink;
+  profile.emailId = managementProfile.email;
   return profile;
 };
 // service to delete a teamInformation
-const deleteTeamInformation = async (id) => {
-  const profile = await dashboardPrisma.teamInformation.delete({
+const deleteTeamInformation = async (id,memberId) => {
+  const targetProfile = await dashboardPrisma.teamInformation.findUnique({
     where:{
-      id:id
+      id
     }
   });
-  if(profile.count === 0)
+  if(targetProfile.count === 0)
   {
     throw new HttpError(404, '(DELETE) : No Record Found');
   }
+  if (targetProfile.memberId !== memberId) {
+    throw new HttpError(403, 'You are not allowed to delete this team information.');
+  }
+  const profile = await dashboardPrisma.teamInformation.delete({
+    where:{
+      id
+    }
+  });
   return profile;
 };
 // service to get teamInformations by projectId
@@ -130,12 +147,27 @@ const getTeamInformationsByProjectId = async (projectId) => {
     });
     return memberDetails;
   }));
+  const projectMemberDetailList = await Promise.all(profiles.map(async (profile) => {
+    const memberId = profile.memberId;
+    const projectMemberDetail = await managementPrisma.ProjectMember.findUnique({
+      where:{
+        projectId_memberId:
+        {
+          projectId:parseInt(projectId),
+          memberId
+        }
+      }
+    });
+    return projectMemberDetail;
+  }));
   for (let i = 0; i < profiles.length; i++) {
     const profile = profiles[i];
     const memberDetails = memberDetailsList[i];
+    const projectMemberDetail = projectMemberDetailList[i];
     profile.name = memberDetails.name;
     profile.emailId = memberDetails.email;
     profile.message= memberDetails.slackLink; 
+    profile.role= projectMemberDetail.role;
   }
   return profiles;
 };

@@ -11,7 +11,7 @@ const schema = require('../../schemas/teamInformationsSchema');
  *      required:
  *        - memberId
  *        - projectId
- *        - role
+ *        - projectRole
  *        - message
  *        - bio
  *        - startDate
@@ -23,7 +23,7 @@ const schema = require('../../schemas/teamInformationsSchema');
  *        projectId:
  *          type: integer
  *          description: The project ID associated with the teamInformation.
- *        role:
+ *        projectRole:
  *          type: string
  *          description: The role of the individual in the project.
  *        message:

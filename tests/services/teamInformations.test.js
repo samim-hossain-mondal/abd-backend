@@ -1,4 +1,4 @@
-const  {managementPrisma, dashboardPrisma}  = require('../../src/prismaClient');
+const  { managementPrisma, dashboardPrisma }  = require('../../src/prismaClient');
 const teamInformationsService = require('../../src/services/teamInformations.service');
 describe('teamInformationsServices', () => {
   describe('createteamInformation', () => {
@@ -16,7 +16,7 @@ describe('teamInformationsServices', () => {
         'email':'test',
         'slackLink':'test',
       };
-      const mockResult ={
+      const mockResult = {
         'memberId': 1,
         'bio': 'string',
         'projectRole': 'string',
@@ -102,102 +102,147 @@ describe('teamInformationsServices', () => {
       expect(teamInformation).toEqual(mockResult);
     });
   });
-  describe('updateTeamInformation', () => {
-    it('should update a teamInformation when called', async () => {
-      const mockResult = {
-        'memberId': 1,
-        'bio':'test',
-        'projectRole':'test',
-        'message':'test',
-        'projectId':1,
-        'startDate':'2021-01-01',
-        'endDate':'2021-01-01',
-        'name': 'test',
-        'emailId':'test'
-      };
-      const mockDashBoardDBInformation = {
-        'memberId': 1,
-        'bio':'test',
-        'projectRole':'test',
-        'message':'test',
-        'projectId':1,
-        'startDate':'2021-01-01',
-        'endDate':'2021-01-01'
-      };
-      const mockManagementDBInformation =        
-          {
-            'name': 'test',
-            'email':'test',
-            'slackLink':'test',
-            'memberId': 1,
-          }
-        ;
-      jest.spyOn(dashboardPrisma.teamInformation, 'update').mockResolvedValue(mockResult);
-      jest.spyOn(managementPrisma.Member, 'update').mockResolvedValue(mockManagementDBInformation);
-      const teamInformation = await teamInformationsService.updateTeamInformation(mockDashBoardDBInformation);
-      expect(teamInformation).toEqual(mockResult);
-    });
-    it('should throw error when not existing id is passed', async () => {
-      const id = 8;
-      const deleteResult = { count: 0 };
-      jest.spyOn(dashboardPrisma.teamInformation, 'update')
-        .mockResolvedValue(deleteResult); 
-      await expect(async () => {
-        await teamInformationsService.updateTeamInformation(id);
-      }).rejects.toThrow('(UPDATE) : No Record Found');
-    });
-  });
   describe('deleteTeamInformation', () => {
     it('should delete a teamInformation when called', async () => {
       const id = 1;
       const deleteResult = { count: 1 };
+      const memberId = 1;
       jest.spyOn(dashboardPrisma.teamInformation, 'delete')
-        .mockResolvedValue(deleteResult);
-      const teamInformation = await teamInformationsService.deleteTeamInformation(id);
+        .mockResolvedValue(deleteResult); 
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ memberId: 1 }); 
+      const teamInformation = await teamInformationsService.deleteTeamInformation(id, memberId);
       expect(teamInformation).toEqual(deleteResult);
-    });
-    it('should throw error when not existing id is passed', async () => {
-      const id = 8;
-      const deleteResult = { count: 0 };
-      jest.spyOn(dashboardPrisma.teamInformation, 'delete')
-        .mockResolvedValue(deleteResult);
-      await expect(async () => {
-        await teamInformationsService.deleteTeamInformation(id);
-      }).rejects.toThrow('(DELETE) : No Record Found');
-    });
+    } 
+    );
+    it('should throw an error when teamInformation is not found', async () => {
+      const id = 1;
+      const memberId = 1;
+      jest.spyOn(dashboardPrisma.teamInformation, 'delete').mockResolvedValue({ count: 0 });
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ count: 0});
+      await expect(teamInformationsService.deleteTeamInformation(id, memberId)).rejects.toThrow('(DELETE) : No Record Found');
+    }
+    );
+    it('should throw error when memberId of user and teamInformation is not same', async () => {
+      const id = 1;
+      const memberId = 1;
+      jest.spyOn(dashboardPrisma.teamInformation, 'delete').mockResolvedValue({ count: 0 });
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ memberId: 2});
+      await expect(teamInformationsService.deleteTeamInformation(id, memberId)).rejects.toThrow('You are not allowed to delete this team information.');
+    }
+    );
   });
-  describe('getTeamInformationsByProjectId', () => { 
-    it('should return all teamInformation when called', async () => {
-      const projectId = 1;
-      const mockDashBoardDBInformation = [{
-        'memberId': 1,
-        'bio':'test',
-        'projectRole':'test',
-        'projectId':1,
-        'startDate':'2021-01-01',
-        'endDate':'2021-01-01'
-      }];
-      const mockManagementDBInformation =    {
+  describe('updateTeamInformation', () => {
+    it('should update a teamInformation when called', async () => {
+      const mockTeamInformation = {
+        'id' : 1,
+        'name'  : 'test',
+        'memberId' : 1,
+        'bio' : 'test',
+        'projectRole' : 'test',
+        'message' : 'test',
+        'projectId' : 1,
+        'startDate' : '2021-01-01',
+        'endDate' : '2021-01-01',
+      };
+      const mockManagementDBInformation = {
         'name': 'test',
         'email':'test',
         'slackLink':'test',
         'memberId': 1,
       };
-      const mockResult = [{
+      const mockResult = {
+        'id': 1,
         'memberId': 1,
         'bio':'test',
         'projectRole':'test',
+        'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
         'endDate':'2021-01-01',
         'name': 'test',
         'emailId':'test',
-        'message':'test'
+      };
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue(mockTeamInformation);
+      jest.spyOn(dashboardPrisma.teamInformation, 'update')
+        .mockResolvedValue(mockTeamInformation);
+      jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
+      const teamInformation = await teamInformationsService.updateTeamInformation(...Object.values(mockTeamInformation));
+      expect(teamInformation).toEqual(mockResult);
+    }
+    );
+    it('should throw an error when teamInformation is not found', async () => {
+      const mockTeamInformation = {
+        'id' : 1,
+        'name'  : 'test',
+        'memberId' : 1,
+        'bio' : 'test',
+        'projectRole' : 'test',
+        'message' : 'test',
+        'projectId' : 1,
+        'startDate' : '2021-01-01',
+        'endDate' : '2021-01-01',
+      };
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ count: 0 });
+      jest.spyOn(dashboardPrisma.teamInformation, 'update')
+        .mockResolvedValue(mockTeamInformation);
+      await expect(teamInformationsService.updateTeamInformation(...Object.values(mockTeamInformation))).rejects.toThrow('(UPDATE) : No Record Found');
+    }
+    );
+    it('should throw error when memberId of user and teamInformation is not same', async () => {
+      const mockTeamInformation = {
+        'id' : 1,
+        'name'  : 'test',
+        'memberId' : 1,
+        'bio' : 'test',
+        'projectRole' : 'test',
+        'message' : 'test',
+        'projectId' : 1,
+        'startDate' : '2021-01-01',
+        'endDate' : '2021-01-01',
+      };
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ memberId: 2 });
+      jest.spyOn(dashboardPrisma.teamInformation, 'update')
+        .mockResolvedValue(mockTeamInformation);
+      await expect(teamInformationsService.updateTeamInformation(...Object.values(mockTeamInformation))).rejects.toThrow('You are not allowed to update this team information.');
+    }
+    );
+  });
+  describe('getTeamInformationByProjectId', () => {
+    it('should return teamInformation when called', async () => {
+      const mockDashBoardDBInformation = [{
+        'memberId': 1,
+        'bio':'test',
+        'projectRole':'test',
+        'message':'test',
+        'projectId':1,
+        'startDate':'2021-01-01',
+        'endDate':'2021-01-01'
+      }];
+      const mockManagementDBInformation = 
+          {
+            'name': 'test',
+            'email':'test',
+            'slackLink':'test',
+            'memberId': 1,
+          };
+      const mockResult = [{
+        'memberId': 1,
+        'bio':'test',
+        'projectRole':'test',
+        'message':'test',
+        'projectId':1,
+        'startDate':'2021-01-01',
+        'endDate':'2021-01-01',
+        'name': 'test',
+        'emailId':'test',
+        'role':'MEMBER'
       }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockDashBoardDBInformation);
       jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
-      const teamInformation = await teamInformationsService.getTeamInformationsByProjectId(projectId);
+      jest.spyOn(managementPrisma.ProjectMember,'findUnique').mockResolvedValue({role:'MEMBER',projectId:1});
+      const teamInformation = await teamInformationsService.getTeamInformationsByProjectId(1);
       expect(teamInformation).toEqual(mockResult);
-    });
+    }
+    );
   });
 });

@@ -218,6 +218,22 @@ const getReaction = async (celebrationId, memberId, projectId) => {
   return reaction;
 };
 
+const getCelebrationsByDate = async (projectId, memberId, date) => {
+  const celebrations = await dashboardPrisma.Celebration.findMany({
+    where: {
+      projectId,
+      createdAt: {
+        gte: new Date(date),
+        lte: new Date(
+          new Date(date).setDate(new Date(date).getDate() + 1)
+        ),
+      }
+    },
+    ...selectOnlyValidCelebrationBoardFields(false)
+  }
+  );
+  return filterByAnonymous(celebrations, memberId);
+};
 
 module.exports = {
   listCelebrations,
@@ -226,5 +242,6 @@ module.exports = {
   updateCelebrationById,
   deleteCelebrationById,
   updateReaction,
-  getReaction
+  getReaction,
+  getCelebrationsByDate
 };

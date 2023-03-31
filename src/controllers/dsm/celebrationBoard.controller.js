@@ -115,6 +115,19 @@ const getReaction = async (req, res, next) => {
   }
 };
 
+const getCelebrationsByDate = async (req, res, next) => {
+  try {
+    const memberId = parseInt(req.user.memberId);
+    const { date, projectId } = req.params;
+    const celebrations =
+      await celebrationBoardServices.getCelebrationsByDate(parseInt(projectId), memberId, date);
+    res.status(200).json(celebrations);
+  }
+  catch (er) {
+    next(er);
+  }
+};
+
 
 module.exports = {
   listCelebrations,
@@ -123,5 +136,6 @@ module.exports = {
   updateCelebration,
   deleteCelebration,
   updateReaction,
-  getReaction
+  getReaction,
+  getCelebrationsByDate
 };

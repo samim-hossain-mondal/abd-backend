@@ -79,4 +79,18 @@ const deleteTeamRequest = async (req, res, next) => {
     next(error);
   }
 };
-module.exports = { createTeamRequest, listTeamRequests, editTeamRequest, deleteTeamRequest };
+
+const getTeamRequestsByDate = async (req, res, next) => {
+  try {
+    const { date, projectId } = req.params;
+    const teamRequests = await teamRequestsServices.getTeamRequestsByDate(
+      date, parseInt(projectId)
+    );
+    res.status(200).json(teamRequests);
+  }
+  catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { createTeamRequest, listTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate };

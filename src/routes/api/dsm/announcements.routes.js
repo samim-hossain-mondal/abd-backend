@@ -4,7 +4,8 @@ const {
   createAnnouncement,
   detailAnnouncement,
   editAnnouncement,
-  deleteAnnouncement
+  deleteAnnouncement,
+  getAnnouncementsByDate
 } = require('../../../controllers/dsm/announcements.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { paramParser } = require('../../../middlewares/paramParser');
@@ -213,5 +214,49 @@ router.route('/:projectId/:id')
     paramParsingMiddleware,
     deleteAnnouncement
   );
+// get announcement by date
+/**
+ * @openapi
+ * /api/dsm/announcements/{projectId}/date/{date}:
+ *  get:
+ *    tags:
+ *      - announcements
+ *    summary: Get announcements by date
+ *    description: Get announcements by date
+ *    parameters:
+ *      - in: path
+ *        name: projectId
+ *        schema:
+ *          type: integer
+ *          required: true
+ *          description: Unique identifier of the project
+ *      - in: path
+ *        name: date
+ *        schema:
+ *          type: string
+ *          required: true
+ *          description: Date of the announcements
+ *    responses:
+ *      '200':
+ *        description: Announcements found
+ *        content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *             items:
+ *               $ref: '#/components/schemas/Announcement'
+ *      '400':
+ *        description: Bad request if unacceptable id is passed
+ *      '404':
+ *        description: Not found if no announcement found with id
+ *      '500':
+ *        description: Internal server error
+*/
 
+router.route('/:projectId/date/:date')
+  .get(
+    paramParser({ projectId: 'number' }),
+    memberValidationMiddleware,
+    getAnnouncementsByDate
+  );
 module.exports = router;

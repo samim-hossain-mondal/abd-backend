@@ -138,10 +138,28 @@ const deleteAnnouncement = async (announcementId, memberId, projectId) => {
   });
 };
 
+const getAnnouncementsByDate = async (date, projectId) => {
+  const announcements = await dashboardPrisma.Announcement.findMany({
+    where: {
+      projectId,
+      createdAt: {
+        gte: new Date(date),
+        lte: new Date(
+          new Date(date).setDate(new Date(date).getDate() + 1)
+        ),
+      },
+    },
+    ...selectOnlyValidAnnouncementFields
+  });
+  return announcements;
+};
+
+
 module.exports = {
   getAnnouncements,
   getAnnouncementByID,
   createAnnouncement,
   editAnnouncement,
-  deleteAnnouncement
+  deleteAnnouncement,
+  getAnnouncementsByDate
 };

@@ -106,10 +106,26 @@ const deleteAnnouncement = async (req, res, next) => {
   }
 };
 
+const getAnnouncementsByDate = async (req, res, next) => {
+  try {
+    const { date, projectId } = req.params;
+    const announcements = await announcementServices.getAnnouncementsByDate(
+      date,
+      parseInt(projectId)
+    );
+    res.status(200).json(announcements);
+  }
+  catch (er) {
+    console.log(er);
+    next(er);
+  }
+};
+
 module.exports = {
   listAnnouncements,
   detailAnnouncement,
   createAnnouncement,
   editAnnouncement,
-  deleteAnnouncement
+  deleteAnnouncement,
+  getAnnouncementsByDate
 };

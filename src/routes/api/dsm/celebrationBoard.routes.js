@@ -6,7 +6,8 @@ const {
   updateCelebration,
   deleteCelebration,
   updateReaction,
-  getReaction
+  getReaction,
+  getCelebrationsByDate
 } = require('../../../controllers/dsm/celebrationBoard.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const celebrationsSchema = require('../../../schemas/dsm/celebrationsSchema');
@@ -321,6 +322,47 @@ router.patch('/:projectId/:id/react',
   // paramValidationMiddleware, 
   generateValidationMiddleware(celebrationsSchema.patchReactionSchema),
   updateReaction);
+
+// get celebrations by date
+/**
+ * @openapi
+ * /api/dsm/celebrations/{projectId}/date/{date}:
+ *  get:
+ *    tags:
+ *      - celebrations
+ *    summary: Get celebrations by date
+ *    description: Get celebrations by date
+ *    parameters:
+ *      - in: path
+ *        name: id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Unique identifier of the project
+ *      - in: path
+ *        name: date
+ *        schema:
+ *           type: string
+ *        required: true
+ *        description: Date of the celebrations
+ *    responses:
+ *      '200':
+ *        description: Celebrations found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Celebration'
+ *      '400':
+ *        description: Bad request if unacceptable id is passed
+ *      '404':
+ *        description: Not found if no celebration found with id
+ *      '500':
+ *        description: Internal server error
+ */
+router.get('/:projectId/date/:date',
+  paramParser({ projectId: 'number' }),
+  memberValidationMiddleware,
+  getCelebrationsByDate);
 
 
 module.exports = router;

@@ -142,4 +142,23 @@ const deleteTeamRequest = async (requestId, memberId, projectId, userRole) => {
   }
   return deleteRequest;
 };
-module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest };
+const getTeamRequestsByDate = async (date, projectId) => {
+  const teamRequests = await dashboardPrisma.Request.findMany({
+    where: {
+      projectId: projectId,
+      createdAt: {
+        gte: new Date(date),
+        lte: new Date(
+          new Date(date).setDate(new Date(date).getDate() + 1)
+        ),
+      }
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    ...selectOnlyValidTeamrequestsFields
+  });
+  return teamRequests;
+};
+
+module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate };

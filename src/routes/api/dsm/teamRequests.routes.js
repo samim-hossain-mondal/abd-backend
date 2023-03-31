@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { listTeamRequests, createTeamRequest, editTeamRequest, deleteTeamRequest } = require('../../../controllers/dsm/teamRequests.controller');
+const { listTeamRequests, createTeamRequest, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate } = require('../../../controllers/dsm/teamRequests.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const requestSchema = require('../../../schemas/dsm/teamRequests.schema');
 const { paramParser } = require('../../../middlewares/paramParser');
@@ -263,5 +263,45 @@ router.route('/:projectId/:requestId')
     paramParsingMiddleware,
     generateValidationMiddleware(requestSchema.deleteTeamRequest),
     deleteTeamRequest
+  );
+// get team requests by date
+/**
+ * @openapi
+ * /api/dsm/team-requests/{projectId}/date/{date}:
+ *  get:
+ *    tags:
+ *      - team-requests
+ *    summary: Get team requests by date 
+ *    description: Get team requests by date
+ *    parameters:
+ *      - in: path 
+ *        name: projectId
+ *        schema: 
+ *          type: integer
+ *        required: true
+ *        description: Unique identifier of the project
+ *      - in: path
+ *        name: date
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Date of the team request
+ *    responses:
+ *      200:
+ *       description: List of team requests
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *           items:
+ *             $ref: "#/components/schemas/team-requests"
+ *      500:
+ *       description: Internal server error
+*/
+router.route('/:projectId/date/:date')
+  .get(
+    paramParser({ projectId: 'number' }),
+    memberValidationMiddleware,
+    getTeamRequestsByDate
   );
 module.exports = router;

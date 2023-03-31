@@ -25,7 +25,9 @@ const getPONotesByQuickFilter = async (
   status,
   page,
   limit,
-  projectId
+  projectId,
+  memberId,
+  isPO = false
 ) => {
   let filterObj = {};
 
@@ -53,7 +55,12 @@ const getPONotesByQuickFilter = async (
     where: {
       ...filterObj,
       isDeleted: false,
-      projectId
+      projectId,
+      ...(!isPO && {
+        status: {
+          not: 'DRAFT'
+        },
+      }),
     },
     orderBy: {
       createdAt: 'desc',
@@ -62,12 +69,11 @@ const getPONotesByQuickFilter = async (
     ...selectOnlyValidPONoteFields
   }
   );
-
   return notes;
 };
 
 // get specific note by id
-const getPONoteByID = async (noteId, projectId) => {
+const getPONoteByID = async (noteId, projectId, memberId) => {
   const noteObj = await dashboardPrisma.PONote.findFirst({
     where: {
       noteId,
@@ -78,6 +84,8 @@ const getPONoteByID = async (noteId, projectId) => {
   });
 
   if (!noteObj) throw new HttpError(404, '(SEARCH) : No Record Found');
+
+  if (noteObj.status === 'DRAFT' && noteObj.memberId !== memberId) throw new HttpError(403, 'You are not allowed to view this note.');
   return noteObj;
 };
 

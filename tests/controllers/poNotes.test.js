@@ -27,8 +27,11 @@ describe('get PO Notes (all/list)', () => {
       query: {},
       params: {
         projectId: 1,
-        id: 1
+        id: 1,
       },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -48,9 +51,11 @@ describe('get PO Notes (all/list)', () => {
         xyz: ''
       }, params: {
         projectId: 1,
-        id: 1
+        id: 1,
       },
-
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -79,8 +84,11 @@ describe('get PO Notes by ID', () => {
       query: {},
       params: {
         projectId: 1,
-        id: 1
+        id: 1,
       },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),
@@ -98,8 +106,11 @@ describe('get PO Notes by ID', () => {
     const mockReq = {
       params: {
         projectId: 1,
-        id: 1
+        id: 1,
       },
+      user: {
+        memberId: 1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),

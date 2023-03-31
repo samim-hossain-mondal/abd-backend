@@ -2,6 +2,8 @@ const poNoteServices = require('../services/poNoteServices');
 
 // controller to handle GET request for listing all po notes
 const listPONotes = async (req, res, next) => {
+  const { memberId, isPO } = req.user;
+
   try {
     const {
       type,
@@ -23,7 +25,9 @@ const listPONotes = async (req, res, next) => {
         status,
         page,
         limit,
-        parseInt(projectId)
+        parseInt(projectId),
+        parseInt(memberId),
+        isPO
       );
     res.status(200).json(filteredNotes);
   }
@@ -42,7 +46,7 @@ const createPONote = async (req, res, next) => {
     } = req.body;
     const { projectId } = req.params;
     const { memberId } = req.user;
-    
+
     const createdNote =
       await poNoteServices.createValidPONote(
         type, note,
@@ -62,9 +66,12 @@ const createPONote = async (req, res, next) => {
 const detailPONote = async (req, res, next) => {
   try {
     const { projectId, id: noteId } = req.params;
+    const { memberId } = req.user;
+
     const resultNote = await poNoteServices.getPONoteByID(
-      noteId, 
-      parseInt(projectId)
+      noteId,
+      parseInt(projectId),
+      parseInt(memberId)
     );
     res.status(200).json(resultNote);
   }

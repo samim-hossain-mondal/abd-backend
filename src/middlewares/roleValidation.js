@@ -4,7 +4,7 @@ const { convertToRoleEnum } = require('../utils/managementDbUtils');
 const roleValidationMiddleware = async (req, res, next) => {
   const { email } = req.user;
   const { projectId } = req.params;
-  
+
   const isAdmin = await managementPrisma.projectMember.findUnique({
     where: {
       projectId_email: {
@@ -51,6 +51,7 @@ const memberValidationMiddleware = async (req, res, next) => {
       role: member.role,
       memberId: member.memberId,
       projectId: member.projectId,
+      isPO: member && member.role === convertToRoleEnum('ADMIN'),
     };
 
     req.user = { ...req.user, ...memberInfo };
@@ -70,7 +71,7 @@ const userValidationMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = { 
+module.exports = {
   roleValidationMiddleware,
   memberValidationMiddleware,
   userValidationMiddleware,

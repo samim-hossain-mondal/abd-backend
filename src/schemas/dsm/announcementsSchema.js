@@ -4,8 +4,14 @@ const createAnnouncementSchema = joi.object({
   content: joi
     .string()
     .min(1)
-    .max(1500)
+    .max(2000)
     .required(),
+  
+  title: joi
+    .string()
+    .min(1)
+    .max(255)
+    .required()
 });
 
 const announcementsParamSchema = joi.object({
@@ -19,7 +25,13 @@ const patchAnnouncementSchema = joi.object({
   content: joi
     .string()
     .min(1)
-    .max(1500)
+    .max(2000)
+    .required(),
+  
+  title: joi
+    .string()
+    .min(1)
+    .max(255)
     .required()
 });
 

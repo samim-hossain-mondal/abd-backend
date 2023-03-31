@@ -5,6 +5,7 @@ const selectOnlyValidAnnouncementFields = {
   select: {
     announcementId: true,
     author: true,
+    title: true,
     content: true,
     createdAt: true,
     projectId: true,
@@ -53,12 +54,16 @@ const getAnnouncementByID = async (announcementId, projectId) => {
   * Service to create announcement
   * @param {String} author - user id of the author
   * @param {String} content - content of the announcement
+  * @param {String} memberId - member id of the author
+  * @param {Number} projectId - project id of the announcement
+  * @param {String} title - title of the announcement
   * @returns {Object} - Announcement object
 */
-const createAnnouncement = async (author, memberId, content, projectId) => {
+const createAnnouncement = async (author, memberId, content, title, projectId) => {
   const announcement = await dashboardPrisma.Announcement.create({
     data: {
       content,
+      title,
       projectId,
       memberId,
       author
@@ -72,10 +77,13 @@ const createAnnouncement = async (author, memberId, content, projectId) => {
   * Service to edit announcement
   * @param {Number} announcementId - Announcement id
   * @param {String} content - new content of the announcement
+  * @param {String} memberId - member id of the author
+  * @param {Number} projectId - project id of the announcement
+  * @param {String} title - new title of the announcement
   * @returns {Object} - Updated announcement object
   * @throws {HttpError} - Throws an error if announcement not found
 */
-const editAnnouncement = async (announcementId, content, memberId, projectId) => {
+const editAnnouncement = async (announcementId, content, title, memberId, projectId) => {
   const availableAnnouncement = await dashboardPrisma.Announcement.findFirst({
     where: {
       announcementId,
@@ -99,7 +107,8 @@ const editAnnouncement = async (announcementId, content, memberId, projectId) =>
       announcementId
     },
     data: {
-      content
+      content,
+      title
     },
     ...selectOnlyValidAnnouncementFields
   });

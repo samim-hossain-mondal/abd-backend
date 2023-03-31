@@ -50,9 +50,9 @@ const createAnnouncement = async (req, res, next) => {
     const author = req.user.name || 'ANON';
     const { memberId } = req.user;
     const { projectId } = req.params;
-    const { content } = req.body;
+    const { content,title } = req.body;
     const resultAnnouncement = await announcementServices.createAnnouncement(
-      author, memberId, content, parseInt(projectId)
+      author, memberId, content, title,  parseInt(projectId)
     );
     res.status(201).json(resultAnnouncement);
   }
@@ -72,9 +72,9 @@ const editAnnouncement = async (req, res, next) => {
     const memberId = req.user.memberId;
     const announcementId = req.params.id;
     const { projectId } = req.params;
-    const content = req.body.content;
+    const {content,title} = req.body;
     const resultAnnouncement = await announcementServices.editAnnouncement(
-      announcementId, content, parseInt(memberId), parseInt(projectId)
+      announcementId, content,title, parseInt(memberId), parseInt(projectId)
     );
     res.status(200).json(resultAnnouncement);
   }

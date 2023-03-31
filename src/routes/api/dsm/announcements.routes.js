@@ -10,7 +10,7 @@ const {
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const { paramParser } = require('../../../middlewares/paramParser');
 const announcementsSchema = require('../../../schemas/dsm/announcementsSchema');
-const { memberValidationMiddleware } = require('../../../middlewares/roleValidation');
+const { memberValidationMiddleware, roleValidationMiddleware } = require('../../../middlewares/roleValidation');
 
 /**
  * @openapi
@@ -95,7 +95,7 @@ router.route('/:projectId')
   )
   .post(
     paramParser({ projectId: 'number' }),
-    memberValidationMiddleware,
+    roleValidationMiddleware,
     generateValidationMiddleware(announcementsSchema.createAnnouncementSchema),
     createAnnouncement);
 
@@ -194,24 +194,21 @@ const paramParsingMiddleware = paramParser(requiredParams);
 router.route('/:projectId/:id')
   .get(
     paramParser({ projectId: 'number', id: 'number' }),
-    // paramValidationMiddleware,
     memberValidationMiddleware,
     paramParsingMiddleware,
     detailAnnouncement
   )
   .patch(
     paramParser({ projectId: 'number', id: 'number' }),
-    memberValidationMiddleware,
-    // paramValidationMiddleware,
     generateValidationMiddleware(announcementsSchema.patchAnnouncementSchema),
     paramParsingMiddleware,
+    roleValidationMiddleware,
     editAnnouncement
   )
   .delete(
     paramParser({ projectId: 'number', id: 'number' }),
-    memberValidationMiddleware,
-    // paramValidationMiddleware,
     paramParsingMiddleware,
+    roleValidationMiddleware,
     deleteAnnouncement
   );
 // get announcement by date

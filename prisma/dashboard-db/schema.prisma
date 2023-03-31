@@ -82,8 +82,9 @@ model Request {
 // Announcement Model
 model Announcement {
   announcementId Int      @id @unique @default(autoincrement())
+  title          String   @db.VarChar(255)
   author         String
-  content        String   @db.VarChar(255)
+  content        String   @db.VarChar(2000)
   createdAt      DateTime @default(now())
   projectId      Int
   memberId       Int

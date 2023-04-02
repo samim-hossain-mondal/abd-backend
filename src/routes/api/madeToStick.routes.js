@@ -2,6 +2,7 @@ const router = require('express').Router();
 const { generateValidationMiddleware } = require('../../middlewares/validation');
 const schema = require('../../schemas/madeToStick');
 const madeToStickController = require('../../controllers/madeToStick.controller');
+const {memberValidationMiddleware, roleValidationMiddleware} = require('../../middlewares/roleValidation');
 /**
  * @openapi
  * components:
@@ -126,8 +127,8 @@ const madeToStickController = require('../../controllers/madeToStick.controller'
  *         description: Internal server error
 */
 
-router.get('/:projectId', madeToStickController.getAllMadeToStick);
-router.post('/:projectId', generateValidationMiddleware(schema.madeToStickCreateSchema), madeToStickController.createMadeToStick);
+router.get('/:projectId', memberValidationMiddleware, madeToStickController.getAllMadeToStick);
+router.post('/:projectId', roleValidationMiddleware, generateValidationMiddleware(schema.madeToStickCreateSchema), madeToStickController.createMadeToStick);
 
 /**
  * @openapi
@@ -225,7 +226,7 @@ router.post('/:projectId', generateValidationMiddleware(schema.madeToStickCreate
  *         description: Internal server error
 */
 
-router.put('/:projectId/:i', madeToStickController.editMadeToStick);
-router.delete('/:projectId/:i', madeToStickController.deleteMadeToStick);
+router.put('/:projectId/:i', roleValidationMiddleware, madeToStickController.editMadeToStick);
+router.delete('/:projectId/:i', roleValidationMiddleware, madeToStickController.deleteMadeToStick);
 
 module.exports = router;

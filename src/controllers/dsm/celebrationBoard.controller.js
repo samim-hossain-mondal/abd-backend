@@ -9,8 +9,9 @@ const listCelebrations = async (req, res, next) => {
   try {
     const memberId = parseInt(req.user.memberId);
     const projectId = parseInt(req.params.projectId);
+    const { page, limit } = req.query;
     const celebrations =
-      await celebrationBoardServices.listCelebrations(projectId, memberId);
+      await celebrationBoardServices.listCelebrations(projectId, memberId, page ?? 1, limit ?? 10);
     res.status(200).json(celebrations);
   }
   catch (er) {

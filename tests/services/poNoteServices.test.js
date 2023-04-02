@@ -51,7 +51,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedStatusQueryFunction).not.toHaveBeenCalled();
     expect(spiedPagination).toBeCalledWith(undefined, undefined);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes });
   });
   it('should return list of filtered po notes (filter on specific date)', async () => {
     const params = [
@@ -70,7 +70,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedSearchKeywordFunction).not.toHaveBeenCalled();
     expect(spiedPagination).toBeCalledWith(undefined, undefined);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes });
   });
   it('should return list of filtered po notes (on custom range date)', async () => {
     const params = [
@@ -89,7 +89,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedSearchKeywordFunction).not.toHaveBeenCalled();
     expect(spiedPagination).toBeCalledWith(undefined, undefined);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes });
   });
   it('should return list of filtered po notes (with search)', async () => {
     const params = [
@@ -108,7 +108,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedSearchKeywordFunction).toBeCalledWith('string');
     expect(spiedPagination).toBeCalledWith(undefined, undefined);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes });
   });
   it('should return list of filtered po notes (with status)', async () => {
     const params = [
@@ -128,7 +128,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedSearchKeywordFunction).toBeCalledWith('string');
     expect(spiedPagination).toBeCalledWith(undefined, undefined);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes });
   });
   it('should return list of filtered po notes (with pagination)', async () => {
     const params = [
@@ -150,7 +150,7 @@ describe('getPONotesByQuickFilter', () => {
     expect(spiedSearchKeywordFunction).toBeCalledWith('string');
     expect(spiedPagination).toBeCalledWith(1, 10);
     expect(returnedVal)
-      .toEqual(poNotes);
+      .toEqual({ notes: poNotes, 'totalCount': 2 });
   });
   it('should return empty list if no records found', async () => {
     const params = [];
@@ -161,7 +161,7 @@ describe('getPONotesByQuickFilter', () => {
     const returnedVal = await poNotesServices.getPONotesByQuickFilter(...params);
     expect(spiedFindMany).toBeCalled();
     expect(returnedVal)
-      .toEqual([]);
+      .toEqual({ 'notes': [] });
   });
 });
 

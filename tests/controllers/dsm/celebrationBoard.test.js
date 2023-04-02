@@ -9,6 +9,10 @@ describe('When team members fetch all celebrations', () => {
       params: {
         projectId: 1
       },
+      query: {
+        page: 1,
+        limit: 10
+      },
       user: {
         memberId: 1
       }
@@ -26,6 +30,10 @@ describe('When team members fetch all celebrations', () => {
     const req = {
       params: {
         projectId: 1
+      },
+      query: {
+        page: 1,
+        limit: 10
       },
       user: {
         memberId: 1

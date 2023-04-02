@@ -9,7 +9,8 @@ const announcementServices = require('../../services/dsm/announcements.services'
 const listAnnouncements = async (req, res, next) => {
   try {
     const { projectId } = req.params;
-    const announcements = await announcementServices.getAnnouncements(parseInt(projectId));
+    const { page, limit } = req.query;
+    const announcements = await announcementServices.getAnnouncements(parseInt(projectId), page ?? 1, limit ?? 10);
     res.status(200).json(announcements);
   }
   catch (er) {
@@ -50,9 +51,9 @@ const createAnnouncement = async (req, res, next) => {
     const author = req.user.name || 'ANON';
     const { memberId } = req.user;
     const { projectId } = req.params;
-    const { content,title } = req.body;
+    const { content, title } = req.body;
     const resultAnnouncement = await announcementServices.createAnnouncement(
-      author, memberId, content, title,  parseInt(projectId)
+      author, memberId, content, title, parseInt(projectId)
     );
     res.status(201).json(resultAnnouncement);
   }
@@ -72,9 +73,9 @@ const editAnnouncement = async (req, res, next) => {
     const memberId = req.user.memberId;
     const announcementId = req.params.id;
     const { projectId } = req.params;
-    const {content,title} = req.body;
+    const { content, title } = req.body;
     const resultAnnouncement = await announcementServices.editAnnouncement(
-      announcementId, content,title, parseInt(memberId), parseInt(projectId)
+      announcementId, content, title, parseInt(memberId), parseInt(projectId)
     );
     res.status(200).json(resultAnnouncement);
   }

@@ -51,6 +51,10 @@ const getPONotesByQuickFilter = async (
     ...filterObj, type
   } : filterObj;
 
+
+  // const submissions = await prisma.$transaction([
+  //   dashboardPrisma.PONote.count({
+
   const notes = await dashboardPrisma.PONote.findMany({
     where: {
       ...filterObj,
@@ -67,9 +71,33 @@ const getPONotesByQuickFilter = async (
     },
     ...(paginationObj && paginationObj),
     ...selectOnlyValidPONoteFields
+  });
+
+  const filteredNotes = {
+    notes: notes.filter(note => note.status !== 'DRAFT' || (note.status === 'DRAFT' && note.memberId === memberId)),
+  };
+
+  if (parseInt(page) === 1) {
+    const totalCountOfNotes = await dashboardPrisma.PONote.findMany({
+      where: {
+        ...filterObj,
+        isDeleted: false,
+        projectId,
+        ...(!isPO && {
+          status: {
+            not: 'DRAFT'
+          },
+        }),
+      },
+      select: {
+        noteId: true,
+      }
+    });
+    const filteredCount = totalCountOfNotes.filter(note => note.status !== 'DRAFT' || (note.status === 'DRAFT' && note.memberId === memberId));
+    filteredNotes.totalCount = filteredCount.length;
   }
-  );
-  return notes;
+
+  return filteredNotes;
 };
 
 // get specific note by id

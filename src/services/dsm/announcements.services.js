@@ -1,5 +1,6 @@
 const { HttpError } = require('../../errors');
 const { dashboardPrisma } = require('../../prismaClient');
+const prismaUtils = require('../../utils/prismaUtils');
 
 const selectOnlyValidAnnouncementFields = {
   select: {
@@ -17,7 +18,9 @@ const selectOnlyValidAnnouncementFields = {
   * Service to list all the announcements
   * @returns {Object} - List of announcements
 */
-const getAnnouncements = async (projectId) => {
+const getAnnouncements = async (projectId, page = 1, limit = 10) => {
+  const paginationObj = prismaUtils.getPaginationObject(page, limit);
+
   const announcements = await dashboardPrisma.Announcement.findMany({
     where: {
       projectId
@@ -25,6 +28,7 @@ const getAnnouncements = async (projectId) => {
     orderBy: {
       createdAt: 'desc',
     },
+    ...(paginationObj && paginationObj),
     ...selectOnlyValidAnnouncementFields
   });
   return announcements;

@@ -11,8 +11,6 @@ function errorHandlingMiddleware(err, req, res, next) {
     return next(err);
   }
 
-  console.log(err.message);
-  
   if (err.constructor === joi.ValidationError) {
     return res.status(400).json({ message: 'Bad Request - ' + err.message });
   }

@@ -1,5 +1,6 @@
 const { HttpError } = require('../../errors');
 const { dashboardPrisma } = require('../../prismaClient');
+const prismaUtils = require('../../utils/prismaUtils');
 
 const selectOnlyValidReactionFields = {
   select: {
@@ -47,7 +48,9 @@ const filterByAnonymous = (celebrations, memberId) => {
 };
 
 // get list of all celebrations
-const listCelebrations = async (projectId, memberId) => {
+const listCelebrations = async (projectId, memberId, page = 1, limit = 10) => {
+  const paginationObj = prismaUtils.getPaginationObject(page, limit);
+
   const celebrations = await dashboardPrisma.Celebration.findMany({
     where: {
       projectId
@@ -55,6 +58,7 @@ const listCelebrations = async (projectId, memberId) => {
     orderBy: {
       createdAt: 'desc',
     },
+    ...(paginationObj && paginationObj),
     ...selectOnlyValidCelebrationBoardFields(false)
   }
   );

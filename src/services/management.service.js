@@ -1,6 +1,8 @@
 const { managementPrisma, dashboardPrisma } = require('../prismaClient');
 const { HttpError } = require('../errors');
 const { convertToRoleEnum } = require('../utils/managementDbUtils');
+const madeToStickService = require('../services/madeToStick.services');
+const madeToStickTemplate = require('../mocks/madeToStickTemplate');
 
 const createNewAgileDashboardInDb = async (
   projectName,
@@ -51,6 +53,22 @@ const createNewAgileDashboardInDb = async (
       memberId: member.memberId,
     }
   });
+  
+  Promise.all(madeToStickTemplate.map(async (item) => {
+    await madeToStickService.createMadeToStick(
+      item.value,
+      item.emailId,
+      item.x,
+      item.y,
+      item.w,
+      item.h,
+      item.type,
+      item.backgroundColor,
+      member.memberId,
+      newProject.projectId
+    );
+  }));
+
   return newProject;
 };
 
@@ -68,7 +86,7 @@ const allProjectsByCurrentUserInDb = async (email) => {
       projectId: true,
       projectName: true,
       projectDescription: true,
-      _count : {
+      _count: {
         select: {
           projectMembers: true
         }
@@ -183,7 +201,7 @@ const addProjectMemberInDb = async (
     data: {
       projectId,
       memberId: member.memberId,
-      startDate: ( startDate && new Date(startDate)),
+      startDate: (startDate && new Date(startDate)),
       endDate: (endDate && new Date(endDate)),
     }
   });
@@ -504,7 +522,7 @@ const createNewMemberInDb = async (email, name = null, slackLink = null) => {
   });
 
   if (member) {
-    if(member.isDeleted) {
+    if (member.isDeleted) {
       await managementPrisma.member.update({
         where: {
           email,
@@ -560,7 +578,7 @@ const updateMemberInfoInDb = async (memberId, name, email, slackLink) => {
   if (updatedMember.isDeleted) {
     throw new HttpError(404, 'Member not found.');
   }
-  
+
   return updatedMember;
 };
 

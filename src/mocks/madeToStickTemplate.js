@@ -1,6 +1,6 @@
 const madeToStickTemplate = [
   {
-    'value': '<p><strong>End User Persona</strong></p><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
+    'value': '<h1>End User Persona</h1><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
     'backgroundColor': '#EEF2F5',
     'x': 10,
     'y': 0,
@@ -10,7 +10,7 @@ const madeToStickTemplate = [
     'emailId': 'test'
   },
   {
-    'value': '<p><strong>Product Vision</strong></p><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
+    'value': '<h1>Product Vision</h1><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
     'backgroundColor': '#EEF2F5',
     'x': 5,
     'y': 0,
@@ -20,7 +20,7 @@ const madeToStickTemplate = [
     'emailId': 'test'
   },
   {
-    'value': '<p><strong>Project Timeline</strong></p><p>&nbsp;</p>',
+    'value': '<h1>Project Timeline</h1><p>&nbsp;</p>',
     'backgroundColor': '#EEF2F5',
     'x': 0,
     'y': 4,
@@ -30,7 +30,7 @@ const madeToStickTemplate = [
     'emailId': 'test'
   },
   {
-    'value': '<p><strong>Team Norms</strong></p><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
+    'value': '<h1>Team Norms</h1><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
     'backgroundColor': '#EEF2F5',
     'x': 0,
     'y': 0,

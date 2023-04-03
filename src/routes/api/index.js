@@ -11,4 +11,5 @@ router.use('/management', require('./management.routes'));
 router.use('/madeToStick', require('./madeToStick.routes'));
 router.use('/leaves', require('./leaves.routes'));
 router.use('/teamInformations', require('./teamInformations.routes'));
+router.use('/upload', require('./upload.routes'));
 module.exports = router;

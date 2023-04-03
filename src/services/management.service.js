@@ -47,10 +47,12 @@ const createNewAgileDashboardInDb = async (
       }
     }
   });
+  const currentDate = new Date();
   await dashboardPrisma.teamInformation.create({
     data: {
       projectId: newProject.projectId,
       memberId: member.memberId,
+      startDate:currentDate
     }
   });
   
@@ -196,12 +198,12 @@ const addProjectMemberInDb = async (
       role,
     },
   });
-
+  const currentDate = new Date();
   const newTeamInformation = await dashboardPrisma.teamInformation.create({
     data: {
       projectId,
       memberId: member.memberId,
-      startDate: (startDate && new Date(startDate)),
+      startDate: currentDate,
       endDate: (endDate && new Date(endDate)),
     }
   });

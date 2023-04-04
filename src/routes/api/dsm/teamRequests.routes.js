@@ -30,7 +30,6 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *                  enum:
  *                      - PENDING
  *                      - APPROVED
- *                      - REJECTED
  *                  description: The status of the request
  *              type:
  *                  type: string
@@ -97,7 +96,6 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *           enum:
  *             - PENDING
  *             - APPROVED
- *             - REJECTED
  *         description: Status of team request  
  *       - in: query
  *         name: author
@@ -210,7 +208,6 @@ router.route('/:projectId')
  *                 enum:
  *                   - PENDING
  *                   - APPROVED 
- *                   - REJECTED
  *     responses:
  *       200:
  *         description: request updated successfully

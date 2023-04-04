@@ -60,10 +60,10 @@ const updateCelebration = async (req, res, next) => {
     const celebrationId = parseInt(req.params.id);
     const projectId = parseInt(req.params.projectId);
     const memberId = parseInt(req.user.memberId);
-    const { content, type, isAnonymous } = req.body;
+    const { content, type, isAnonymous, isAbuse } = req.body;
     const updatedCelebration =
       await celebrationBoardServices.updateCelebrationById(
-        celebrationId, content, type, isAnonymous, memberId, projectId
+        celebrationId, content, type, isAnonymous, memberId, projectId, isAbuse
       );
     res.status(200).json({ message: 'Celebration updated successfully', updatedCelebration });
   }

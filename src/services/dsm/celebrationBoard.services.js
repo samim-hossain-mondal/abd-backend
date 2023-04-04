@@ -29,6 +29,7 @@ const selectOnlyValidCelebrationBoardFields = (isAnonymous) => ({
     createdAt: true,
     projectId: true,
     memberId: !isAnonymous,
+    isAbuse: true
   }
 });
 
@@ -53,7 +54,8 @@ const listCelebrations = async (projectId, memberId, page = 1, limit = 10) => {
 
   const celebrations = await dashboardPrisma.Celebration.findMany({
     where: {
-      projectId
+      projectId,
+      isAbuse: false
     },
     orderBy: {
       createdAt: 'desc',
@@ -70,7 +72,8 @@ const getCelebrationById = async (celebrationId, projectId) => {
   const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
       celebrationId,
-      projectId
+      projectId,
+      isAbuse: false
     },
     ...selectOnlyValidCelebrationBoardFields(true)
   }
@@ -98,11 +101,12 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
 };
 
 // update a celebration
-const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId, projectId) => {
+const updateCelebrationById = async (celebrationId, content, type, isAnonymous, memberId, projectId, isAbuse) => {
   const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
       celebrationId,
-      projectId
+      projectId,
+      isAbuse: false
     },
     select: {
       memberId: true
@@ -118,7 +122,8 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
     data: {
       content,
       type,
-      isAnonymous
+      isAnonymous,
+      isAbuse
     },
     ...selectOnlyValidCelebrationBoardFields(false)
   });
@@ -162,7 +167,8 @@ const updateReaction = async (celebrationId, memberId, isReacted, projectId) => 
   const celebration = await dashboardPrisma.Celebration.findFirst({
     where: {
       celebrationId,
-      projectId
+      projectId,
+      isAbuse: false
     },
     select: {
       reaction: {
@@ -203,11 +209,12 @@ const updateReaction = async (celebrationId, memberId, isReacted, projectId) => 
 };
 
 const getReaction = async (celebrationId, memberId, projectId) => {
-  const reaction = await dashboardPrisma.celebration.findMany({
+  const reaction = await dashboardPrisma.Celebration.findMany({
     where: {
       celebrationId,
       memberId,
       projectId,
+      isAbuse: false
     },
     select: {
       reaction: {
@@ -227,6 +234,7 @@ const getCelebrationsByDate = async (projectId, memberId, date) => {
   const celebrations = await dashboardPrisma.Celebration.findMany({
     where: {
       projectId,
+      isAbuse: false,
       createdAt: {
         gte: new Date(date),
         lte: new Date(

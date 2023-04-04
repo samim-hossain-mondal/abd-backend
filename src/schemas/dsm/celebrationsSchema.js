@@ -6,12 +6,10 @@ const createCelebrationSchema = joi.object({
     .min(1)
     .max(1500)
     .required(),
-
   type: joi
     .string()
     .valid('CELEBRATION', 'IMPEDIMENT')
     .required(),
-
   isAnonymous: joi
     .valid(true, false)
     .required(),
@@ -29,13 +27,13 @@ const patchcelebrationSchema = joi.object({
     .string()
     .min(1)
     .max(1500),
-
   type: joi
     .string()
     .valid('CELEBRATION', 'IMPEDIMENT'),
-
   isAnonymous: joi
-    .valid(true, false)
+    .valid(true, false),
+  isAbuse: joi
+    .valid(true, false),
 });
 
 const patchReactionSchema = joi.object({

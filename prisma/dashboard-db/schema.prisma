@@ -55,6 +55,7 @@ model Celebration {
   projectId     Int
   memberId      Int
   reaction      CelebrationReactedUser[]
+  isAbuse       Boolean                  @default(false)
 }
 
 // RequestTaggedUser Model

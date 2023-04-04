@@ -26,6 +26,7 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *    - content
  *    - type
  *    - createdAt
+ *    - isAbuse
  *    properties:
  *     celebrationId:
  *      type: integer
@@ -45,6 +46,9 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *      enum:
  *       - CELEBRATION
  *       - IMPEDIMENT
+ *     isAbuse:
+ *      type: boolean
+ *      description: Is the celebration abusive
  *     _count:
  *      type: object
  *      properties:
@@ -61,12 +65,19 @@ const { paramParser } = require('../../../middlewares/paramParser');
 
 /**
  * @openapi
- * /api/dsm/celebrations:
+ * /api/dsm/celebrations/{projectId}:
  *  get:
  *    tags:
  *      - celebrations
  *    summary: List celebrations
- *    description: List all the celebrations
+ *    description: List all the celebrations not abusive
+ *    parameters:
+ *      - in: path
+ *        name: projectId
+ *        schema:
+ *         type: integer
+ *        required: true
+ *        description: Project id
  *    responses:
  *      '200':
  *        description: List of celebrations
@@ -83,6 +94,13 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *       - celebrations
  *    summary: Create a celebration
  *    description: Create an celebration
+ *    parameters:
+ *      - in: path
+ *        name: projectId
+ *        schema:
+ *         type: integer
+ *        required: true
+ *        description: Project id
  *    requestBody:
  *       required: true
  *       content:
@@ -116,25 +134,31 @@ const { paramParser } = require('../../../middlewares/paramParser');
  *         description: Internal server error
 */
 
-// GET /api/dsm/celebration
+// GET /api/dsm/celebration/:projectId
 router.get('/:projectId',
   paramParser({ projectId: 'number' }),
   memberValidationMiddleware, listCelebrations);
 
-// POST /api/dsm/celebration
+// POST /api/dsm/celebration/:projectId
 router.post('/:projectId',
   paramParser({ projectId: 'number' }),
   memberValidationMiddleware, generateValidationMiddleware(celebrationsSchema.createCelebrationSchema), createCelebration);
 
 /**
  * @openapi
- * /api/dsm/celebrations/{id}:
+ * /api/dsm/celebrations/{projectId}/{id}:
  *  get:
  *    tags:
  *      - celebrations
  *    summary: Get a celebration
- *    description: Get a celebration by id
+ *    description: Get a celebration by id which is not abusive
  *    parameters:
+ *      - in: path
+ *        name: projectId
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Project id
  *      - in: path
  *        name: id
  *        schema:
@@ -161,6 +185,12 @@ router.post('/:projectId',
  *    description: Partial update an celebration
  *    parameters:
  *      - in: path
+ *        name: projectId
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Project id
+ *      - in: path
  *        name: id
  *        schema:
  *          type: integer
@@ -182,6 +212,9 @@ router.post('/:projectId',
  *              isAnonymous:
  *                type: boolean
  *                description: Is the author anonymous
+ *              isAbuse:
+ *                type: boolean
+ *                description: Is the celebration abusive
  *    responses:
  *      '200':
  *        description: Celebration updated
@@ -201,6 +234,12 @@ router.post('/:projectId',
  *    tags:
  *      - celebrations
  *    parameters:
+ *      - in: path
+ *        name: projectId
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Project id
  *      - in: path
  *        name: id
  *        schema:
@@ -243,69 +282,81 @@ router.delete('/:projectId/:id',
   deleteCelebration);
 
 /**
- * @openapi
- * /api/dsm/celebrations/{id}/react:
- *  get:
- *    tags:
- *      - celebration reactions
- *    summary: Get a reaction of celebration
- *    description: Get a reaction by celebration id
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: integer
- *        required: true
- *        description: Unique identifier of the celebration
- *    responses:
- *      '200':
- *        description: Reaction found
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Celebration'
- *      '400':
- *        description: Bad request if unacceptable id is passed
- *      '404':
- *        description: Not found if no celebration found with id
- *      '500':
- *        description: Internal server error
- *  patch:
- *    tags:
- *      - celebration reactions
- *    summary: Handle celebration reactions
- *    description: Partial update an celebration reaction
- *    parameters:
- *      - in: path
- *        name: id
- *        schema:
- *          type: integer
- *        required: true
- *        description: Unique identifier of the celebration
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              isReacted:
- *                type: boolean
- *                description: Is the user reacted or unreacted to the celebration
- *      
- *    responses:
- *      '200':
- *        description: Reaction updated
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Celebration'
- *      '400':
- *        description: Bad request if unacceptable id is passed
- *      '404':
- *        description: Not found if no celebration found with id
- *      '500':
- *        description: Internal server error
+  * @openapi
+  * /api/dsm/celebrations/{projectId}/{id}/react:
+  *  get:
+  *    tags:
+  *      - celebration reactions
+  *    summary: Get a reaction of celebration
+  *    description: Get a reaction by celebration id
+  *    parameters:
+  *      - in: path
+  *        name: projectId
+  *        schema:
+  *          type: integer
+  *        required: true
+  *        description: Unique identifier of the project
+  *      - in: path
+  *        name: id
+  *        schema:
+  *          type: integer
+  *        required: true
+  *        description: Unique identifier of the celebration
+  *    responses:
+  *      '200':
+  *        description: Reaction found
+  *        content:
+  *          application/json:
+  *            schema:
+  *              $ref: '#/components/schemas/Celebration'
+  *      '400':
+  *        description: Bad request if unacceptable id is passed
+  *      '404':
+  *        description: Not found if no celebration found with id
+  *      '500':
+  *        description: Internal server error
+  *  patch:
+  *    tags:
+  *      - celebration reactions
+  *    summary: Handle celebration reactions
+  *    description: Partial update an celebration reaction
+  *    parameters:
+  *      - in: path
+  *        name: projectId
+  *        schema:
+  *          type: integer
+  *        required: true
+  *        description: Unique identifier of the project
+  *      - in: path
+  *        name: id
+  *        schema:
+  *          type: integer
+  *        required: true
+  *        description: Unique identifier of the celebration
+  *    requestBody:
+  *      required: true
+  *      content:
+  *        application/json:
+  *          schema:
+  *            type: object
+  *            properties:
+  *              isReacted:
+  *                type: boolean
+  *                description: Is the user reacted or unreacted to the celebration
+  *      
+  *    responses:
+  *      '200':
+  *        description: Reaction updated
+  *        content:
+  *          application/json:
+  *            schema:
+  *              $ref: '#/components/schemas/Celebration'
+  *      '400':
+  *        description: Bad request if unacceptable id is passed
+  *      '404':
+  *        description: Not found if no celebration found with id
+  *      '500':
+  *        description: Internal server error
 */
 
 // GET /api/dsm/celebration/:id/react
@@ -315,7 +366,7 @@ router.get('/:projectId/:id/react',
   // paramValidationMiddleware, 
   getReaction);
 
-// PATCH /api/dsm/celebration/:id/react
+// PATCH /api/dsm/celebration/:projectId/:id/react
 router.patch('/:projectId/:id/react',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
@@ -331,7 +382,7 @@ router.patch('/:projectId/:id/react',
  *    tags:
  *      - celebrations
  *    summary: Get celebrations by date
- *    description: Get celebrations by date
+ *    description: Get celebrations by date which is not abusive
  *    parameters:
  *      - in: path
  *        name: id

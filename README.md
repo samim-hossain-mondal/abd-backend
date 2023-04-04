@@ -32,6 +32,14 @@ Steps to set up the project on your local machine:
     * Okta Client ID 
 
     * Okta Domain url
+
+    * AWS Region
+
+    * AWS S3 Bucket Name
+
+    * AWS Access Key ID
+
+    * AWS Secret Access Key
     
         
 

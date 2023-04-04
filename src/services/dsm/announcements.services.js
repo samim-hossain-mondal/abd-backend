@@ -118,6 +118,7 @@ const editAnnouncement = async (announcementId, content, title, memberId, projec
     },
     ...selectOnlyValidAnnouncementFields
   });
+  createNotification.createNotification(content,projectId,announcement.announcementId,'ANNOUNCEMENT');
   return announcement;
 };
 

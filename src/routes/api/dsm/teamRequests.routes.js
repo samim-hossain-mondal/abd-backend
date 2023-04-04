@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { listTeamRequests, createTeamRequest, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate } = require('../../../controllers/dsm/teamRequests.controller');
+const { listTeamRequests, createTeamRequest, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate,getTeamRequestById } = require('../../../controllers/dsm/teamRequests.controller');
 const { generateValidationMiddleware } = require('../../../middlewares/validation');
 const requestSchema = require('../../../schemas/dsm/teamRequests.schema');
 const { paramParser } = require('../../../middlewares/paramParser');
@@ -273,6 +273,10 @@ const requiredParams = {
 const paramParsingMiddleware = paramParser(requiredParams);
 
 router.route('/:projectId/:requestId')
+  .get(
+    paramParser({ projectId: 'number', requestId: 'number' }),
+    getTeamRequestById
+  )
   .put(
     paramParser({ projectId: 'number', requestId: 'number' }),
     memberValidationMiddleware,
@@ -287,6 +291,7 @@ router.route('/:projectId/:requestId')
     generateValidationMiddleware(requestSchema.deleteTeamRequest),
     deleteTeamRequest
   );
+
 // get team requests by date
 /**
  * @openapi

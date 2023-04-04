@@ -92,5 +92,17 @@ const getTeamRequestsByDate = async (req, res, next) => {
     next(error);
   }
 };
-
-module.exports = { createTeamRequest, listTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate };
+const getTeamRequestById = async (req, res, next) => {
+  try {
+    const { requestId, projectId } = req.params;
+    const teamRequest = await teamRequestsServices.getTeamRequestById(
+      parseInt(requestId),
+      parseInt(projectId)
+    );
+    res.status(200).json(teamRequest);
+  }
+  catch (error) {
+    next(error);
+  }
+};
+module.exports = { createTeamRequest, listTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate, getTeamRequestById };

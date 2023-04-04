@@ -122,7 +122,7 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
     },
     ...selectOnlyValidCelebrationBoardFields(false)
   });
-
+  createNotificationService.createNotification(content,projectId,updatedCelebration.celebrationId,'CELEBRATION');
   return updatedCelebration;
 };
 

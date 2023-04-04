@@ -41,6 +41,7 @@ describe('Announcement Services', () => {
   describe('editAnnouncement', () => {
     it('should return the updated announcement object', async () => {
       const mockAnnouncement = mockAnnouncementByID;
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       jest.spyOn(prisma.Announcement, 'findFirst').mockResolvedValue(mockAnnouncement);
       jest.spyOn(prisma.Announcement, 'update').mockResolvedValue({ ...mockAnnouncement, content: 'updated-test' });
       const announcement = await announcementServices.editAnnouncement(1, 'updated-test', 1, 1);

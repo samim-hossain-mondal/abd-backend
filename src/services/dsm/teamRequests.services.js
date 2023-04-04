@@ -117,6 +117,7 @@ const editTeamRequest = async (
   if (!updatedRequest) {
     throw new HttpError(404, 'Team Request not found');
   }
+  createNotification.createNotification(content,projectId,updatedRequest.requestId,'TEAM_REQUEST');
   return updatedRequest;
 };
 // service to delete team request by team request id
@@ -166,4 +167,14 @@ const getTeamRequestsByDate = async (date, projectId) => {
   return teamRequests;
 };
 
-module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate };
+const getTeamRequestById = async (requestId, projectId) => {
+  const teamRequest = await dashboardPrisma.Request.findFirst({
+    where: {
+      requestId,
+      projectId
+    },
+    ...selectOnlyValidTeamrequestsFields 
+  });
+  return teamRequest;
+};
+module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate ,getTeamRequestById};

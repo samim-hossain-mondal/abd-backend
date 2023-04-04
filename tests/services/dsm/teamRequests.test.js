@@ -71,6 +71,7 @@ describe('Team Request Services', () => {
         'taggedIndividuals': [],
         'isFlagged': true,
       };
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       await teamRequestsServices.editTeamRequest(...Object.values(mock), 1, 1);
       expect(spiedFindFirstTeamRequest).toBeCalled();
       expect(spiedEditTeamRequest).toBeCalledWith(
@@ -95,6 +96,7 @@ describe('Team Request Services', () => {
         'createdAt': '2023-03-04T12:11:41.080Z',
         'taggedIndividuals': [],
       };
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       const spiedFindFirstTeamRequest = jest.spyOn(prisma.Request, 'findFirst').mockResolvedValue(teamRequests[0]);
       jest.spyOn(prisma.Request, 'update').mockResolvedValue(undefined);
       await expect(teamRequestsServices.editTeamRequest(...Object.values(mock), 1, 1)).rejects.toThrow(new HttpError(404, 'Team Request not found'));

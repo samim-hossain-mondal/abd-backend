@@ -53,6 +53,7 @@ describe('Celebration Board Services', () => {
   describe('updateCelebration', () => {
     it('should update a celebration', async () => {
       const expected = celebrations[0];
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       jest.spyOn(prisma.Celebration, 'findFirst').mockResolvedValue(expected);
       jest.spyOn(prisma.Celebration, 'update').mockResolvedValue({ ...expected, content: 'new content' });
       const actual = await celebrationBoardServices.updateCelebrationById(1, expected.content, expected.type, true, 1);
@@ -60,6 +61,7 @@ describe('Celebration Board Services', () => {
     });
     it('should throw error if no record is found', async () => {
       const expected = celebrations[0];
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       jest.spyOn(prisma.Celebration, 'findFirst').mockResolvedValue(null);
       jest.spyOn(prisma.Celebration, 'update').mockResolvedValue(null);
       await expect(celebrationBoardServices.updateCelebrationById(1, expected.content, expected.type, true, 1)).rejects.toThrow(new HttpError(404, 'No Record Found'));

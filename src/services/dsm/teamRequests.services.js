@@ -166,7 +166,6 @@ const getTeamRequestsByDate = async (date, projectId) => {
   });
   return teamRequests;
 };
-
 const getTeamRequestById = async (requestId, projectId) => {
   const teamRequest = await dashboardPrisma.Request.findFirst({
     where: {

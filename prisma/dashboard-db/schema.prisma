@@ -157,7 +157,6 @@ enum Sentiment {
 enum RequestStatus {
   PENDING
   APPROVED
-  DENIED
 }
 
 enum RequestType {

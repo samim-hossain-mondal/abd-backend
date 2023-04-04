@@ -24,7 +24,7 @@ const editTeamRequest = joi.object(
       .valid('MEETING', 'RESOURCE'),
     status: joi
       .string()
-      .valid('PENDING', 'APPROVED', 'REJECTED')
+      .valid('PENDING', 'APPROVED')
   }
 );
 const deleteTeamRequest = joi.object({
@@ -55,7 +55,7 @@ const dsmRequestQuerySchema = joi.object({
     .string(),
   status: joi
     .string()
-    .valid('PENDING', 'APPROVED', 'REJECTED'),
+    .valid('PENDING', 'APPROVED'),
   author: joi
     .string()
     .min(1)

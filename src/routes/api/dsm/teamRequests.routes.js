@@ -18,6 +18,7 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *          - type
  *          - createdAt
  *          - taggedIndividuals
+ *          - isFlagged
  *          properties:
  *              author:
  *                  type: string
@@ -44,17 +45,26 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *              taggedIndividuals:
  *                  type: array
  *                  description: email id of all the individuals tagged in the request
+ *              isFlagged:
+ *                  type: boolean
+ *                  description: Whether the request is flagged or not
  */
 /**
  * @openapi
- * /api/dsm/team-requests:
+ * /api/dsm/team-requests/{projectId}:
  *   get:
  *     tags:
  *       - team-requests
  *     summary: List all team requests
  *     description: List all team requests
  *     parameters:
-  *       - in: query
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Project id
+ *       - in: query
  *         name: page
  *         schema:
  *           type: integer
@@ -118,6 +128,13 @@ const { memberValidationMiddleware } = require('../../../middlewares/roleValidat
  *       - team-requests
  *     summary: Create a team request
  *     description: Create a team request
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Project id
  *     requestBody:
  *       required: true
  *       content:
@@ -167,7 +184,7 @@ router.route('/:projectId')
   );
 /**
  * @openapi
- * /api/dsm/team-requests/{requestId}:
+ * /api/dsm/team-requests/{projectId}/{requestId}:
  *   put:
  *     tags:
  *       - team-requests
@@ -180,6 +197,12 @@ router.route('/:projectId')
  *           type: integer
  *         required: true
  *         description: Unique identifier of the request
+ *       - in: path
+ *         name: projectId
+ *         schema:
+ *           type: integer
+ *         required: true
+ *         description: Project id
  *     requestBody:
  *       required: true
  *       content:
@@ -207,7 +230,10 @@ router.route('/:projectId')
  *                 description: Status of the team request
  *                 enum:
  *                   - PENDING
- *                   - APPROVED 
+ *                   - APPROVED
+ *               isFlagged:
+ *                 type: boolean
+ *                 description: Whether the request is flagged or not
  *     responses:
  *       200:
  *         description: request updated successfully

@@ -15,7 +15,8 @@ const selectOnlyValidTeamrequestsFields = {
     createdAt: true,
     taggedIndividuals: true,
     projectId: true,
-    memberId: true
+    memberId: true,
+    isFlagged: true
   }
 };
 
@@ -57,6 +58,7 @@ describe('Team Request Services', () => {
         'type': 'RESOURCE',
         'createdAt': '2023-03-04T12:11:41.080Z',
         'taggedIndividuals': [],
+        'isFlagged': true,
       };
       const mockCalledValue = {
         'author': 'string',
@@ -64,7 +66,8 @@ describe('Team Request Services', () => {
         'status': 'PENDING',
         'type': 'RESOURCE',
         'createdAt': '2023-03-04T12:11:41.080Z',
-        'taggedIndividuals': []
+        'taggedIndividuals': [],
+        'isFlagged': true,
       };
       await teamRequestsServices.editTeamRequest(...Object.values(mock), 1, 1);
       expect(spiedFindFirstTeamRequest).toBeCalled();

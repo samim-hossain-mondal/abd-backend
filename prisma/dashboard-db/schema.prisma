@@ -76,6 +76,7 @@ model Request {
   createdAt         DateTime            @default(now())
   requestId         Int                 @id @unique @default(autoincrement())
   projectId         Int
+  isFlagged         Boolean             @default(false)
   taggedIndividuals RequestTaggedUser[]
 }
 

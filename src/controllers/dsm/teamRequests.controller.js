@@ -54,9 +54,9 @@ const editTeamRequest = async (req, res, next) => {
     const projectId = parseInt(req.params.projectId);
     const { requestId } = req.params;
     const memberId = parseInt(req.user.memberId);
-    const { content, status, type, createdAt, taggedIndividuals } = req.body;
+    const { content, status, type, createdAt, taggedIndividuals, isFlagged } = req.body;
     const updatedRequest = await teamRequestsServices.editTeamRequest(
-      requestId, author, content, status, type, createdAt, taggedIndividuals, memberId, projectId, req.user.role
+      requestId, author, content, status, type, createdAt, taggedIndividuals, isFlagged, memberId, projectId, req.user.role
     );
     res.status(200).json(updatedRequest);
   }

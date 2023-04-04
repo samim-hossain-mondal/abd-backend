@@ -24,7 +24,8 @@ const editTeamRequest = joi.object(
       .valid('MEETING', 'RESOURCE'),
     status: joi
       .string()
-      .valid('PENDING', 'APPROVED')
+      .valid('PENDING', 'APPROVED'),
+    isFlagged: joi.boolean()
   }
 );
 const deleteTeamRequest = joi.object({

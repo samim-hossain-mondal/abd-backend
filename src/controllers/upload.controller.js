@@ -10,8 +10,8 @@ if (process.env.AWS_REGION === undefined) {
   throw new Error('AWS_REGION environment variable not set');
 }
 
-if (process.env.AWS_S3_BUCKET_NAME === undefined) {
-  throw new Error('AWS_S3_BUCKET_NAME environment variable not set');
+if (process.env.AWS_S3_BUCKET_NAME_UPLOAD_IMAGE === undefined) {
+  throw new Error('AWS_S3_BUCKET_NAME_UPLOAD_IMAGE environment variable not set');
 }
 
 if (process.env.AWS_ACCESS_KEY_ID === undefined) {
@@ -41,7 +41,7 @@ function uploadFile(source, targetName, res) {
   fs.readFile(source, function (err, filedata) {
     if (!err) {
       const putParams = {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Bucket: process.env.AWS_S3_BUCKET_NAME_UPLOAD_IMAGE,
         Key: targetName,
         Body: filedata
       };
@@ -56,9 +56,9 @@ function uploadFile(source, targetName, res) {
         else {
           fs.unlink(source, console.error);// Deleting the file from uploads folder(Optional).Do Whatever you prefer.
           // need to send the url along with success
-          return res.status(201).json({ 
+          return res.status(201).json({
             success: true,
-            url: `http://${process.env.AWS_S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${targetName}`
+            url: `http://${process.env.AWS_S3_BUCKET_NAME_UPLOAD_IMAGE}.s3.${process.env.AWS_REGION}.amazonaws.com/${targetName}`
           });
         }
       });
@@ -66,17 +66,17 @@ function uploadFile(source, targetName, res) {
     else {
       res.status(500).json({
         success: false,
-        message: 'Internal Server Error - Something Went Wrong' 
+        message: 'Internal Server Error - Something Went Wrong'
       });
     }
   });
 }
 
 const upload = async (req, res, next) => {
-  try{
-    uploadFile(req.file.path, req.file.filename ,res);
+  try {
+    uploadFile(req.file.path, req.file.filename, res);
   }
-  catch(err){
+  catch (err) {
     next(err);
   }
 };

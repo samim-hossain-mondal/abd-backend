@@ -12,9 +12,12 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 RUN npm i --production
+RUN npm run generate
 
 # Bundle app source
 COPY . .
 
 EXPOSE 3001
-ENTRYPOINT ["npm", "run", "dev"]
+
+# CMD [ "npm", "run", "migrate" ]
+ENTRYPOINT ["npm", "run", "dev:prod"]

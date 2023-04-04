@@ -1,13 +1,20 @@
 {
-  "taskDefinitionArn": "arn:aws:ecs:ap-south-1:604207207594:task-definition/my-agile-board-fargate-app:1",
+  "taskDefinitionArn": "arn:aws:ecs:us-east-1:802486341833:task-definition/dev-my-agile-board-task:2",
   "containerDefinitions": [
     {
-      "name": "my-agile-board",
-      "image": "604207207594.dkr.ecr.ap-south-1.amazonaws.com/dev-ap-south-1-myagileboard:latest",
+      "name": "my-agile-board-backend",
+      "image": "802486341833.dkr.ecr.us-east-1.amazonaws.com/dev-us-east-1-myagileboard:latest",
       "cpu": 0,
       "portMappings": [
         {
-          "name": "my-agile-board-3001-tcp",
+          "name": "my-agile-board-backend-80-tcp",
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp",
+          "appProtocol": "http"
+        },
+        {
+          "name": "my-agile-board-backend-3001-tcp",
           "containerPort": 3001,
           "hostPort": 3001,
           "protocol": "tcp",
@@ -23,17 +30,17 @@
         "logDriver": "awslogs",
         "options": {
           "awslogs-create-group": "true",
-          "awslogs-group": "/ecs/my-agile-board-fargate-app",
-          "awslogs-region": "ap-south-1",
+          "awslogs-group": "/ecs/dev-my-agile-board-task",
+          "awslogs-region": "us-east-1",
           "awslogs-stream-prefix": "ecs"
         }
       }
     }
   ],
-  "family": "my-agile-board-fargate-app",
-  "executionRoleArn": "arn:aws:iam::604207207594:role/ecsTaskExecutionRole",
+  "family": "dev-my-agile-board-task",
+  "executionRoleArn": "arn:aws:iam::802486341833:role/ecsTaskExecutionRole",
   "networkMode": "awsvpc",
-  "revision": 1,
+  "revision": 2,
   "volumes": [],
   "status": "ACTIVE",
   "requiresAttributes": [
@@ -71,7 +78,7 @@
     "cpuArchitecture": "X86_64",
     "operatingSystemFamily": "LINUX"
   },
-  "registeredAt": "2023-03-16T13:43:36.492Z",
-  "registeredBy": "arn:aws:iam::604207207594:root",
+  "registeredAt": "2023-04-03T09:15:14.989Z",
+  "registeredBy": "arn:aws:sts::802486341833:assumed-role/user-access/Bharath_Raj_GN@mckinsey.com",
   "tags": []
 }

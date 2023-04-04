@@ -1,6 +1,7 @@
 const { dashboardPrisma } = require('../../prismaClient');
 const { HttpError } = require('../../errors');
 const prismaUtils = require('../../utils/prismaUtils');
+const createNotification = require('../../utils/createNotification');
 const selectOnlyValidTeamrequestsFields = {
   select: {
     requestId: true,
@@ -32,6 +33,7 @@ const createValidTeamRequest = async (
     },
     ...selectOnlyValidTeamrequestsFields
   });
+  createNotification.createNotification(content,projectId,createdRequest.requestId,'TEAM_REQUEST');
   return createdRequest;
 };
 // service to get all team requests

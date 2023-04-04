@@ -72,10 +72,23 @@ const queryParamFilterTeamRequests = (type,
   } : filterObj;
   return filterObj;
 };
+const queryParamNotificationFilter = (readStatus,targetType) => {
+  let filterObj = {};
+  
+  filterObj = readStatus ? {
+    ...filterObj, readStatus: readStatus==='true'?true:false
+  } : filterObj;
+  filterObj = targetType ? {
+    ...filterObj, targetType
+  } : filterObj;
+  return filterObj;
+};
+
 module.exports = {
   getPaginationObject,
   getStatusQueryObject,
   getSearchKeywordObject,
   getDateRangeObject,
-  queryParamFilterTeamRequests
+  queryParamFilterTeamRequests,
+  queryParamNotificationFilter
 };

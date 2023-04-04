@@ -1,6 +1,7 @@
 const { HttpError } = require('../../errors');
 const { dashboardPrisma } = require('../../prismaClient');
 const prismaUtils = require('../../utils/prismaUtils');
+const createNotificationService = require('../../utils/createNotification');
 
 const selectOnlyValidReactionFields = {
   select: {
@@ -9,7 +10,6 @@ const selectOnlyValidReactionFields = {
     memberId: true
   }
 };
-
 const selectOnlyValidCelebrationBoardFields = (isAnonymous) => ({
   select: {
     celebrationId: true,
@@ -93,6 +93,7 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
     ...selectOnlyValidCelebrationBoardFields(false)
   }
   );
+  createNotificationService.createNotification(content,projectId,newCelebration.celebrationId,'CELEBRATION');
   return newCelebration;
 };
 

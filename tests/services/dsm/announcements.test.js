@@ -2,6 +2,7 @@ const announcementServices = require('../../../src/services/dsm/announcements.se
 const { dashboardPrisma: prisma } = require('../../../src/prismaClient');
 const { HttpError } = require('../../../src/errors');
 const { mockAnnouncementList, mockAnnouncementByID } = require('../../../src/mocks/dsm/announcements');
+const createNotification = require('../../../src/utils/createNotification');
 
 describe('Announcement Services', () => {
   describe('getAnnouncements', () => {
@@ -30,6 +31,7 @@ describe('Announcement Services', () => {
   describe('createAnnouncement', () => {
     it('should return an announcement object', async () => {
       const mockAnnouncement = mockAnnouncementByID;
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       jest.spyOn(prisma.Announcement, 'create').mockResolvedValue(mockAnnouncement);
       const announcement = await announcementServices.createAnnouncement('1', 1, 'hello', 1);
       expect(announcement).toBeInstanceOf(Object);

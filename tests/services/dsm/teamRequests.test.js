@@ -4,6 +4,7 @@ const prismaUtils = require('../../../src/utils/prismaUtils');
 const teamRequests = require('../../../mocks/dsm/teamRequests');
 const { HttpError } = require('../../../src/errors');
 const { default: expect } = require('expect');
+const createNotification = require('../../../src/utils/createNotification');
 
 const selectOnlyValidTeamrequestsFields = {
   select: {
@@ -34,6 +35,7 @@ describe('Team Request Services', () => {
         projectId: 1,
         memberId: 1
       };
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       const returnedValue = await teamRequestsServices.createValidTeamRequest(...Object.values(mock), 1);
       expect(spiedCreateTeamRequest).toBeCalledWith(
         {

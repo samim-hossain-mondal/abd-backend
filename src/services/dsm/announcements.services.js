@@ -1,5 +1,6 @@
 const { HttpError } = require('../../errors');
 const { dashboardPrisma } = require('../../prismaClient');
+const createNotification = require('../../utils/createNotification');
 const prismaUtils = require('../../utils/prismaUtils');
 
 const selectOnlyValidAnnouncementFields = {
@@ -74,6 +75,7 @@ const createAnnouncement = async (author, memberId, content, title, projectId) =
     },
     ...selectOnlyValidAnnouncementFields
   });
+  createNotification.createNotification(content,projectId,announcement.announcementId,'ANNOUNCEMENT');
   return announcement;
 };
 
@@ -166,8 +168,6 @@ const getAnnouncementsByDate = async (date, projectId) => {
   });
   return announcements;
 };
-
-
 module.exports = {
   getAnnouncements,
   getAnnouncementByID,

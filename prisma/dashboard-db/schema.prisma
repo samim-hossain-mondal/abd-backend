@@ -127,6 +127,24 @@ model teamInformation {
   endDate DateTime?
   @@unique([memberId, projectId])
 }
+model notification {
+  id Int @id @unique @default(autoincrement())
+  title String
+  content String?
+  projectId Int
+  createdAt DateTime @default(now())
+  targetType NotificationType?
+  targetId Int?
+  userNotifications userNotification[]
+}
+model userNotification {
+  id Int @id @unique @default(autoincrement())
+  memberId Int
+  readStatus Boolean @default(false)
+  notificationId Int
+  notifications notification @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  @@unique([memberId, notificationId])
+}
 // Enums
 
 enum MadeToStickType {
@@ -168,5 +186,11 @@ enum RequestType {
 enum CelebrationType {
   CELEBRATION
   IMPEDIMENT
+}
+
+enum NotificationType {
+    TEAM_REQUEST
+    CELEBRATION
+    ANNOUNCEMENT
 }
 

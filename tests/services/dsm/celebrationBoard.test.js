@@ -2,6 +2,7 @@ const celebrationBoardServices = require('../../../src/services/dsm/celebrationB
 const { dashboardPrisma: prisma } = require('../../../src/prismaClient');
 const { HttpError } = require('../../../src/errors');
 const celebrations = require('../../../mocks/dsm/celebration');
+const createNotification = require('../../../src/utils/createNotification');
 
 describe('Celebration Board Services', () => {
   describe('listCelebrations', () => {
@@ -38,11 +39,13 @@ describe('Celebration Board Services', () => {
     it('should create a celebration', async () => {
       const expected = celebrations[0];
       jest.spyOn(prisma.Celebration, 'create').mockResolvedValue(expected);
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       const actual = await celebrationBoardServices.createCelebration(expected);
       expect(actual).toEqual(expected);
     });
     it('should throw an error if there is an error', async () => {
       jest.spyOn(prisma.Celebration, 'create').mockRejectedValue(new Error('Bad Request'));
+      jest.spyOn(createNotification, 'createNotification').mockResolvedValue();
       await expect(celebrationBoardServices.createCelebration(celebrations[0])).rejects.toThrow('Bad Request');
     });
   });

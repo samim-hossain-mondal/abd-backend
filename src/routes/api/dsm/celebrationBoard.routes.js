@@ -257,20 +257,15 @@ router.post('/:projectId',
  *        description: Internal server error
 */
 
-// const paramValidationMiddleware = generateValidationMiddleware(celebrationsSchema.celebrationsParamSchema, 'params');
-
 // GET /api/dsm/celebration/:id
 router.get('/:projectId/:id',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
-  // paramValidationMiddleware, 
   detailCelebration);
 
-// PATCH /api/dsm/celebration/:id
 router.patch('/:projectId/:id',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
-  // paramValidationMiddleware, 
   generateValidationMiddleware(celebrationsSchema.patchcelebrationSchema),
   updateCelebration);
 
@@ -278,7 +273,6 @@ router.patch('/:projectId/:id',
 router.delete('/:projectId/:id',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
-  // paramValidationMiddleware, 
   deleteCelebration);
 
 /**
@@ -363,14 +357,12 @@ router.delete('/:projectId/:id',
 router.get('/:projectId/:id/react',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
-  // paramValidationMiddleware, 
   getReaction);
 
 // PATCH /api/dsm/celebration/:projectId/:id/react
 router.patch('/:projectId/:id/react',
   paramParser({ projectId: 'number', id: 'number' }),
   memberValidationMiddleware,
-  // paramValidationMiddleware, 
   generateValidationMiddleware(celebrationsSchema.patchReactionSchema),
   updateReaction);
 

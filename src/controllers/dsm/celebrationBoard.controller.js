@@ -1,9 +1,5 @@
 const celebrationBoardServices = require('../../services/dsm/celebrationBoard.services');
 
-// userId is hardcoded for now
-// but, actual userId will be passed from the frontend (in header)
-// const userId = 'anonymous';
-
 // controller to handle GET request for listing all celebrations
 const listCelebrations = async (req, res, next) => {
   try {

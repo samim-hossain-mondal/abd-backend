@@ -96,7 +96,7 @@ const createCelebration = async (author, memberId, content, type, isAnonymous = 
     ...selectOnlyValidCelebrationBoardFields(false)
   }
   );
-  createNotificationService.createNotification(content,projectId,newCelebration.celebrationId,'CELEBRATION');
+  createNotificationService.createNotification(content, projectId, newCelebration.celebrationId, 'CELEBRATION');
   return newCelebration;
 };
 
@@ -113,7 +113,7 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
     }
   });
   if (!celebration) throw new HttpError(404, 'No Record Found');
-  if (celebration.memberId !== memberId) throw new HttpError(403, 'You are not authorized to perform this action');
+  if (celebration.memberId !== memberId && !isAbuse) throw new HttpError(403, 'You are not authorized to perform this action');
 
   const updatedCelebration = await dashboardPrisma.Celebration.update({
     where: {
@@ -127,7 +127,7 @@ const updateCelebrationById = async (celebrationId, content, type, isAnonymous, 
     },
     ...selectOnlyValidCelebrationBoardFields(false)
   });
-  createNotificationService.createNotification(content,projectId,updatedCelebration.celebrationId,'CELEBRATION');
+  createNotificationService.createNotification(content, projectId, updatedCelebration.celebrationId, 'CELEBRATION');
   return updatedCelebration;
 };
 

@@ -11,8 +11,9 @@
     "lint": "eslint . --ext .js --fix",
     "test:coverage": "jest --coverage",
     "test:verbose": "jest --verbose",
-    "migrate": "cd prisma/management-db/ && npx prisma migrate dev && cd ../dashboard-db && npx prisma migrate dev && cd ../../ && npm run generate",
-    "generate": "cd prisma/management-db/ && npx prisma generate && cd ../dashboard-db && npx prisma generate"
+    "migrate": "cd prisma/management-db/ && npx prisma migrate dev --skip-seed && cd ../dashboard-db && npx prisma migrate dev --skip-seed && cd ../../ && npm run generate",
+    "generate": "cd prisma/management-db/ && npx prisma generate && cd ../dashboard-db && npx prisma generate",
+    "seed": "prisma db seed"
   },
   "devDependencies": {
     "@types/express": "^4.17.16",
@@ -61,5 +62,8 @@
         "statements": 70
       }
     }
+  },
+  "prisma": {
+    "seed": "bash prisma/seed.sh"
   }
 }

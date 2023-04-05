@@ -1,6 +1,4 @@
-const https = require('https');
-const path = require('path');
-const fs = require('fs');
+
 const express = require('express');
 const morgan = require('morgan');
 const { PORT } = require('./config');
@@ -28,17 +26,6 @@ app.get('/', (req, res) => {
 
 app.use(errorHandlingMiddleware);
 
-if (process.env.NODE_ENV === 'development') {
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-  });
-} else {
-  const sslServer = https.createServer({
-    key: fs.readFileSync(path.join(__dirname, 'ssl', 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'ssl', 'cert.pem'))
-  }, app);
-  
-  sslServer.listen(PORT, () => {
-    console.log(`HTTPS Server running on port ${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

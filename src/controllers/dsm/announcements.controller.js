@@ -117,7 +117,6 @@ const getAnnouncementsByDate = async (req, res, next) => {
     res.status(200).json(announcements);
   }
   catch (er) {
-    console.log(er);
     next(er);
   }
 };

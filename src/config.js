@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const PORT = process.env.PORT || 3001;
+const DOMAIN = process.env.DOMAIN || 'localhost';
 
 const OIDC = {
   clientId: process.env.OKTA_CLIENT_ID,
@@ -13,5 +14,6 @@ const OIDC = {
 
 module.exports = {
   PORT,
-  OIDC
+  OIDC,
+  DOMAIN
 };

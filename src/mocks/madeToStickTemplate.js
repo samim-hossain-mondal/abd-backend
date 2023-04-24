@@ -1,6 +1,6 @@
 const madeToStickTemplate = [
   {
-    'value': '<h1>End User Persona</h1><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
+    'value': '<h1>Sprint Goals</h1><ol><li>&lt;Feed some text&gt;</li><li>…</li></ol>',
     'backgroundColor': '#EEF2F5',
     'x': 10,
     'y': 0,

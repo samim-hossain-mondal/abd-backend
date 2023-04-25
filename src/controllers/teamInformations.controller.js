@@ -81,7 +81,8 @@ const deleteTeamInformation = async (req, res, next) => {
 const getTeamInformationsByProjectId = async (req, res, next) => {
   try {
     const {projectId}= req.params;
-    const profiles = await teamInformationService.getTeamInformationsByProjectId(projectId);
+    const { memberId } = req.user;
+    const profiles = await teamInformationService.getTeamInformationsByProjectId(projectId,memberId);
     res.status(200).json(profiles);
   }
   catch (er) {

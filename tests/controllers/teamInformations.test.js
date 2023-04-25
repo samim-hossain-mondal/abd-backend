@@ -238,6 +238,10 @@ describe('get teamInformations by project id', () => {
       params: {
         projectId: 1
       }
+      ,
+      user:{
+        memberId:1
+      }
     };
     const mockRes = {
       status: jest.fn().mockReturnThis(),

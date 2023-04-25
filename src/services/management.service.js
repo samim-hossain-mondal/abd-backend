@@ -4,6 +4,42 @@ const { convertToRoleEnum } = require('../utils/managementDbUtils');
 const madeToStickService = require('../services/madeToStick.services');
 const madeToStickTemplate = require('../mocks/madeToStickTemplate');
 
+const selectOnlyValidProjectMemberFields = {
+  select: {
+    email: true,
+    role: true,
+    memberId: true,
+    projectId: true,
+    isActive: true,
+  }
+};
+
+const selectOnlyValidMemberFields = {
+  select: {
+    memberId: true,
+    name: true,
+    email: true,
+    slackLink: true,
+    isDeleted: true,
+    projectMembers: selectOnlyValidProjectMemberFields
+  }
+};
+
+const selectOnlyValidProjectFields = {
+  select: {
+    projectId: true,
+    projectName: true,
+    projectDescription: true,
+    isDeleted: true,
+    projectMembers: selectOnlyValidProjectMemberFields,
+    _count: {
+      select: {
+        projectMembers: true
+      }
+    }
+  }
+};
+
 const createNewAgileDashboardInDb = async (
   projectName,
   projectDescription = null,
@@ -80,21 +116,31 @@ const allProjectsByCurrentUserInDb = async (email) => {
       isDeleted: false,
       projectMembers: {
         some: {
-          email
-        }
-      }
+          email,
+        },
+      },
     },
     select: {
-      projectId: true,
-      projectName: true,
-      projectDescription: true,
+      ...(selectOnlyValidProjectFields.select),
+      projectMembers: {
+        where: {
+          email,
+        },
+        select: {
+          ...selectOnlyValidProjectMemberFields.select,
+          projectId: false,
+          member: {
+            select: { name: true }
+          }
+        }
+      },
       _count: {
         select: {
           projectMembers: true
         }
       }
-    }
-  });
+    },
+  });  
 
   if (!projects) {
     throw new HttpError(404, 'No projects found.');
@@ -105,26 +151,18 @@ const allProjectsByCurrentUserInDb = async (email) => {
 
 const allMembersByProjectIdInDb = async (projectId) => {
 
-  const projectMembers = await managementPrisma.project.findFirst({
+  const project = await managementPrisma.project.findFirst({
     where: {
       projectId,
     },
-    select: {
-      isDeleted: true,
-      projectMembers: {
-        select: {
-          email: true,
-          role: true
-        }
-      }
-    }
+    ...selectOnlyValidProjectFields
   });
 
-  if (!projectMembers || projectMembers.isDeleted) {
+  if (!project || project.isDeleted) {
     throw new HttpError(404, 'Project does not exist.');
   }
 
-  return projectMembers.projectMembers;
+  return project.projectMembers;
 };
 
 const addProjectMemberInDb = async (
@@ -134,86 +172,74 @@ const addProjectMemberInDb = async (
 
   const project = await managementPrisma.project.findUnique({
     where: { projectId },
-    include: {
-      projectMembers: true,
-    },
+    include: { projectMembers: true },
   });
 
   if (!project || project.isDeleted) {
     throw new HttpError(404, `Project with id ${projectId} not found`);
   }
 
-  let member = await managementPrisma.member.findUnique({
-    where: {
-      email
-    }
-  });
-
-  if (!member) {
-    member = await managementPrisma.member.create({
-      data: {
-        email,
-      }
-    });
-  }
-
-  if (member.isDeleted) {
-    await managementPrisma.member.update({
-      where: {
-        memberId: member.memberId
-      },
-      data: {
-        isDeleted: false
-      }
-    });
-  }
-
-  await managementPrisma.member.upsert({
-    where: {
-      memberId: member.memberId
-    },
-    update: {
-      slackLink: message
-    },
-    create: {
-      memberId: member.memberId,
-      email,
-      slackLink: message
-    }
+  let member = await managementPrisma.member.upsert({
+    where: { email },
+    update: { isDeleted: false, slackLink: message },
+    create: { email, slackLink: message },
   });
 
   const existingProjectMember = project.projectMembers.find(
     (projectMember) => projectMember.email === email
   );
 
-  if (existingProjectMember) {
+  if (existingProjectMember && existingProjectMember.isActive) {
     throw new HttpError(400, `Member with email ${email} is already part of the project`);
   }
 
+  if (existingProjectMember && !existingProjectMember.isActive) {
+    const newProjectMember = await managementPrisma.projectMember.update({
+      where: {
+        projectId_email: {
+          projectId,
+          email,
+        },
+      },
+      data: {
+        isActive: true,
+        role,
+      },
+    });
+
+    const newTeamInformation = await dashboardPrisma.teamInformation.update({
+      where: {
+        memberId_projectId: {
+          memberId: member.memberId,
+          projectId,
+        }
+      },
+      data: {
+        isActive: true,
+        startDate: new Date(),
+        endDate: null
+      },
+    });
+
+    return { newProjectMember, newTeamInformation };
+  }
+
   const newProjectMember = await managementPrisma.projectMember.create({
-    data: {
-      projectId,
-      memberId: member.memberId,
-      email,
-      role,
-    },
+    data: { projectId, memberId: member.memberId, email, role },
   });
-  const currentDate = new Date();
+
   const newTeamInformation = await dashboardPrisma.teamInformation.create({
     data: {
       projectId,
       memberId: member.memberId,
-      startDate: currentDate,
-      endDate: (endDate && new Date(endDate)),
-    }
+      startDate: new Date(),
+      endDate: endDate && new Date(endDate),
+    },
   });
 
-  return {
-    newProjectMember,
-    newTeamInformation
-  };
-
+  return { newProjectMember, newTeamInformation };
 };
+
 
 const removeProjectMemberByEmailInDb = async (projectId, email) => {
   const project = await managementPrisma.project.findUnique({
@@ -238,23 +264,32 @@ const removeProjectMemberByEmailInDb = async (projectId, email) => {
     },
   });
 
-  if (!projectMember) {
+  if (!projectMember || !projectMember.isActive) {
     throw new HttpError(404, 'Member not found in project');
   }
 
-  await managementPrisma.project.update({
+  await managementPrisma.projectMember.update({
     where: {
-      projectId,
+      projectId_email: {
+        projectId,
+        email,
+      },
     },
     data: {
-      projectMembers: {
-        delete: {
-          projectId_email: {
-            projectId,
-            email,
-          },
-        },
+      isActive: false,
+    },
+  });
+
+  await dashboardPrisma.teamInformation.update({
+    where: {
+      memberId_projectId: {
+        memberId: projectMember.memberId,
+        projectId,
       },
+    },
+    data: {
+      endDate: new Date(),
+      isActive: false,
     },
   });
 
@@ -296,7 +331,7 @@ const updateMemberRoleByEmailInDb = async (projectId, email, role) => {
     }
   });
 
-  if (!projectMember) {
+  if (!projectMember || !projectMember.isActive) {
     throw new HttpError(404, 'Member not found in project.');
   }
 
@@ -365,15 +400,22 @@ const deleteProjectInDb = async (projectId) => {
     }
   });
 
-  await managementPrisma.projectMember.deleteMany({
+  await managementPrisma.projectMember.updateMany({
     where: {
       projectId
+    },
+    data: {
+      isActive: false
     }
   });
 
-  await dashboardPrisma.teamInformation.deleteMany({
+  await dashboardPrisma.teamInformation.updateMany({
     where: {
       projectId
+    },
+    data: {
+      isActive: false,
+      endDate: new Date()
     }
   });
 
@@ -394,6 +436,7 @@ const getProjectDetailsByIdInDb = async (projectId) => {
         select: {
           email: true,
           role: true,
+          isActive: true,
           memberId: true,
           member: {
             select: {
@@ -401,6 +444,11 @@ const getProjectDetailsByIdInDb = async (projectId) => {
               email: true,
             }
           }
+        }
+      },
+      _count: {
+        select: {
+          projectMembers: true,
         }
       }
     },
@@ -417,7 +465,8 @@ const getProjectMemberDetailsByIdInDb = async (projectId, memberId) => {
   const projectMember = await managementPrisma.projectMember.findFirst({
     where: {
       projectId,
-      memberId
+      memberId,
+      isActive: true
     },
     select: {
       projectId: true,
@@ -461,7 +510,7 @@ const updateMemberRoleByIdInDb = async (projectId, memberId, role) => {
     }
   });
 
-  if (!projectMember) {
+  if (!projectMember || !projectMember.isActive) {
     throw new HttpError(404, 'Member not found in project.');
   }
 
@@ -500,16 +549,19 @@ const removeProjectMemberByIdInDb = async (projectId, memberId) => {
     }
   });
 
-  if (!projectMember) {
+  if (!projectMember || !projectMember.isActive) {
     throw new HttpError(404, 'Member not found in project.');
   }
 
-  await managementPrisma.projectMember.delete({
+  await managementPrisma.projectMember.update({
     where: {
       projectId_memberId: {
         projectId,
         memberId
       }
+    },
+    data: {
+      isActive: false
     }
   });
 };
@@ -583,7 +635,6 @@ const updateMemberInfoInDb = async (memberId, name, email, slackLink) => {
 
   return updatedMember;
 };
-
 
 const deleteMemberInDb = async (memberId) => {
   const member = await managementPrisma.member.findUnique({

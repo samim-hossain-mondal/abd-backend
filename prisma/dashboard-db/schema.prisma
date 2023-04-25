@@ -124,6 +124,7 @@ model teamInformation {
   bio String?
   projectRole String?
   projectId Int
+  isActive Boolean @default(true)
   startDate DateTime?
   endDate DateTime?
   @@unique([memberId, projectId])

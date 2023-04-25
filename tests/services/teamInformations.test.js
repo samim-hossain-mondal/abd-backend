@@ -105,11 +105,16 @@ describe('teamInformationsServices', () => {
   describe('deleteTeamInformation', () => {
     it('should delete a teamInformation when called', async () => {
       const id = 1;
-      const deleteResult = { count: 1 };
+      const deleteResult = {   endDate: '2021-01-01',
+        isActive: false};
       const memberId = 1;
       jest.spyOn(dashboardPrisma.teamInformation, 'delete')
         .mockResolvedValue(deleteResult); 
       jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ memberId: 1 }); 
+      jest.spyOn(dashboardPrisma.teamInformation, 'update').mockResolvedValue({ 
+        endDate: '2021-01-01',
+        isActive: false
+      });
       const teamInformation = await teamInformationsService.deleteTeamInformation(id, memberId);
       expect(teamInformation).toEqual(deleteResult);
     } 
@@ -117,8 +122,12 @@ describe('teamInformationsServices', () => {
     it('should throw an error when teamInformation is not found', async () => {
       const id = 1;
       const memberId = 1;
-      jest.spyOn(dashboardPrisma.teamInformation, 'delete').mockResolvedValue({ count: 0 });
-      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ count: 0});
+      jest.spyOn(dashboardPrisma.teamInformation, 'delete').mockResolvedValue();
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue();
+      jest.spyOn(dashboardPrisma.teamInformation, 'update').mockResolvedValue({ 
+        endDate: '2021-01-01',
+        isActive: false
+      });
       await expect(teamInformationsService.deleteTeamInformation(id, memberId)).rejects.toThrow('(DELETE) : No Record Found');
     }
     );
@@ -182,7 +191,7 @@ describe('teamInformationsServices', () => {
         'startDate' : '2021-01-01',
         'endDate' : '2021-01-01',
       };
-      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue({ count: 0 });
+      jest.spyOn(dashboardPrisma.teamInformation, 'findUnique').mockResolvedValue();
       jest.spyOn(dashboardPrisma.teamInformation, 'update')
         .mockResolvedValue(mockTeamInformation);
       await expect(teamInformationsService.updateTeamInformation(...Object.values(mockTeamInformation))).rejects.toThrow('(UPDATE) : No Record Found');
@@ -216,7 +225,8 @@ describe('teamInformationsServices', () => {
         'message':'test',
         'projectId':1,
         'startDate':'2021-01-01',
-        'endDate':'2021-01-01'
+        'endDate':'2021-01-01',
+        'isActive':true
       }];
       const mockManagementDBInformation = 
           {
@@ -235,12 +245,13 @@ describe('teamInformationsServices', () => {
         'endDate':'2021-01-01',
         'name': 'test',
         'emailId':'test',
-        'role':'MEMBER'
+        'role':'MEMBER',
+        'isActive':true
       }];
       jest.spyOn(dashboardPrisma.teamInformation, 'findMany').mockResolvedValue(mockDashBoardDBInformation);
       jest.spyOn(managementPrisma.Member, 'findUnique').mockResolvedValue(mockManagementDBInformation);
       jest.spyOn(managementPrisma.ProjectMember,'findUnique').mockResolvedValue({role:'MEMBER',projectId:1});
-      const teamInformation = await teamInformationsService.getTeamInformationsByProjectId(1);
+      const teamInformation = await teamInformationsService.getTeamInformationsByProjectId(1,1);
       expect(teamInformation).toEqual(mockResult);
     }
     );

@@ -33,11 +33,12 @@ const createValidTeamRequest = async (
     },
     ...selectOnlyValidTeamrequestsFields
   });
-  createNotification.createNotification(content,projectId,createdRequest.requestId,'TEAM_REQUEST');
+  createNotification.createNotification(content, projectId, createdRequest.requestId, 'TEAM_REQUEST');
   return createdRequest;
 };
 // service to get all team requests
-const getAllTeamRequests = async (type,
+const getAllTeamRequests = async (
+  type,
   author,
   startDate,
   endDate,
@@ -117,7 +118,7 @@ const editTeamRequest = async (
   if (!updatedRequest) {
     throw new HttpError(404, 'Team Request not found');
   }
-  createNotification.createNotification(content,projectId,updatedRequest.requestId,'TEAM_REQUEST');
+  createNotification.createNotification(content, projectId, updatedRequest.requestId, 'TEAM_REQUEST');
   return updatedRequest;
 };
 // service to delete team request by team request id
@@ -172,8 +173,8 @@ const getTeamRequestById = async (requestId, projectId) => {
       requestId,
       projectId
     },
-    ...selectOnlyValidTeamrequestsFields 
+    ...selectOnlyValidTeamrequestsFields
   });
   return teamRequest;
 };
-module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate ,getTeamRequestById};
+module.exports = { createValidTeamRequest, getAllTeamRequests, editTeamRequest, deleteTeamRequest, getTeamRequestsByDate, getTeamRequestById };

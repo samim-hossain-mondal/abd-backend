@@ -9,8 +9,8 @@ const announcementServices = require('../../services/dsm/announcements.services'
 const listAnnouncements = async (req, res, next) => {
   try {
     const { projectId } = req.params;
-    const { page, limit } = req.query;
-    const announcements = await announcementServices.getAnnouncements(parseInt(projectId), page ?? 1, limit ?? 10);
+    const { search, page, limit } = req.query;
+    const announcements = await announcementServices.getAnnouncements(parseInt(projectId), page ?? 1, limit ?? 10, search);
     res.status(200).json(announcements);
   }
   catch (er) {

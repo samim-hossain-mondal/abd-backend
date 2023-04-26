@@ -19,12 +19,14 @@ const selectOnlyValidAnnouncementFields = {
   * Service to list all the announcements
   * @returns {Object} - List of announcements
 */
-const getAnnouncements = async (projectId, page = 1, limit = 10) => {
+const getAnnouncements = async (projectId, page = 1, limit = 10, search) => {
   const paginationObj = prismaUtils.getPaginationObject(page, limit);
+  const filterObj = prismaUtils.filterTitleAndContent(search);
 
   const announcements = await dashboardPrisma.Announcement.findMany({
     where: {
-      projectId
+      projectId,
+      ...filterObj,
     },
     orderBy: {
       createdAt: 'desc',
@@ -75,7 +77,7 @@ const createAnnouncement = async (author, memberId, content, title, projectId) =
     },
     ...selectOnlyValidAnnouncementFields
   });
-  createNotification.createNotification(content,projectId,announcement.announcementId,'ANNOUNCEMENT');
+  createNotification.createNotification(content, projectId, announcement.announcementId, 'ANNOUNCEMENT');
   return announcement;
 };
 
@@ -118,7 +120,7 @@ const editAnnouncement = async (announcementId, content, title, memberId, projec
     },
     ...selectOnlyValidAnnouncementFields
   });
-  createNotification.createNotification(content,projectId,announcement.announcementId,'ANNOUNCEMENT');
+  createNotification.createNotification(content, projectId, announcement.announcementId, 'ANNOUNCEMENT');
   return announcement;
 };
 

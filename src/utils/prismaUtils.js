@@ -44,8 +44,8 @@ const getStatusQueryObject = (status) => {
     status
   };
 };
-const queryParamFilterTeamRequests = (type,
-  author,
+const queryParamFilterTeamRequests = (
+  type,
   startDate,
   endDate,
   searchKeyword,
@@ -67,19 +67,36 @@ const queryParamFilterTeamRequests = (type,
   filterObj = type ? {
     ...filterObj, type
   } : filterObj;
-  filterObj = author ? {
-    ...filterObj, author: author
-  } : filterObj;
+  // filterObj = author ? {
+  //   ...filterObj, author: author
+  // } : filterObj;
   return filterObj;
 };
-const queryParamNotificationFilter = (readStatus,targetType) => {
+const queryParamNotificationFilter = (readStatus, targetType) => {
   let filterObj = {};
-  
+
   filterObj = readStatus ? {
-    ...filterObj, readStatus: readStatus==='true'?true:false
+    ...filterObj, readStatus: readStatus === 'true' ? true : false
   } : filterObj;
   filterObj = targetType ? {
     ...filterObj, targetType
+  } : filterObj;
+  return filterObj;
+};
+
+const filterTitleAndContent = (searchKeyword) => {
+  let filterObj = {};
+
+  filterObj = searchKeyword ? {
+    ...filterObj,
+    content: {
+      contains: searchKeyword,
+      mode: 'insensitive',
+    },
+    title: {
+      contains: searchKeyword,
+      mode: 'insensitive',
+    }
   } : filterObj;
   return filterObj;
 };
@@ -90,5 +107,6 @@ module.exports = {
   getSearchKeywordObject,
   getDateRangeObject,
   queryParamFilterTeamRequests,
-  queryParamNotificationFilter
+  queryParamNotificationFilter,
+  filterTitleAndContent
 };

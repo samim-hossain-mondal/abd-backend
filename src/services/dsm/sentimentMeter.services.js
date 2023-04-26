@@ -242,7 +242,7 @@ const createSentiment = async (sentiment, projectId, memberId, offSetTime = 0) =
   // const todayDate = new Date();
   if (todayDate.getDay() === 0 || todayDate.getDay() === 6) throw new HttpError(400, 'Sorry, Can\'t track response on weekends');
 
-  const sentimentExists = await getTodaySentimentOfMember(projectId, memberId);
+  const sentimentExists = await getTodaySentimentOfMember(projectId, memberId, offSetTime);
   if (sentimentExists.sentimentId) {
     const updatedSentiment = sentimentExists.sentiment === sentiment ?
       sentimentExists :

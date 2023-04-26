@@ -74,14 +74,12 @@ describe('getDateRangeObject', () => {
     it('should return valid object when author, start Date,end Date, search keyword and status is passed', () => {
       const mockFilter = {
         type: 'MEETING',
-        author: 'string',
         startDate: '2023-03-04',
         endDate: '2023-03-04',
         searchKeyword: 'string',
         status: 'PENDING'
       };
       const mockFilterResult = {
-        'author': 'string',
         'content': {
           'contains': 'string',
           'mode': 'insensitive',

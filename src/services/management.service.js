@@ -113,7 +113,6 @@ const createNewAgileDashboardInDb = async (
 const allProjectsByCurrentUserInDb = async (email) => {
   const projects = await managementPrisma.project.findMany({
     where: {
-      isDeleted: false,
       projectMembers: {
         some: {
           email,
